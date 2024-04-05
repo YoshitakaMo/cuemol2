@@ -15,7 +15,7 @@ jobs:
     - name: Run sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.4
 
-    - name: Install deplibs
+    - name: Install deplibs and build libcuemol2
       shell: bash
       env:
         SCCACHE_GHA_ENABLED: "true"

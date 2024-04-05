@@ -20,7 +20,7 @@ BUILD_DIR=$BASEDIR/build
 mkdir -p $BUILD_DIR
 cd $BUILD_DIR
 
-# # BUILD_TYPE=Debug
+# BUILD_TYPE=Debug
 BUILD_TYPE=Release
 
 PYTHON=python3
@@ -53,3 +53,4 @@ cmake ${GITHUB_WORKSPACE} \
       -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
 make -j 8
+make install
