@@ -12,9 +12,15 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Run sccache-cache
+      uses: mozilla-actions/sccache-action@v0.0.4
+
     - name: Install deplibs
       shell: bash
+      env:
+        SCCACHE_GHA_ENABLED: "true"
       run: |
+        sccache -s
         cd ${GITHUB_WORKSPACE}
         bash build_scripts/build_libcuemol2_macos.sh $HOME
 
