@@ -20,7 +20,7 @@ BUILD_DIR=$BASEDIR/build
 mkdir -p $BUILD_DIR
 cd $BUILD_DIR
 
-# BUILD_TYPE=Debug
+# # BUILD_TYPE=Debug
 BUILD_TYPE=Release
 
 PYTHON=python3
