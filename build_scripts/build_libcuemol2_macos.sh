@@ -2,16 +2,19 @@
 set -eux
 
 BASEDIR=$1
+ARCH=$2
 TMPDIR=$BASEDIR/tmp
 
 mkdir -p $TMPDIR
 cd $TMPDIR
 
 # Retrieve deplibs binary
+DEPLIBS_TGZ=deplibs_macOS_${ARCH}.tar.bz2
+DEPLIBS_VERSION=v0.0.1
 wget --progress=dot:mega -c \
-     https://github.com/CueMol/build_scripts/releases/download/v0.0.1/deplibs_macOS_ARM64.tar.bz2
-xattr -cr deplibs_macOS_ARM64.tar.bz2
-tar xjf deplibs_macOS_ARM64.tar.bz2
+     https://github.com/CueMol/build_scripts/releases/download/$DEPLIBS_VERSION/$DEPLIBS_TGZ
+xattr -cr $DEPLIBS_TGZ
+tar xjf $DEPLIBS_TGZ
 mv builds $BASEDIR/deplibs
 PROJ_DIR=$BASEDIR/deplibs
 

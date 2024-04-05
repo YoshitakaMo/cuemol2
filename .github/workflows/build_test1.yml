@@ -22,5 +22,23 @@ jobs:
       run: |
         sccache -s
         cd ${GITHUB_WORKSPACE}
-        bash build_scripts/build_libcuemol2_macos.sh $HOME
+        bash build_scripts/build_libcuemol2_macos.sh $HOME ${{ runner.arch }}
+
+  build_mac_intel:
+    name: "MacOS 12 intel clang"
+    runs-on: macos-12
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Run sccache-cache
+      uses: mozilla-actions/sccache-action@v0.0.4
+
+    - name: Install deplibs and build libcuemol2
+      shell: bash
+      env:
+        SCCACHE_GHA_ENABLED: "true"
+      run: |
+        sccache -s
+        cd ${GITHUB_WORKSPACE}
+        bash build_scripts/build_libcuemol2_macos.sh $HOME ${{ runner.arch }}
 
