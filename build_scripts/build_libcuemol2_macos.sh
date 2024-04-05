@@ -1,11 +1,24 @@
 #!/bin/sh
 set -eux
 
+BASEDIR=$1
+TMPDIR=$BASEDIR/tmp
+
+mkdir -p $TMPDIR
+cd $TMPDIR
+
 # Retrieve deplibs binary
-wget -c https://github.com/CueMol/build_scripts/releases/download/v0.0.1/deplibs_macOS_ARM64.tar.bz2
+wget --progress=dot:mega -c \
+     https://github.com/CueMol/build_scripts/releases/download/v0.0.1/deplibs_macOS_ARM64.tar.bz2
 xattr -cr deplibs_macOS_ARM64.tar.bz2
 tar xjf deplibs_macOS_ARM64.tar.bz2
-ls -la builds/
+mv builds $BASEDIR/deplibs
+PROJ_DIR=$BASEDIR/deplibs
+
+# Build
+BUILD_DIR=$BASEDIR/build
+mkdir -p $BUILD_DIR
+cd $BUILD_DIR
 
 # BUILD_TYPE=Debug
 BUILD_TYPE=Release
@@ -18,13 +31,12 @@ BUILD_PYTHON_BINDINGS=OFF
 BUILD_PYTHON_MODULE=OFF
 
 # Install location
-CMAKE_INSTALL_PREFIX=$HOME/tmp/cuemol2
+CMAKE_INSTALL_PREFIX=$BASEDIR/cuemol2
 
-# Prerequisites
-PROJ_DIR=builds
 CMAKE_PREFIX_PATH="$PROJ_DIR"
+ls -la $PROJ_DIR
 
-cmake .. \
+cmake ${GITHUB_WORKSPACE} \
       -DCMAKE_INSTALL_PREFIX=$CMAKE_INSTALL_PREFIX \
       -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH \
       -DBoost_ROOT=$PROJ_DIR/boost_1_84/ \
