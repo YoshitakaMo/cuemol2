@@ -1,8 +1,8 @@
 name: Build
 
-on:
-  pull_request:
-    types: [ready_for_review, synchronize]
+# on:
+#   pull_request:
+#     types: [ready_for_review, synchronize]
 
 env:
   PYTHON_VERSION: 3.8

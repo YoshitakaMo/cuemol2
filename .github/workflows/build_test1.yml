@@ -1,0 +1,20 @@
+name: Build and release
+
+on:
+  push:
+
+###############################################
+
+jobs:
+  build_mac_arm64:
+    name: "MacOS 14 arm64 clang"
+    runs-on: macos-14
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install deplibs
+      shell: bash
+      run: |
+        cd ${GITHUB_WORKSPACE}
+        bash build_scripts/build_libcuemol2_macos.sh $HOME
+
