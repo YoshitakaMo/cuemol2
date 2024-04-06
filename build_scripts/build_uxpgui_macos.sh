@@ -4,6 +4,7 @@ set -eux
 BASEDIR=$1
 ARCH=$2
 TMPDIR=$BASEDIR/tmp
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 mkdir -p $TMPDIR
 cd $TMPDIR
@@ -20,3 +21,30 @@ mv uxp ${GITHUB_WORKSPACE}/uxp_gui/platform
 cd ${GITHUB_WORKSPACE}/uxp_gui
 patch -p5 < uxp_diff.patch
 
+# Setup bundle software
+BUNDLE_DIR=$TMPDIR/cuemol2_bundle
+mkdir -p $BUNDLE_DIR
+pushd $BUNDLE_DIR
+
+# Retrieve povray prebuild binary
+POV_TGZ=povray_macOS_${ARCH}.tar.bz2
+wget --progress=dot:mega -c \
+     https://github.com/CueMol/povray_build/releases/download/v0.0.5/$POV_TGZ
+xattr -cr $POV_TGZ
+tar xjvf $POV_TGZ
+
+# Retrieve ffmpeg bin
+FFMPEG_DIST=ffmpeg61arm
+wget --progress=dot:mega -c https://www.osxexperts.net/${FFMPEG_DIST}.zip
+xattr -cr ${FFMPEG_DIST}.zip
+mkdir -p $BUNDLE_DIR/ffmpeg/bin
+cd $BUNDLE_DIR/ffmpeg/bin
+unzip -o ../../${FFMPEG_DIST}.zip
+popd
+
+# Build UXP
+cd ${GITHUB_WORKSPACE}/uxp_gui
+sed "s!@CUEMOL_BUNDLE@!$BUNDLE_DIR!g" $SCRIPT_DIR/mozconfig_${ARCH} > .mozconfig
+./mach build
+./mach package
+popd
