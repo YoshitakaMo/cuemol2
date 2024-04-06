@@ -20,9 +20,16 @@ jobs:
       env:
         SCCACHE_GHA_ENABLED: "true"
       run: |
-        sccache -s
         cd ${GITHUB_WORKSPACE}
         bash build_scripts/build_libcuemol2_macos.sh $HOME ${{ runner.arch }}
+
+    - name: Build UXP GUI
+      shell: bash
+      env:
+        SCCACHE_GHA_ENABLED: "true"
+      run: |
+        cd ${GITHUB_WORKSPACE}
+        bash build_scripts/build_uxpgui_macos.sh $HOME ${{ runner.arch }}
 
   build_mac_intel:
     name: "MacOS 12 intel clang"
