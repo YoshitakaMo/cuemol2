@@ -24,9 +24,10 @@ jobs:
         SCCACHE_GHA_ENABLED: "true"
       run: |
         brew install pyenv zlib
-        env CC="sccache clang" CXX=="sccache clang++" LDFLAGS="-L/opt/homebrew/opt/zlib/lib" CPPFLAGS="-I/opt/homebrew/opt/zlib/include" PKG_CONFIG_PATH="/opt/homebrew/opt/zlib/lib/pkgconfig" pyenv install -v 2.7.18
-
+        env CC="sccache clang" CXX=="sccache clang++" LDFLAGS="-L/opt/homebrew/opt/zlib/lib" CPPFLAGS="-I/opt/homebrew/opt/zlib/include" PKG_CONFIG_PATH="/opt/homebrew/opt/zlib/lib/pkgconfig" pyenv install 2.7.18
+        pyenv global 2.7.18
         pyenv versions
+        python --version
 
     # - name: Install deplibs and build libcuemol2
     #   shell: bash
@@ -45,21 +46,21 @@ jobs:
     #     which python
     #     bash build_scripts/build_uxpgui_macos.sh $HOME ${{ runner.arch }}
 
-  build_mac_intel:
-    name: "MacOS 12 intel clang"
-    runs-on: macos-12
-    steps:
-    - uses: actions/checkout@v4
+  # build_mac_intel:
+  #   name: "MacOS 12 intel clang"
+  #   runs-on: macos-12
+  #   steps:
+  #   - uses: actions/checkout@v4
 
-    - name: Run sccache-cache
-      uses: mozilla-actions/sccache-action@v0.0.4
+  #   - name: Run sccache-cache
+  #     uses: mozilla-actions/sccache-action@v0.0.4
 
-    - name: Install deplibs and build libcuemol2
-      shell: bash
-      env:
-        SCCACHE_GHA_ENABLED: "true"
-      run: |
-        sccache -s
-        cd ${GITHUB_WORKSPACE}
-        bash build_scripts/build_libcuemol2_macos.sh $HOME ${{ runner.arch }}
+  #   - name: Install deplibs and build libcuemol2
+  #     shell: bash
+  #     env:
+  #       SCCACHE_GHA_ENABLED: "true"
+  #     run: |
+  #       sccache -s
+  #       cd ${GITHUB_WORKSPACE}
+  #       bash build_scripts/build_libcuemol2_macos.sh $HOME ${{ runner.arch }}
 
