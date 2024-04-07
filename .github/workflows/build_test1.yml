@@ -24,7 +24,8 @@ jobs:
         SCCACHE_GHA_ENABLED: "true"
       run: |
         brew install pyenv zlib
-        env CC="sccache clang" CXX=="sccache clang++" pyenv install 2.7.18
+        env CC="sccache clang" CXX=="sccache clang++" LDFLAGS="-L/opt/homebrew/opt/zlib/lib" CPPFLAGS="-I/opt/homebrew/opt/zlib/include" PKG_CONFIG_PATH="/opt/homebrew/opt/zlib/lib/pkgconfig" pyenv install -v 2.7.18
+
         pyenv versions
 
     # - name: Install deplibs and build libcuemol2
