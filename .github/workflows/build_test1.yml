@@ -18,6 +18,14 @@ jobs:
     - name: Run sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.4
 
+    - name: Install deplibs and build libcuemol2
+      shell: bash
+      env:
+        SCCACHE_GHA_ENABLED: "true"
+      run: |
+        cd ${GITHUB_WORKSPACE}
+        bash build_scripts/build_libcuemol2_macos.sh $HOME ${{ runner.arch }}
+
     - name: Install python2
       shell: bash
       env:
@@ -33,14 +41,6 @@ jobs:
         pyenv global 2.7.18
         pyenv versions
         python --version
-
-    # - name: Install deplibs and build libcuemol2
-    #   shell: bash
-    #   env:
-    #     SCCACHE_GHA_ENABLED: "true"
-    #   run: |
-    #     cd ${GITHUB_WORKSPACE}
-    #     bash build_scripts/build_libcuemol2_macos.sh $HOME ${{ runner.arch }}
 
     - name: Build UXP GUI
       shell: bash
