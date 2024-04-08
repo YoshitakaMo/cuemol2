@@ -42,6 +42,15 @@ cd $BUNDLE_DIR/ffmpeg/bin
 unzip -o ../../${FFMPEG_DIST}.zip
 popd
 
+ls -l /Applications
+ls -l /Applications/Xcode.app
+ls -l /Applications/Xcode.app/Contents
+ls -l /Applications/Xcode.app/Contents/Developer
+ls -l /Applications/Xcode.app/Contents/Developer/Platforms
+ls -l /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform
+ls -l /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer
+ls -l /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs
+ls -l /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk
 # Build UXP
 cd ${GITHUB_WORKSPACE}/uxp_gui
 sed "s!@CUEMOL_BUNDLE@!$BUNDLE_DIR!g" $SCRIPT_DIR/mozconfig_${ARCH} > .mozconfig
