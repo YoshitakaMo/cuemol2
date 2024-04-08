@@ -43,13 +43,13 @@ ac_add_options --with-pthreads
 
 # export MOZ_PKG_SPECIAL=gtk$_GTK_VERSION
 
-ac_add_options --with-macos-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk
+ac_add_options --with-macos-sdk=@SDK_PATH@
 ac_add_options --target=aarch64-apple-darwin
 ac_add_options --host=aarch64-apple-darwin
 
 mk_add_options MOZ_MAKE_FLAGS="-j8"
 
-ac_add_options --enable-cuemol=$HOME/tmp/cuemol2/
-ac_add_options --enable-cuemol-boostdir=$HOME/proj64/boost_1_84/
-ac_add_options --enable-cuemol-deplibs=$HOME/proj64/boost_1_84/lib
+ac_add_options --enable-cuemol=@CUEMOL_DIR@
+ac_add_options --enable-cuemol-boostdir=@BOOST_DIR@
+ac_add_options --enable-cuemol-deplibs=@DEPLIBS_DIR@
 ac_add_options --enable-cuemol-bundle=@CUEMOL_BUNDLE@

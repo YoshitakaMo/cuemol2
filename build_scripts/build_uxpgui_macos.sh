@@ -42,18 +42,22 @@ cd $BUNDLE_DIR/ffmpeg/bin
 unzip -o ../../${FFMPEG_DIST}.zip
 popd
 
-ls -l /Applications
-ls -l /Applications/Xcode.app
-ls -l /Applications/Xcode.app/Contents
-ls -l /Applications/Xcode.app/Contents/Developer
-ls -l /Applications/Xcode.app/Contents/Developer/Platforms
-ls -l /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform
-ls -l /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer
-ls -l /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs
-ls -l /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk
 # Build UXP
+
+xcrun --show-sdk-path
+SDK_PATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk
+
+CUEMOL_DIR=$BASEDIR/cuemol2
+PROJ_DIR=$BASEDIR/deplibs
+BOOST_DIR=$PROJ_DIR/boost_1_84
+DEPLIBS_DIR=$PROJ_DIR/boost_1_84/lib
+
 cd ${GITHUB_WORKSPACE}/uxp_gui
-sed "s!@CUEMOL_BUNDLE@!$BUNDLE_DIR!g" $SCRIPT_DIR/mozconfig_${ARCH} > .mozconfig
+sed "s!@CUEMOL_BUNDLE@!$BUNDLE_DIR!g" $SCRIPT_DIR/mozconfig_${ARCH} \
+    | sed "s!@CUEMOL_DIR@!$CUEMOL_DIR!g" \
+    | sed "s!@BOOST_DIR@!$BOOST_DIR!g" \
+    | sed "s!@DEPLIBS_DIR@!$DEPLIBS_DIR!g" \
+    | sed "s!@SDK_PATH@!$SDK_PATH!g" > .mozconfig
 ./mach build
 ./mach package
 popd
