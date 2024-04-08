@@ -63,4 +63,6 @@ sed "s!@CUEMOL_BUNDLE@!$BUNDLE_DIR!g" $SCRIPT_DIR/mozconfig_${ARCH} \
 
 ls -l obj-*/dist/cuemol2-*.dmg
 cp obj-*/dist/cuemol2-*.dmg ${GITHUB_WORKSPACE}/
-tar czvf ${GITHUB_WORKSPACE}/$ARTIFACT_NAME *.dmg
+cd ${GITHUB_WORKSPACE}
+ls -l cuemol2-*.dmg
+tar cjvf ${GITHUB_WORKSPACE}/${ARTIFACT_NAME} *.dmg
