@@ -6,8 +6,8 @@
 warning("CUEMOL_DIR: <%s>" % CONFIG['CUEMOL_DIR'])
 
 LOCAL_INCLUDES += [
-    '%%%s/include' % CONFIG['CUEMOL_BOOST_DIR'],
     '%%%s/include' % CONFIG['CUEMOL_DIR'],
+    '%%%s/include' % CONFIG['CUEMOL_BOOST_DIR'],
 ]
 OS_LIBS += ['-L%s/lib' % CONFIG['CUEMOL_DIR'],
     'cuemol2',
