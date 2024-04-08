@@ -60,4 +60,7 @@ sed "s!@CUEMOL_BUNDLE@!$BUNDLE_DIR!g" $SCRIPT_DIR/mozconfig_${ARCH} \
     | sed "s!@SDK_PATH@!$SDK_PATH!g" > .mozconfig
 ./mach build
 ./mach package
-popd
+
+ls -l obj-*/dist/cuemol2-*.dmg
+cp obj-*/dist/cuemol2-*.dmg ${GITHUB_WORKSPACE}/
+tar czvf ${GITHUB_WORKSPACE}/$ARTIFACT_NAME *.dmg
