@@ -100,13 +100,13 @@ function PovRender()
   }
   dd("this.mDefaultBlendExePath="+this.mDefaultBlendExePath);
   
-  this.mBlendExePath = this.mDefaultBlendExePath;
+  this.mStrBlendExePath = this.mDefaultBlendExePath;
   if (pref.has(blendpng_key)) {
     let strpath = pref.get(blendpng_key);
     if (util.chkCreateMozFile(strpath))
-      this.mBlendExePath = strpath;
+      this.mStrBlendExePath = strpath;
   }
-  dd("PovRender> blendpng path="+this.mBlendExePath);
+  dd("PovRender> blendpng path="+this.mStrBlendExePath);
   
 }
 
@@ -406,7 +406,7 @@ PovRender.prototype.startRender = function ()
 PovRender.prototype.setupPovPaths = function ()
 {
   var str_povexe = this.mPovExePath;
-  var str_blendpng_path = this.mBlendExePath;
+  var str_blendpng_path = this.mStrBlendExePath;
   var str_povinc = this.mPovIncPath;
 
   dd("doRenderImpl povpath="+str_povexe);
@@ -439,7 +439,7 @@ PovRender.prototype.setupPovPaths = function ()
 
   this.mPovExePath = povexe;
   this.mPovIncPath = povinc;
-  this.mBlendExePath = blendpng_path;
+  this.mStrBlendExePath = blendpng_path.path;
 
   // // blendpng/blendpng.exe path
   // if (this.mPlfName=="Windows_NT") {
@@ -588,7 +588,7 @@ PovRender.prototype.runBlendImgTask = function (aImgDir, aOutStem)
   var depends = this.mProcs.join(" ");
   dd("depends: "+depends);
 
-  var tid = procMgr.queueTask(this.mBlendExePath.path, strargs, depends);
+  var tid = procMgr.queueTask(this.mStrBlendExePath, strargs, depends);
   dd("blend task "+tid+" queued.");
   return tid;
 };
