@@ -7,6 +7,7 @@
 #ifndef INDEXED_TABLE_HPP_INCLUDED_
 #define INDEXED_TABLE_HPP_INCLUDED_
 
+#include "qlib.hpp"
 #include "GenericTable.hpp"
 
 namespace qlib {

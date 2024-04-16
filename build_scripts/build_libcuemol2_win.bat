@@ -21,7 +21,7 @@ cmake -S . -B build ^
  -DBoost_ROOT=%DEPLIBS_DIR%\boost_1_84_0 ^
  -DFFTW_ROOT=%DEPLIBS_DIR%\fftw-3.3.10 ^
  -DLCMS2_ROOT=%DEPLIBS_DIR%\lcms2-2.16 ^
- -DGLEW_ROOT=%DEPLIBS_DIR%\glew-2.1.0 ^
+ -DGLEW_ROOT=%DEPLIBS_DIR%\glew-2.2.0 ^
  -DLibLZMA_ROOT=%DEPLIBS_DIR%\xz-5.2.12 ^
  -DBUILD_PYTHON_BINDINGS=OFF ^
  -DBUILD_PYTHON_MODULE=OFF ^
@@ -29,6 +29,5 @@ cmake -S . -B build ^
  -DCGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE=TRUE ^
  -DCMAKE_BUILD_TYPE=Release
 
-cmake --build build --config Release
-cmake --install build --config Release
-
+# cmake --build build --config Release
+# cmake --install build --config Release

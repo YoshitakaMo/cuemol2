@@ -6,10 +6,6 @@
 
 #include <common.h>
 
-#ifdef WIN32
-#  include <windows.h>
-#endif
-
 #ifdef HAVE_GLEW
 #include <GL/glew.h>
 #pragma comment(lib, "glew32.lib")

@@ -11,6 +11,10 @@
 #include "sysdep.hpp"
 #include "OglView.hpp"
 
+#ifdef WIN32
+#  include <windows.h>
+#endif
+
 namespace sysdep {
 
   class WglDisplayContext;
