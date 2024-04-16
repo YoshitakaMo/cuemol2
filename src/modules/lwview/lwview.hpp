@@ -13,8 +13,10 @@
 
 #ifdef LWVIEW_EXPORTS
 # define LWVIEW_API __declspec(dllexport)
-#else
+#elif defined(LINK_SHARED)
 # define LWVIEW_API __declspec(dllimport)
+#else
+# define LWVIEW_API
 #endif
 
 #elif defined(MB_HAVE_GCC_VIS_ATTR)

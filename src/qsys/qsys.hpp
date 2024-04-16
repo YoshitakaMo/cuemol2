@@ -12,8 +12,10 @@
 // for MS-Windows
 #ifdef QSYS_EXPORTS
 # define QSYS_API __declspec(dllexport)
-#else
+#elif defined(LINK_SHARED)
 # define QSYS_API __declspec(dllimport)
+#else
+# define QSYS_API
 #endif
 
 #elif defined(MB_HAVE_GCC_VIS_ATTR)

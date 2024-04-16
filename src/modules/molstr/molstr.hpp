@@ -9,12 +9,14 @@
 #ifdef WIN32
 
 // for MS-Windows
-#define DLLEXPORT __declspec(dllexport)
+// #define DLLEXPORT __declspec(dllexport)
 
 #ifdef MOLSTR_EXPORTS
 # define MOLSTR_API __declspec(dllexport)
-#else
+#elif defined(LINK_SHARED)
 # define MOLSTR_API __declspec(dllimport)
+#else
+# define MOLSTR_API
 #endif
 
 #elif defined(MB_HAVE_GCC_VIS_ATTR)

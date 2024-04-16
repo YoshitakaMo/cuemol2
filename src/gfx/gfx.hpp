@@ -12,8 +12,10 @@
 // for MS-Windows
 #ifdef GFX_EXPORTS
 # define GFX_API __declspec(dllexport)
-#else
+#elif defined(LINK_SHARED)
 # define GFX_API __declspec(dllimport)
+#else
+# define GFX_API
 #endif
 
 #elif defined(MB_HAVE_GCC_VIS_ATTR)

@@ -16,8 +16,10 @@
 
 #ifdef MOLVIS_EXPORTS
 # define MOLVIS_API __declspec(dllexport)
-#else
+#elif defined(LINK_SHARED)
 # define MOLVIS_API __declspec(dllimport)
+#else
+# define MOLVIS_API
 #endif
 
 #elif defined(MB_HAVE_GCC_VIS_ATTR)

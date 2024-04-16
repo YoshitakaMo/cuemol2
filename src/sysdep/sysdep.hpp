@@ -10,8 +10,10 @@
 // for MS-Windows
 #ifdef SYSDEP_EXPORTS
 # define SYSDEP_API __declspec(dllexport)
-#else
+#elif defined(LINK_SHARED)
 # define SYSDEP_API __declspec(dllimport)
+#else
+# define SYSDEP_API
 #endif
 
 #elif defined(MB_HAVE_GCC_VIS_ATTR)

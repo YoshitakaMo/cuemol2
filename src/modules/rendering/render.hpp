@@ -13,8 +13,10 @@
 
 #ifdef RENDER_EXPORTS
 # define RENDER_API __declspec(dllexport)
-#else
+#elif defined(LINK_SHARED)
 # define RENDER_API __declspec(dllimport)
+#else
+# define RENDER_API
 #endif
 
 #elif defined(MB_HAVE_GCC_VIS_ATTR)

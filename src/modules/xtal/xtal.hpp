@@ -16,8 +16,10 @@
 
 #ifdef XTAL_EXPORTS
 # define XTAL_API __declspec(dllexport)
-#else
+#elif defined(LINK_SHARED)
 # define XTAL_API __declspec(dllimport)
+#else
+# define XTAL_API
 #endif
 
 #elif defined(MB_HAVE_GCC_VIS_ATTR)
