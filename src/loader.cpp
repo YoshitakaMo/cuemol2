@@ -191,15 +191,15 @@ namespace cuemol2 {
       lwview::init();
       anim::init();
 
-      // load other modules
-      render::init();
-      molvis::init();
-      xtal::init();
-      symm::init();
-      surface::init();
-      molanl::init();
-      mdtools::init();
-      importers::init();
+      // // load other modules
+      // render::init();
+      // molvis::init();
+      // xtal::init();
+      // symm::init();
+      // surface::init();
+      // molanl::init();
+      // mdtools::init();
+      // importers::init();
 
 #ifdef HAVE_JAVASCRIPT
       // load internal JS module
@@ -244,16 +244,16 @@ namespace cuemol2 {
   MB_DPRINTLN("=== jsbr::fini() OK ===");
 #endif
 
-    // load other modules
-    render::fini();
-    molvis::fini();
-    xtal::fini();
-    symm::fini();
-    surface::fini();
-    molanl::fini();
+    // // load other modules
+    // render::fini();
+    // molvis::fini();
+    // xtal::fini();
+    // symm::fini();
+    // surface::fini();
+    // molanl::fini();
 
-    anim::fini();
-    lwview::fini();
+    // anim::fini();
+    // lwview::fini();
     molstr::fini();
     MB_DPRINTLN("=== molstr::fini() OK ===");
 

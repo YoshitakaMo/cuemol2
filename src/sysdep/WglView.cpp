@@ -7,8 +7,9 @@
 #include <common.h>
 
 #ifdef HAVE_GLEW
+#define GLEW_STATIC
 #include <GL/glew.h>
-#pragma comment(lib, "glew32.lib")
+// #pragma comment(lib, "glew32.lib")
 #endif
 
 #include <GL/gl.h>

@@ -132,6 +132,7 @@ if (WIN32)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE})
   add_definitions(-DBOOST_ALL_NO_LIB)
   add_definitions(-DBOOST_ALL_DYN_LINK)
+  add_definitions(-DCGAL_NO_AUTOLINK_CGAL=1)
 endif()
 
 #####
@@ -208,14 +209,14 @@ SET(CUEMOL2_LINK_LIBRARIES
   gfx
   qsys
   molstr
+  lwview
+  anim
   molvis
   surface
   molanl
   symm
   xtal
-  lwview
   render
-  anim
   mdtools
   importers
   Boost::filesystem

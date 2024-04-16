@@ -7,6 +7,7 @@
 #include <common.h>
 
 #ifdef HAVE_GL_GLEW_H
+#  define GLEW_STATIC
 #  include <GL/glew.h>
 #endif
 
