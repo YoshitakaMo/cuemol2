@@ -236,6 +236,8 @@ if (BUILD_OPENGL_SYSDEP)
   list(APPEND CUEMOL2_LINK_LIBRARIES sysdep)
 endif ()
 
+##########
+
 add_library(cuemol2 SHARED)
 target_include_directories(
   cuemol2 PRIVATE
@@ -244,6 +246,7 @@ target_include_directories(
   ${Boost_INCLUDE_DIRS}
 )
 target_link_libraries(cuemol2 PRIVATE ${CUEMOL2_LINK_LIBRARIES})
+target_compile_definitions(cuemol2 PUBLIC LIBCUEMOL_EXPORTS=1)
 
 target_sources(cuemol2
   PRIVATE loader.cpp

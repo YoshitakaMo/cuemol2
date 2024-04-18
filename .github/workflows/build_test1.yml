@@ -5,9 +5,6 @@ on:
 
 ###############################################
 
-env:
-  PYTHON_VERSION: 2.7
-
 jobs:
   build_mac_arm64:
     name: "MacOS 14 arm64 clang"
@@ -17,6 +14,12 @@ jobs:
 
     - name: Run sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.4
+
+    - name: Install prerequsites
+      shell: bash
+      run: |
+        brew install bison autoconf@2.13
+        bison --version
 
     - name: Install deplibs and build libcuemol2
       shell: bash
@@ -31,7 +34,7 @@ jobs:
       env:
         SCCACHE_GHA_ENABLED: "true"
       run: |
-        brew install pyenv zlib autoconf@2.13
+        brew install pyenv zlib
 
         export PYENV_ROOT="$HOME/.pyenv"
         command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"

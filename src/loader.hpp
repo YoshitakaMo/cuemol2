@@ -1,5 +1,16 @@
 #pragma once
 
+#ifdef WIN32
+// for Windows
+#ifdef LIBCUEMOL_EXPORTS
+#define LIBCUEMOL_API __declspec(dllexport)
+#elif defined(LINK_SHARED)
+#define LIBCUEMOL_API __declspec(dllimport)
+#else
+#define LIBCUEMOL_API
+#endif
+#endif
+
 #include <common.h>
 
 namespace qlib { class LString; }
@@ -8,15 +19,15 @@ namespace sysdep { class MouseEventHandler; }
 
 namespace cuemol2 {
 
-  int init_qlib() noexcept;
-  int init(const qlib::LString &confpath, bool reg_view) noexcept;
+  LIBCUEMOL_API int init_qlib() noexcept;
+  LIBCUEMOL_API int init(const qlib::LString &confpath, bool reg_view) noexcept;
 
-  int fini();
+  LIBCUEMOL_API int fini();
   
 #ifdef BUILD_OPENGL_SYSDEP
-  gfx::TextRenderImpl *initTextRender();
-  void finiTextRender(gfx::TextRenderImpl *pTR);
-  sysdep::MouseEventHandler *createMouseEventHander();
+  LIBCUEMOL_API gfx::TextRenderImpl *initTextRender();
+  LIBCUEMOL_API void finiTextRender(gfx::TextRenderImpl *pTR);
+  LIBCUEMOL_API sysdep::MouseEventHandler *createMouseEventHander();
 #endif
     
 } // namespace cuemol2
