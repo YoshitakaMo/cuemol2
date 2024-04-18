@@ -1387,8 +1387,6 @@ bool RendIntData::isVertVisible(const Vector4D &vert,
   return true;
 }
 
-#if 0
-
 bool RendIntData::isVertSilVisible(const Vector4D &vert,
                                    int iv)
 {
@@ -1948,60 +1946,3 @@ void RendIntData::writeCornerPoints(PrintStream &ps)
     
   }
 }
-
-#endif
-/*
-bool RendIntData::isVertVisible(const Vector4D &vert,
-                                int iv)
-{
-  return true;
-}
-*/
-bool RendIntData::isVertSilVisible(const Vector4D &vert,
-                                   int iv)
-{
-  return true;
-}
-bool RendIntData::isVertSilVisible2(const Vector4D &vert,
-                                    int iv1, int iv2)
-{
-  return true;
-}
-void RendIntData::buildVertVisList()
-{
-}
-void RendIntData::buildAABBTree(int nexcl_mode)
-{
-}
-void RendIntData::calcEdgeIntrsec()
-{
-}
-void RendIntData::calcSilhIntrsec(double divw)
-{
-}
-void RendIntData::cleanupSilEdgeLines()
-{
-}
-void RendIntData::writeEdgeLines(PrintStream &ps)
-{
-}
-void RendIntData::writeEdgeLine(PrintStream &ps, const SEEdge &elem)
-{
-}
-void RendIntData::writeEdgeLine(PrintStream &ips,
-                                const Vector4D &v1, const Vector4D &v2,
-                                const Vector4D &n1, const Vector4D &n2,
-                                int alpha1, int alpha2,
-                                int flag /*=0*/)
-{
-}
-void RendIntData::writeEdgeLine(PrintStream &ips, const SEEdge &elem, double fsec1, double fsec2)
-{
-}
-void RendIntData::writeSilhLines(PrintStream &ps)
-{
-}
-void RendIntData::writeCornerPoints(PrintStream &ps)
-{
-}
-
