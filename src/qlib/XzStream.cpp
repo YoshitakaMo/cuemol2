@@ -11,6 +11,7 @@
 
 #ifdef HAVE_LZMA_H
 
+#define LZMA_API_STATIC
 #include <lzma.h>
 
 using namespace qlib;

@@ -18,9 +18,15 @@ option(BUILD_PYTHON_MODULE  "Build Python modules (not embedding)")
 option(BUILD_MINIMUM_MODULES "Build CueMol with minimum modules." OFF)
 option(BUILD_XPCJS_BINDINGS "Build XPCOM-js bindings")
 
-find_package(Perl REQUIRED)
-find_package(BISON REQUIRED)
-find_package(FLEX REQUIRED)
+find_package(Perl 5.10.0 REQUIRED)
+message(STATUS "PERL_EXECUTABLE: ${PERL_EXECUTABLE}")
+find_package (Python3 3.6 COMPONENTS Interpreter)
+message(STATUS "Python3_EXECUTABLE: ${Python3_EXECUTABLE}")
+find_package(BISON 3.7.4 REQUIRED)
+find_package(FLEX 2.6.4 REQUIRED)
+
+find_package(Git REQUIRED)
+message(STATUS "GIT_EXECUTABLE: ${GIT_EXECUTABLE}")
 
 if (APPLE)
   # set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" CACHE STRING "" FORCE)

@@ -13,8 +13,10 @@
 
 #ifdef MDTOOLS_EXPORTS
 # define MDTOOLS_API __declspec(dllexport)
-#else
+#elif defined(LINK_SHARED)
 # define MDTOOLS_API __declspec(dllimport)
+#else
+# define MDTOOLS_API
 #endif
 
 #elif defined(MB_HAVE_GCC_VIS_ATTR)

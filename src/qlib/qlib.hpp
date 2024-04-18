@@ -12,8 +12,10 @@
 // for MS-Windows
 #ifdef QLIB_EXPORTS
 #define QLIB_API __declspec(dllexport)
-#else
+#elif defined(LINK_SHARED)
 #define QLIB_API __declspec(dllimport)
+#else
+#define QLIB_API
 #endif
 
 #elif defined(MB_HAVE_GCC_VIS_ATTR)

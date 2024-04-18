@@ -13,8 +13,10 @@
 
 #ifdef ANIM_EXPORTS
 # define ANIM_API __declspec(dllexport)
-#else
+#elif defined(LINK_SHARED)
 # define ANIM_API __declspec(dllimport)
+#else
+# define ANIM_API
 #endif
 
 #elif defined(MB_HAVE_GCC_VIS_ATTR)

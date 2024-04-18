@@ -17,8 +17,10 @@
 
 #ifdef SURFACE_EXPORTS
 # define SURFACE_API __declspec(dllexport)
-#else
+#elif defined(LINK_SHARED)
 # define SURFACE_API __declspec(dllimport)
+#else
+# define SURFACE_API
 #endif
 
 #elif defined(MB_HAVE_GCC_VIS_ATTR)

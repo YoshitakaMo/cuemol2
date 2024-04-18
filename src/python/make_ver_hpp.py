@@ -8,21 +8,22 @@ def create_argparser():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--input_path", type=str, default=None, required=True)
     parser.add_argument("-o", "--output_path", type=str, default=None)
+    parser.add_argument("--git", type=str, default="git")
     args = parser.parse_args()
     return args
 
 
-def get_git_hash():
+def get_git_hash(git_path):
     path = Path(__file__)
     path = path.parent
-    cmd = ["git", "-C", path, "rev-parse", "--short", "HEAD"]
+    cmd = [git_path, "-C", path, "rev-parse", "--short", "HEAD"]
     print(f"{cmd=}")
     commit_hash = subprocess.check_output(cmd)
     commit_hash = commit_hash.decode('utf-8').strip()
     return commit_hash
 
 
-def create_ver_hpp(ver_maj, ver_min, ver_rev, ver_build):
+def create_ver_hpp(git_path, ver_maj, ver_min, ver_rev, ver_build):
     template = """//
 // Version info
 //
@@ -37,7 +38,7 @@ def create_ver_hpp(ver_maj, ver_min, ver_rev, ver_build):
 #define QUE_VERSION_STRING "Version " STRPRODUCTVER " build " STRBUILD_ID
 """
 
-    build_id = get_git_hash()
+    build_id = get_git_hash(git_path)
 
     template = template.format(v1=ver_maj,
                                v2=ver_min,
@@ -62,7 +63,7 @@ def main():
         ver_rev = int(m.group(3))
         ver_build = int(m.group(4))
     
-    str_ver_hpp = create_ver_hpp(ver_maj, ver_min, ver_rev, ver_build)
+    str_ver_hpp = create_ver_hpp(args.git, ver_maj, ver_min, ver_rev, ver_build)
     if args.output_path is None:
         return
 

@@ -132,6 +132,7 @@ if (WIN32)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE})
   add_definitions(-DBOOST_ALL_NO_LIB)
   add_definitions(-DBOOST_ALL_DYN_LINK)
+  add_definitions(-DLINK_STATIC)
 endif()
 
 #####
@@ -208,14 +209,14 @@ SET(CUEMOL2_LINK_LIBRARIES
   gfx
   qsys
   molstr
+  lwview
+  anim
   molvis
   surface
   molanl
   symm
   xtal
-  lwview
   render
-  anim
   mdtools
   importers
   Boost::filesystem
@@ -235,6 +236,8 @@ if (BUILD_OPENGL_SYSDEP)
   list(APPEND CUEMOL2_LINK_LIBRARIES sysdep)
 endif ()
 
+##########
+
 add_library(cuemol2 SHARED)
 target_include_directories(
   cuemol2 PRIVATE
@@ -243,6 +246,7 @@ target_include_directories(
   ${Boost_INCLUDE_DIRS}
 )
 target_link_libraries(cuemol2 PRIVATE ${CUEMOL2_LINK_LIBRARIES})
+target_compile_definitions(cuemol2 PUBLIC LIBCUEMOL_EXPORTS=1)
 
 target_sources(cuemol2
   PRIVATE loader.cpp

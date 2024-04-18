@@ -8,7 +8,7 @@
 #include "CmsXform.hpp"
 
 #ifdef HAVE_LCMS2_H
-#define CMS_DLL
+// #define CMS_DLL
 #include <lcms2.h>
 #else
 typedef void *cmsHTRANSFORM;

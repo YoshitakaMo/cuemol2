@@ -1,4 +1,4 @@
-SET(MCWRAPGEN "perl ${CMAKE_SOURCE_DIR}/src/perl/mcwrapgen3.pl")
+SET(MCWRAPGEN "${PERL_EXECUTABLE} ${CMAKE_SOURCE_DIR}/src/perl/mcwrapgen3.pl")
 
 if (WIN32)
   SET(MCWRAPGEN "${MCWRAPGEN} -MSVC")

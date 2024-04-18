@@ -9,6 +9,7 @@
 #include "sysdep.hpp"
 
 #ifdef HAVE_GLEW
+#  define GLEW_STATIC
 #  include <GL/glew.h>
 #endif
 
