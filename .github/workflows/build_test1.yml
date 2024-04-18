@@ -62,7 +62,7 @@ jobs:
         which python
         python --version
         bash build_scripts/build_uxpgui_macos.sh $HOME ${{ runner.arch }}
-        
+
         cd ${GITHUB_WORKSPACE}/
 
     - name: Upload artifact

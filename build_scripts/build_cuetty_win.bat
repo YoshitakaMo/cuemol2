@@ -1,6 +1,6 @@
 if "%1"=="" (
    echo "arg1 not specified"
-   exit /b   
+   exit /b
 )
 
 REM SET DEPLIBS_DIR=c:\proj64_deplibs
@@ -8,7 +8,7 @@ SET DEPLIBS_DIR=%1
 
 if not exist %DEPLIBS_DIR% (
    echo "DEPLIBS_DIR not exists " %DEPLIBS_DIR%
-   exit /b   
+   exit /b
 )
 
 echo "DEPLIBS_DIR: " %DEPLIBS_DIR%

@@ -55,9 +55,6 @@ else()
   target_compile_options(render PUBLIC "-fPIC")
 endif()
 
-# add_definitions(-DCGAL_NO_AUTOLINK_CGAL=1)
-# add_definitions(-DCGAL_LIB_DIAGNOSTIC=1)
-
 target_link_libraries(render PRIVATE qlib gfx qsys CGAL::CGAL qmpng qmzlib Boost::filesystem)
 
 MCWRAPGEN_SCR_WRAPPERS(render)

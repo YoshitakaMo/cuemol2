@@ -122,7 +122,6 @@ add_library(molstr STATIC ${MOLSTR_SRCS} ${MCWG_HEADERS})
 
 if (WIN32)
   add_definitions(-DMOLSTR_EXPORTS=1)
-  add_definitions(-DCGAL_NO_AUTOLINK_CGAL=1)
 else()
   target_compile_options(molstr PUBLIC "-fPIC")
 endif()

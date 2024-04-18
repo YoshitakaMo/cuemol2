@@ -77,7 +77,6 @@ add_library(surface STATIC ${SURFACE_SRCS} ${MCWG_HEADERS})
 
 if (WIN32)
   add_definitions(-DSURFACE_EXPORTS=1)
-  add_definitions(-DCGAL_NO_AUTOLINK_CGAL=1)
 else()
   target_compile_options(surface PUBLIC "-fPIC")
 endif()
