@@ -69,7 +69,7 @@ HWND XPCNativeWidgetWin::createNativeChildWnd()
   wc.hCursor       = NULL;
   wc.hbrBackground = (HBRUSH)::GetStockObject(NULL_BRUSH);
   wc.lpszMenuName  = NULL;
-  wc.lpszClassName = L"CueMol2NativeWidget";
+  wc.lpszClassName = TEXT("CueMol2NativeWidget");
   wc.hIconSm = NULL;
 
   if (::RegisterClassEx(&wc)==0) {
@@ -87,7 +87,7 @@ HWND XPCNativeWidgetWin::createNativeChildWnd()
   if (height<0) height = 0;
 
   HWND wnd = CreateWindow(wc.lpszClassName,
-                          L"native view",
+                          TEXT("native view"),
                           WS_CHILD|WS_VISIBLE|WS_CLIPSIBLINGS|WS_CLIPCHILDREN,
                           0, 0, width, height,
                           m_hParWnd,
