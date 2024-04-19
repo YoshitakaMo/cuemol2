@@ -69,7 +69,10 @@ if CONFIG['HAVE_CLOCK_MONOTONIC']:
 #####
 # helper applications
 
-FINAL_TARGET_FILES += ['%%%s/bin/blendpng' % CONFIG['CUEMOL_DIR']]
+if CONFIG['OS_ARCH'] == 'WINNT':
+    FINAL_TARGET_FILES += ['%%%s/bin/blendpng.exe' % CONFIG['CUEMOL_DIR']]
+else:
+    FINAL_TARGET_FILES += ['%%%s/bin/blendpng' % CONFIG['CUEMOL_DIR']]
 
 if CONFIG['CUEMOL_BUNDLE_DIR']:
     # povray
