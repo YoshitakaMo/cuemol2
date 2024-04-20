@@ -15,7 +15,7 @@ DEPLIBS_VERSION=v0.0.3
 # DEPLIBS_VERSION=v0.0.1
 wget --progress=dot:mega -c \
      https://github.com/CueMol/build_scripts/releases/download/$DEPLIBS_VERSION/$DEPLIBS_TGZ
-xattr -cr $DEPLIBS_TGZ
+# xattr -cr $DEPLIBS_TGZ
 tar xjf $DEPLIBS_TGZ
 
 mv target/* $BASEDIR/
