@@ -40,13 +40,20 @@ jobs:
         ls -la $BASEDIR/cuemol2/bin/cuetty
         $BASEDIR/cuemol2/bin/cuetty
         
-    # - name: Upload artifact
-    #   env:
-    #     ARTIFACT_NAME: cuemol2_${{ runner.os }}_${{ runner.arch }}.tar.bz2
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: cuemol2_macos_arm64
-    #     path: ${{ env.ARTIFACT_NAME }}
+    - name: Build UXP GUI
+      id: build-artifact
+      uses: ./build_scripts/build_uxpgui_posix
+      with:
+        basedir: ${{ github.workspace }}/target
+
+    - name: Upload artifact
+      # env:
+      #   ARTIFACT_NAME: cuemol2_${{ runner.os }}_${{ runner.arch }}.tar.bz2
+      uses: actions/upload-artifact@v4
+      with:
+        name: cuemol2_macos_arm64
+        path: ${{ steps.build-artifact.outputs.artifact-path }}
+        # path: ${{ env.ARTIFACT_NAME }}
 
   # build_linux_x64:
   #   name: "Linux ubuntu 22.04 x64 gcc"
