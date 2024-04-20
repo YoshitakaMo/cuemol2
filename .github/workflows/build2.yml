@@ -27,6 +27,13 @@ jobs:
       with:
         basedir: ${{ github.workspace }}/target
 
+    - name: Check cuetty run
+      shell: bash
+      run: |
+        set -eux
+        ls -la ${{ github.workspace }}/target/cuemol2/bin/cuetty
+        ${{ github.workspace }}/target/cuemol2/bin/cuetty
+        
     # - name: Upload artifact
     #   env:
     #     ARTIFACT_NAME: cuemol2_${{ runner.os }}_${{ runner.arch }}.tar.bz2
