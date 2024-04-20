@@ -45,5 +45,5 @@ cmake ${GITHUB_WORKSPACE} \
       -DCGAL_DISABLE_GMP=TRUE \
       -DCGAL_HEADER_ONLY=TRUE
 
-make -j 8
+make #-j 8
 make install
