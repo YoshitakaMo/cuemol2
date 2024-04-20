@@ -16,7 +16,7 @@ runs:
   - name: Install prerequsites
     shell: bash
     run: |
-      brew install bison autoconf@2.13
+      brew install bison
       export PATH="/opt/homebrew/opt/bison/bin:$PATH"
       bison --version
 

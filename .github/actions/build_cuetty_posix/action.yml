@@ -1,0 +1,22 @@
+name: 'Build cuetty posix'
+description: 'Build cuetty posix'
+
+# inputs:
+#   runner_arch:
+#     description: 'runner arch'
+#     required: true
+
+#   runner_os:
+#     description: 'runner os'
+#     required: true
+
+runs:
+  using: "composite"
+  steps:
+  - name: Build and install cuetty
+    shell: bash
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+    run: |
+      cd ${GITHUB_WORKSPACE}
+      bash build_scripts/build_cuetty_posix.sh $HOME ${{ runner.arch }}

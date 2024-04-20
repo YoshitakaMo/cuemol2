@@ -20,6 +20,8 @@ jobs:
     - name: Build libcuemol2
       uses: ./.github/actions/build_libcuemol2_posix
 
+    - name: Build cuetty
+      uses: ./.github/actions/build_cuetty_posix
 
     # - name: Upload artifact
     #   env:
