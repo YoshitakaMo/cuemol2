@@ -2,8 +2,8 @@
 set -eux
 
 BASEDIR=$1
-RUNNER_ARCH=$2
-RUNNER_OS=$3
+RUNNER_OS=$2
+RUNNER_ARCH=$3
 TMPDIR=$BASEDIR/tmp
 
 # Build
