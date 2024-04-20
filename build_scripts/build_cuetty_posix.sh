@@ -27,4 +27,4 @@ cmake -S ${GITHUB_WORKSPACE}/cli -B $BUILD_DIR \
 make -j 8
 make install
 
-cp $BASEDIR/boost_1_84/lib/*.dylib $BASEDIR/cuemol2/lib
+cp $BASEDIR/boost_1_84/lib/* $BASEDIR/cuemol2/lib

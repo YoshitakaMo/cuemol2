@@ -2,20 +2,9 @@
 set -eux
 
 BASEDIR=$1
-ARCH=$2
+RUNNER_ARCH=$2
+RUNNER_OS=$3
 TMPDIR=$BASEDIR/tmp
-
-mkdir -p $TMPDIR
-cd $TMPDIR
-
-# Retrieve deplibs binary
-DEPLIBS_TGZ=deplibs_macOS_${ARCH}.tar.bz2
-DEPLIBS_VERSION=v0.0.1
-wget --progress=dot:mega -c \
-     https://github.com/CueMol/build_scripts/releases/download/$DEPLIBS_VERSION/$DEPLIBS_TGZ
-xattr -cr $DEPLIBS_TGZ
-tar xjf $DEPLIBS_TGZ
-mv builds/* $BASEDIR/
 
 # Build
 BUILD_DIR=$BASEDIR/build_libcuemol2

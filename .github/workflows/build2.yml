@@ -17,6 +17,11 @@ jobs:
     - name: Run sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.4
 
+    - name: Download deplibs
+      uses: ./build_scripts/download_deplibs
+      with:
+        basedir: ${{ github.workspace }}/target
+
     - name: Build libcuemol2
       uses: ./.github/actions/build_libcuemol2_posix
       with:
@@ -42,3 +47,35 @@ jobs:
     #   with:
     #     name: cuemol2_macos_arm64
     #     path: ${{ env.ARTIFACT_NAME }}
+
+  build_linux_x64:
+    name: "Linux"
+    runs-on: macos-14
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Run sccache-cache
+      uses: mozilla-actions/sccache-action@v0.0.4
+
+    - name: Download deplibs
+      uses: ./build_scripts/download_deplibs
+      with:
+        basedir: ${{ github.workspace }}/target
+
+    - name: Build libcuemol2
+      uses: ./.github/actions/build_libcuemol2_posix
+      with:
+        basedir: ${{ github.workspace }}/target
+
+    - name: Build cuetty
+      uses: ./.github/actions/build_cuetty_posix
+      with:
+        basedir: ${{ github.workspace }}/target
+
+    - name: Check cuetty run
+      shell: bash
+      run: |
+        set -eux
+        BASEDIR=${{ github.workspace }}/target
+        ls -la $BASEDIR/cuemol2/bin/cuetty
+        $BASEDIR/cuemol2/bin/cuetty
