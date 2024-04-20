@@ -2,7 +2,6 @@
 set -eux
 
 BASEDIR=$1
-ARCH=$2
 BOOST_VER=boost_1_84_0
 
 # Install location
@@ -25,7 +24,7 @@ cmake -S ${GITHUB_WORKSPACE}/cli -B $BUILD_DIR \
       -DLIBCUEMOL2_ROOT=$BASEDIR\cuemol2 \
       -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
-make -j 8
+make # -j 8
 make install
 
 ls -la $BASEDIR/$BOOST_VER/lib/lib*

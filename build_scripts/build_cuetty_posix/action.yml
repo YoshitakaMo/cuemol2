@@ -6,14 +6,6 @@ inputs:
      description: 'base dir'
      required: true
 
-#   runner_arch:
-#     description: 'runner arch'
-#     required: true
-
-#   runner_os:
-#     description: 'runner os'
-#     required: true
-
 runs:
   using: "composite"
   steps:
@@ -23,4 +15,4 @@ runs:
       SCCACHE_GHA_ENABLED: "true"
     run: |
       cd ${GITHUB_WORKSPACE}
-      bash build_scripts/build_cuetty_posix.sh ${{ inputs.basedir }} ${{ runner.arch }}
+      bash build_scripts/build_cuetty_posix/run.sh ${{ inputs.basedir }}

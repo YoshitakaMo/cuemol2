@@ -1,0 +1,43 @@
+name: 'Build UXP GUI posix'
+description: 'Build UXP GUI posix'
+
+inputs:
+  basedir:
+     description: 'base dir'
+     required: true
+
+runs:
+  using: "composite"
+  steps:
+  - name: Install python2
+    shell: bash
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+    run: |
+      brew install pyenv zlib
+
+      export PYENV_ROOT="$HOME/.pyenv"
+      command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+      eval "$(pyenv init -)"
+
+      env CC="sccache clang" CXX=="sccache clang++" LDFLAGS="-L/opt/homebrew/opt/zlib/lib" CPPFLAGS="-I/opt/homebrew/opt/zlib/include" PKG_CONFIG_PATH="/opt/homebrew/opt/zlib/lib/pkgconfig" pyenv install 2.7.18
+      pyenv global 2.7.18
+      pyenv versions
+      python --version
+
+    - name: Build UXP GUI
+      shell: bash
+      env:
+        SCCACHE_GHA_ENABLED: "true"
+        ARTIFACT_NAME: cuemol2_${{ runner.os }}_${{ runner.arch }}.tar.bz2
+      run: |
+        export PYENV_ROOT="$HOME/.pyenv"
+        command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+        eval "$(pyenv init -)"
+        pyenv global 2.7.18
+
+        cd ${GITHUB_WORKSPACE}
+        which python
+        python --version
+        bash build_scripts/build_uxpgui_posix/run.sh ${{ inputs.basedir }} ${{ runner.os }} ${{ runner.arch }}
+

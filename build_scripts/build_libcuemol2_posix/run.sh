@@ -5,6 +5,7 @@ BASEDIR=$1
 RUNNER_OS=$2
 RUNNER_ARCH=$3
 TMPDIR=$BASEDIR/tmp
+NCPU=8
 
 # Build
 BUILD_DIR=$BASEDIR/build_libcuemol2
@@ -45,5 +46,5 @@ cmake ${GITHUB_WORKSPACE} \
       -DCGAL_DISABLE_GMP=TRUE \
       -DCGAL_HEADER_ONLY=TRUE
 
-make #-j 8
+make -j $NCPU
 make install
