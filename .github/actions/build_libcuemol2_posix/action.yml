@@ -1,7 +1,11 @@
 name: 'Build libcuemol2 posix'
 description: 'Build libcuemol2 posix'
 
-# inputs:
+inputs:
+  basedir:
+     description: 'base dir'
+     required: true
+
 #   runner_arch:
 #     description: 'runner arch'
 #     required: true
@@ -27,4 +31,4 @@ runs:
     run: |
       cd ${GITHUB_WORKSPACE}
       export PATH="/opt/homebrew/opt/bison/bin:$PATH"
-      bash build_scripts/build_libcuemol2_macos.sh $HOME ${{ runner.arch }}
+      bash build_scripts/build_libcuemol2_macos.sh ${{ inputs.basedir }} ${{ runner.arch }}

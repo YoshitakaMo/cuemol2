@@ -1,7 +1,11 @@
 name: 'Build cuetty posix'
 description: 'Build cuetty posix'
 
-# inputs:
+inputs:
+  basedir:
+     description: 'base dir'
+     required: true
+
 #   runner_arch:
 #     description: 'runner arch'
 #     required: true
@@ -19,4 +23,4 @@ runs:
       SCCACHE_GHA_ENABLED: "true"
     run: |
       cd ${GITHUB_WORKSPACE}
-      bash build_scripts/build_cuetty_posix.sh $HOME ${{ runner.arch }}
+      bash build_scripts/build_cuetty_posix.sh ${{ inputs.basedir }} ${{ runner.arch }}

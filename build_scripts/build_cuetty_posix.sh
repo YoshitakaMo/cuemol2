@@ -17,7 +17,7 @@ BUILD_TYPE=Release
 
 ls -la $BASEDIR
 
-cmake -S ${GITHUB_WORKSPACE} -B $BUILD_DIR \
+cmake -S ${GITHUB_WORKSPACE}/cli -B $BUILD_DIR \
       -DCMAKE_INSTALL_PREFIX=$INST_PATH \
       -DCMAKE_PREFIX_PATH=$BASEDIR \
       -DBoost_ROOT=$BASEDIR/boost_1_84/ \
