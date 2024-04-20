@@ -1,0 +1,30 @@
+name: 'Build libcuemol2 posix'
+description: 'Build libcuemol2 posix'
+
+# inputs:
+#   runner_arch:
+#     description: 'runner arch'
+#     required: true
+
+#   runner_os:
+#     description: 'runner os'
+#     required: true
+
+runs:
+  using: composite
+  steps:
+  - name: Install prerequsites
+    shell: bash
+    run: |
+      brew install bison autoconf@2.13
+      export PATH="/opt/homebrew/opt/bison/bin:$PATH"
+      bison --version
+
+  - name: Install deplibs and build libcuemol2
+    shell: bash
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+    run: |
+      cd ${GITHUB_WORKSPACE}
+      export PATH="/opt/homebrew/opt/bison/bin:$PATH"
+      bash build_scripts/build_libcuemol2_macos.sh $HOME ${{ runner.arch }}
