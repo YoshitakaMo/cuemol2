@@ -18,7 +18,7 @@ jobs:
       uses: mozilla-actions/sccache-action@v0.0.4
 
     - name: Build libcuemol2
-      uses: CueMol/cuemol2/.github/actions/build_libcuemol2_posix
+      uses: ./.github/actions/build_libcuemol2_posix
 
 
     # - name: Upload artifact

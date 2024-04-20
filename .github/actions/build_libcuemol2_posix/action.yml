@@ -11,7 +11,7 @@ description: 'Build libcuemol2 posix'
 #     required: true
 
 runs:
-  using: composite
+  using: "composite"
   steps:
   - name: Install prerequsites
     shell: bash
