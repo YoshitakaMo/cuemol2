@@ -12,8 +12,15 @@ runs:
   - name: Install prerequsites
     shell: bash
     run: |
-      brew install bison
-      export PATH="/opt/homebrew/opt/bison/bin:$PATH"
+      if [ ${{ runner.os }} = "macOS" ]; then
+        brew install bison
+        export PATH="/opt/homebrew/opt/bison/bin:$PATH"
+      elif [ ${{ runner.os }} = "Linux" ]; then
+        echo "XXX"
+      else
+        echo "unknown runner os: ${{ runner.os }}"
+        exit 1
+      fi
       bison --version
 
   - name: Install deplibs and build libcuemol2
@@ -22,5 +29,7 @@ runs:
       SCCACHE_GHA_ENABLED: "true"
     run: |
       cd ${GITHUB_WORKSPACE}
-      export PATH="/opt/homebrew/opt/bison/bin:$PATH"
+      if [ ${{ runner.os }} = "macOS" ]; then
+        export PATH="/opt/homebrew/opt/bison/bin:$PATH"
+      fi
       bash build_scripts/build_libcuemol2_macos.sh ${{ inputs.basedir }} ${{ runner.os }} ${{ runner.arch }}
