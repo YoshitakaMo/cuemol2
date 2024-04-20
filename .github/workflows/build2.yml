@@ -20,12 +20,12 @@ jobs:
     - name: Build libcuemol2
       uses: ./.github/actions/build_libcuemol2_posix
       with:
-        basedir: ${{ env.GITHUB_WORKSPACE }}/target
+        basedir: ${{ github.workspace }}/target
 
     - name: Build cuetty
       uses: ./.github/actions/build_cuetty_posix
       with:
-        basedir: ${{ env.GITHUB_WORKSPACE }}/target
+        basedir: ${{ github.workspace }}/target
 
     # - name: Upload artifact
     #   env:
