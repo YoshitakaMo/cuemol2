@@ -8,17 +8,17 @@ on:
 ###############################################
 
 jobs:
-  # build_mac_arm64:
   build_posix:
-    name: '${{ matrix.os }}'
+    name: '${{ matrix.name }}'
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-14, macos-12]
-
-    # name: "MacOS 14 arm64 clang"
-    # runs-on: macos-14
+        include:
+          - os: macos-14
+            name: "MacOS 14 arm64 clang"
+          - os: macos-12
+            name: "MacOS 12 x64 clang"
 
     steps:
     - uses: actions/checkout@v4
@@ -61,35 +61,22 @@ jobs:
         name: cuemol2_macos_arm64
         path: ${{ steps.build-artifact.outputs.artifact-path }}
 
+###############################################
 
-  # build_linux_x64:
-  #   name: "Linux ubuntu 22.04 x64 gcc"
-  #   runs-on: ubuntu-22.04
-  #   steps:
-  #   - uses: actions/checkout@v4
+  release_build:
+    needs: [build_posix]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download All Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: artifacts
+        merge-multiple: true
+    - run: |
+        ls -lR
 
-  #   - name: Run sccache-cache
-  #     uses: mozilla-actions/sccache-action@v0.0.4
-
-  #   - name: Download deplibs
-  #     uses: ./build_scripts/download_deplibs
-  #     with:
-  #       basedir: ${{ github.workspace }}/target
-
-  #   - name: Build libcuemol2
-  #     uses: ./.github/actions/build_libcuemol2_posix
-  #     with:
-  #       basedir: ${{ github.workspace }}/target
-
-  #   - name: Build cuetty
-  #     uses: ./.github/actions/build_cuetty_posix
-  #     with:
-  #       basedir: ${{ github.workspace }}/target
-
-  #   - name: Check cuetty run
-  #     shell: bash
-  #     run: |
-  #       set -eux
-  #       BASEDIR=${{ github.workspace }}/target
-  #       ls -la $BASEDIR/cuemol2/bin/cuetty
-  #       $BASEDIR/cuemol2/bin/cuetty
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: artifacts/*
