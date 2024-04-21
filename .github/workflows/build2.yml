@@ -28,8 +28,10 @@ jobs:
 
     - shell: bash
       run: |
-        SDK_PATH=$(dirname $(xcrun --show-sdk-path))
-        echo $SDK_PATH/MacOSX*.*.sdk
+        # SDK_PATH=$(dirname $(xcrun --show-sdk-path))
+        SDK_PATH=$(echo $(dirname $(xcrun --show-sdk-path))/MacOSX*.*.sdk | sort | tail -1)
+        echo $SDK_PATH
+        ls -la $SDK_PATH
         xcrun --show-sdk-version
 
     - name: Download deplibs
