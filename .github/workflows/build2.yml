@@ -8,9 +8,18 @@ on:
 ###############################################
 
 jobs:
-  build_mac_arm64:
-    name: "MacOS 14 arm64 clang"
-    runs-on: macos-14
+  # build_mac_arm64:
+  build_posix:
+    name: '${{ matrix.os }}'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, macos-12]
+
+    # name: "MacOS 14 arm64 clang"
+    # runs-on: macos-14
+
     steps:
     - uses: actions/checkout@v4
 
@@ -47,13 +56,11 @@ jobs:
         basedir: ${{ github.workspace }}/target
 
     - name: Upload artifact
-      # env:
-      #   ARTIFACT_NAME: cuemol2_${{ runner.os }}_${{ runner.arch }}.tar.bz2
       uses: actions/upload-artifact@v4
       with:
         name: cuemol2_macos_arm64
         path: ${{ steps.build-artifact.outputs.artifact-path }}
-        # path: ${{ env.ARTIFACT_NAME }}
+
 
   # build_linux_x64:
   #   name: "Linux ubuntu 22.04 x64 gcc"
