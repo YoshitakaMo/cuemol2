@@ -52,16 +52,18 @@ BOOST_DIR=$BASEDIR/boost_1_84_0
 DEPLIBS_DIR=$BASEDIR/boost_1_84_0/lib
 
 if [ $RUNNER_OS = "macOS" ]; then
-    brew install autoconf@2.13
-    xcrun --show-sdk-path
-    SDK_PATH=$(xcrun --show-sdk-path)
-    # SDK_PATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk
+    brew install autoconf@2.13 yasm
+    # xcrun --show-sdk-path
+    # SDK_PATH=$(xcrun --show-sdk-path)
+    
 
     ADD_MOZCONFIG=""
     if [ $RUNNER_ARCH = "ARM64" ]; then
         BUILD_ARCH="aarch64-apple-darwin"
+        SDK_PATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk
     elif [ $RUNNER_ARCH = "X64" ]; then
         BUILD_ARCH="x86_64-apple-darwin"
+        SDK_PATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk
         ADD_MOZCONFIG="export CXXFLAGS='-stdlib=libc++'"
     else
         echo "unknown runner arch: $RUNNER_ARCH"
