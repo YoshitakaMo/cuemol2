@@ -26,6 +26,11 @@ jobs:
     - name: Run sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.4
 
+    - shell: bash
+      run: |
+        ls $(dirname $(xcrun --show-sdk-path))
+        xcrun --show-sdk-version
+
     - name: Download deplibs
       uses: ./build_scripts/download_deplibs
       with:
