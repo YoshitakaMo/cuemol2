@@ -66,7 +66,7 @@ if [ $RUNNER_OS = "macOS" ]; then
         exit 1
     fi
 
-    sed "s!@CUEMOL_BUNDLE@!$BUNDLE_DIR!g" $SCRIPT_DIR/mozconfig_${RUNNER_ARCH} \
+    sed "s!@CUEMOL_BUNDLE@!$BUNDLE_DIR!g" $SCRIPT_DIR/mozconfig_macOS \
         | sed "s!@CUEMOL_DIR@!$CUEMOL_DIR!g" \
         | sed "s!@BOOST_DIR@!$BOOST_DIR!g" \
         | sed "s!@DEPLIBS_DIR@!$DEPLIBS_DIR!g" \
