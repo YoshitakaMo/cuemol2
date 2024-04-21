@@ -48,9 +48,8 @@ popd
 cd ${GITHUB_WORKSPACE}/uxp_gui
 
 CUEMOL_DIR=$BASEDIR/cuemol2
-PROJ_DIR=$BASEDIR/deplibs
-BOOST_DIR=$PROJ_DIR/boost_1_84_0
-DEPLIBS_DIR=$PROJ_DIR/boost_1_84_0/lib
+BOOST_DIR=$BASE_DIR/boost_1_84_0
+DEPLIBS_DIR=$BASE_DIR/boost_1_84_0/lib
 
 if [ $RUNNER_OS = "macOS" ]; then
     brew install autoconf@2.13
