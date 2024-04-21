@@ -44,3 +44,4 @@ ac_add_options --enable-cuemol=@CUEMOL_DIR@
 ac_add_options --enable-cuemol-boostdir=@BOOST_DIR@
 ac_add_options --enable-cuemol-deplibs=@DEPLIBS_DIR@
 ac_add_options --enable-cuemol-bundle=@CUEMOL_BUNDLE@
+
