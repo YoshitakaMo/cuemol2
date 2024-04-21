@@ -55,15 +55,20 @@ if [ $RUNNER_OS = "macOS" ]; then
     brew install autoconf@2.13 yasm
     # xcrun --show-sdk-path
     # SDK_PATH=$(xcrun --show-sdk-path)
-    
+    SDK_PLATFORM_PATH=$(xcrun --show-sdk-platform-path)
+    SDK_PLATFORM_VER=$(xcrun --show-sdk-platform-version)
+    SDK_PATH=$SDK_PLATFORM_PATH/Developer/SDKs/MacOSX${SDK_PLATFORM_VER}.sdk
+
+    echo SDK_PATH: $SDK_PATH
+    ls -la $SDK_PATH
 
     ADD_MOZCONFIG=""
     if [ $RUNNER_ARCH = "ARM64" ]; then
         BUILD_ARCH="aarch64-apple-darwin"
-        SDK_PATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk
+        # SDK_PATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk
     elif [ $RUNNER_ARCH = "X64" ]; then
         BUILD_ARCH="x86_64-apple-darwin"
-        SDK_PATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk
+        # SDK_PATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk
         ADD_MOZCONFIG="export CXXFLAGS='-stdlib=libc++'"
     else
         echo "unknown runner arch: $RUNNER_ARCH"
