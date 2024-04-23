@@ -1,0 +1,22 @@
+name: Build test 2 (windows)
+
+on:
+  push:
+    # branches-ignore:
+    #   - '**'
+
+###############################################
+
+jobs:
+  build_win_x64:
+    name: "Windows intel msvc"
+    runs-on: windows-2019
+    steps:
+    - uses: actions/checkout@v4
+
+    steps:
+    - name: Install prerequisite
+      run: |
+        # choco install -r wget
+        wget https://ftp.mozilla.org/pub/mozilla/libraries/win32/MozillaBuildSetup-3.4.exe
+        dir
