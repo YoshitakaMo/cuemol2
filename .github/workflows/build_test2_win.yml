@@ -19,6 +19,6 @@ jobs:
 
     - name: Install prerequisite
       run: |
-        # choco install -r wget
+        choco install -r wget
         wget https://ftp.mozilla.org/pub/mozilla/libraries/win32/MozillaBuildSetup-3.4.exe
         dir
