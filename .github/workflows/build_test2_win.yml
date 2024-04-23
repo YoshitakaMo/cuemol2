@@ -24,6 +24,12 @@ jobs:
         choco install mozillabuild
         dir c:\
 
+    - name: Run mozilla build
+      shell: cmd
+      run: |
+        C:/mozilla-build/start-shell.bat
+        ls -la /
+
     # - name: Install prerequisite
     #   run: |
     #     choco install -r wget
