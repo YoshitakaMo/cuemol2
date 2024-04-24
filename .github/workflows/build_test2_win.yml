@@ -41,5 +41,7 @@ jobs:
       run: |
         REM cmd /c C:/mozilla-build/start-shell.bat ${{ github.workspace }}/build_scripts/test_win1.sh
         REM cmd /c C:/mozilla-build/start-shell.bat /d/a/cuemol2/cuemol2/build_scripts/test_win1.sh
-        cmd /c C:/mozilla-build/start-shell.bat ls -la d:/a/cuemol2/cuemol2/build_scripts
-        REM cmd /c C:/mozilla-build/start-shell.bat ls -la d:/
+        cmd /c C:/mozilla-build/start-shell.bat pwd
+        cmd /c C:/mozilla-build/start-shell.bat ls -la D:/a
+        cmd /c C:/mozilla-build/start-shell.bat ls -la D:/a/cuemol2
+        cmd /c C:/mozilla-build/start-shell.bat ls -la D:/a/cuemol2/cuemol2
