@@ -45,7 +45,7 @@ if CONFIG['_MSC_VER']:
 if CONFIG['OS_ARCH'] == 'WINNT':
     RCINCLUDE = 'splash.rc'
     # DEFINES['MOZ_PHOENIX'] = True
-    DEFINES['MOZ_PHOENIX'] = False
+    # DEFINES['MOZ_PHOENIX'] = False
 
 # Control the default heap size.
 # This is the heap returned by GetProcessHeap().
