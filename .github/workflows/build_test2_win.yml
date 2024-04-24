@@ -34,10 +34,11 @@ jobs:
       shell: bash
       run: |
         set -eux
-        echo ${{ github.workspace }}
+        echo '${{ github.workspace }}' | sed 's/\\/\//g'
 
     - name: Run mozilla build
       shell: cmd
       run: |
-        # cmd /c C:/mozilla-build/start-shell.bat ${{ github.workspace }}/build_scripts/test_win1.sh
-        cmd /c C:/mozilla-build/start-shell.bat /d/a/cuemol2/cuemol2/build_scripts/test_win1.sh
+        REM cmd /c C:/mozilla-build/start-shell.bat ${{ github.workspace }}/build_scripts/test_win1.sh
+        REM cmd /c C:/mozilla-build/start-shell.bat /d/a/cuemol2/cuemol2/build_scripts/test_win1.sh
+        cmd /c C:/mozilla-build/start-shell.bat d:/a/cuemol2/cuemol2/build_scripts/test_win1.sh
