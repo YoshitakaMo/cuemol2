@@ -31,5 +31,5 @@ cmake -S . -B build ^
  -DCGAL_HEADER_ONLY=TRUE ^
  -DCMAKE_BUILD_TYPE=Release
 
-REM cmake --build build --config Release
-REM cmake --install build --config Release
+cmake --build build --config Release
+cmake --install build --config Release
