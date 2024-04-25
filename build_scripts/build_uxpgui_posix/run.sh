@@ -52,8 +52,6 @@ cd $BUNDLE_DIR/ffmpeg/bin
 unzip -o ../../${FFMPEG_DIST}.zip
 popd
 
-https://www.osxexperts.net/ffmpeg7intel.zip
-
 # Build UXP
 cd ${GITHUB_WORKSPACE}/uxp_gui
 
