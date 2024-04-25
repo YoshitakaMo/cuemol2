@@ -26,7 +26,7 @@ ac_add_options --disable-necko-wifi
 ac_add_options --disable-updater
 ac_add_options --disable-av1
 ac_add_options --disable-jxl
-ac_add_options --disable-ffmpeg
+# ac_add_options --disable-ffmpeg
 ac_add_options --with-pthreads
 # ac_add_options --with-branding=whitestar/branding/whitestar
 
