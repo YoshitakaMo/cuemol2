@@ -2,8 +2,8 @@ name: Build and release
 
 on:
   push:
-    branches-ignore:
-      - '**'
+    # branches-ignore:
+    #   - '**'
 
 ###############################################
 
@@ -30,6 +30,7 @@ jobs:
       run: |
         set -eux
         SDK_BASE_PATH=$(dirname $(xcrun --show-sdk-path))
+        echo $SDK_BASE_PATH/MacOSX*.*.sdk | tr ' ' '\n' | sort
         SDK_PATH=$(echo $SDK_BASE_PATH/MacOSX*.*.sdk | sort | tail -1)
         echo $SDK_PATH
         ls -la $SDK_PATH
