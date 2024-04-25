@@ -30,7 +30,7 @@ jobs:
       run: |
         set -eux
         SDK_BASE_PATH=$(dirname $(xcrun --show-sdk-path))
-        echo $SDK_BASE_PATH/MacOSX*.*.sdk | tr ' ' '\n' | sort | tail -1
+        # echo $SDK_BASE_PATH/MacOSX*.*.sdk | tr ' ' '\n' | sort | tail -1
         SDK_PATH=$($SDK_BASE_PATH/MacOSX*.*.sdk | tr ' ' '\n' | sort | tail -1)
         echo $SDK_PATH
         ls -la $SDK_PATH
