@@ -53,12 +53,9 @@ DEPLIBS_DIR=$BASEDIR/boost_1_84_0/lib
 
 if [ $RUNNER_OS = "macOS" ]; then
     brew install autoconf@2.13 yasm
-    # xcrun --show-sdk-path
-    # SDK_PATH=$(xcrun --show-sdk-path)
-    SDK_PLATFORM_PATH=$(xcrun --show-sdk-platform-path)
-    SDK_PLATFORM_VER=$(xcrun --show-sdk-platform-version)
-    SDK_PATH=$SDK_PLATFORM_PATH/Developer/SDKs/MacOSX${SDK_PLATFORM_VER}.sdk
 
+    SDK_BASE_PATH=$(dirname $(xcrun --show-sdk-path))
+    SDK_PATH=$(echo $SDK_BASE_PATH/MacOSX*.*.sdk | tr ' ' '\n' | sort | tail -1)
     echo SDK_PATH: $SDK_PATH
     ls -la $SDK_PATH
 

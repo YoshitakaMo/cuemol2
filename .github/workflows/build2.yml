@@ -26,15 +26,15 @@ jobs:
     - name: Run sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.4
 
-    - shell: bash
-      run: |
-        set -eux
-        SDK_BASE_PATH=$(dirname $(xcrun --show-sdk-path))
-        # echo $SDK_BASE_PATH/MacOSX*.*.sdk | tr ' ' '\n' | sort | tail -1
-        SDK_PATH=$(echo $SDK_BASE_PATH/MacOSX*.*.sdk | tr ' ' '\n' | sort | tail -1)
-        echo $SDK_PATH
-        ls -la $SDK_PATH
-        xcrun --show-sdk-version
+    # - shell: bash
+    #   run: |
+    #     set -eux
+    #     SDK_BASE_PATH=$(dirname $(xcrun --show-sdk-path))
+    #     # echo $SDK_BASE_PATH/MacOSX*.*.sdk | tr ' ' '\n' | sort | tail -1
+    #     SDK_PATH=$(echo $SDK_BASE_PATH/MacOSX*.*.sdk | tr ' ' '\n' | sort | tail -1)
+    #     echo $SDK_PATH
+    #     ls -la $SDK_PATH
+    #     # xcrun --show-sdk-version
 
     - name: Download deplibs
       uses: ./build_scripts/download_deplibs
