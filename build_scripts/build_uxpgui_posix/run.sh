@@ -33,16 +33,26 @@ POV_TGZ=povray_${RUNNER_OS}_${RUNNER_ARCH}.tar.bz2
 wget --progress=dot:mega -c \
      https://github.com/CueMol/povray_build/releases/download/v0.0.5/$POV_TGZ
 xattr -cr $POV_TGZ
-tar xjvf $POV_TGZ
+tar xjf $POV_TGZ
 
 # Retrieve ffmpeg bin
-FFMPEG_DIST=ffmpeg61arm
+if [ $RUNNER_ARCH = "ARM64" ]; then
+    FFMPEG_DIST=ffmpeg61arm
+elif [ $RUNNER_ARCH = "X64" ]; then
+    FFMPEG_DIST=ffmpeg61intel
+else
+    echo "unknown runner arch: $RUNNER_ARCH"
+    exit 1
+fi
+
 wget --progress=dot:mega -c https://www.osxexperts.net/${FFMPEG_DIST}.zip
 xattr -cr ${FFMPEG_DIST}.zip
 mkdir -p $BUNDLE_DIR/ffmpeg/bin
 cd $BUNDLE_DIR/ffmpeg/bin
 unzip -o ../../${FFMPEG_DIST}.zip
 popd
+
+https://www.osxexperts.net/ffmpeg7intel.zip
 
 # Build UXP
 cd ${GITHUB_WORKSPACE}/uxp_gui
