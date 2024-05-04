@@ -15,9 +15,12 @@ echo "DEPLIBS_DIR: " %DEPLIBS_DIR%
 SET INSTPATH=%DEPLIBS_DIR%\cuemol2
 rd /s /q build
 
-cmake -S . -B build ^
+cmake -S cli -B build_cli ^
  -DCMAKE_INSTALL_PREFIX=%INSTPATH% ^
  -DCMAKE_PREFIX_PATH=%DEPLIBS_DIR% ^
  -DBoost_ROOT=%DEPLIBS_DIR%\boost_1_84_0 ^
  -DLIBCUEMOL2_ROOT=%DEPLIBS_DIR%\cuemol2 ^
  -DCMAKE_BUILD_TYPE=Release
+
+cmake --build build_cli --config Release
+cmake --install build_cli --config Release
