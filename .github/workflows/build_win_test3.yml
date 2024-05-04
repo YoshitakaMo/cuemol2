@@ -23,4 +23,4 @@ jobs:
       shell: cmd
       run: |
         cd %GITHUB_WORKSPACE%
-        call /c build_scripts/build_libcuemol2_win.bat %HOME%
+        cmd /c build_scripts/build_libcuemol2_win.bat %HOME%
