@@ -14,8 +14,8 @@ mkdir %TMPDIR%
 cd %TMPDIR%
 
 REM Retrieve deplibs binary
-DEPLIBS_TGZ=deplibs_%RUNNER_OS%_%RUNNER_ARCH%.tar.gz
-DEPLIBS_VERSION=v0.0.2
+SET DEPLIBS_TGZ=deplibs_%RUNNER_OS%_%RUNNER_ARCH%.tar.gz
+SET DEPLIBS_VERSION=v0.0.2
 wget --progress=dot:mega -c ^
      https://github.com/CueMol/build_prerequisites/releases/download/%DEPLIBS_VERSION%/%DEPLIBS_TGZ%
 tar xzf %DEPLIBS_TGZ%
