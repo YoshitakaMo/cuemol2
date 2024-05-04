@@ -20,8 +20,7 @@ wget --progress=dot:mega -c ^
      https://github.com/CueMol/build_prerequisites/releases/download/%DEPLIBS_VERSION%/%DEPLIBS_TGZ%
 tar xzf %DEPLIBS_TGZ%
 dir
-ren proj64_deplibs %BASEDIR%/deplibs
-SET DEPLIBS_DIR=%BASEDIR/deplibs%
+SET DEPLIBS_DIR=%BASEDIR%/proj64_deplibs
 echo "DEPLIBS_DIR: " %DEPLIBS_DIR%
 
 REM Build libcuemol2
