@@ -11,6 +11,7 @@ SET RUNNER_ARCH=X64
 SET TMPDIR=%BASEDIR%\tmp
 
 mkdir %TMPDIR%
+%~d1
 cd %TMPDIR%
 
 REM Retrieve deplibs binary
