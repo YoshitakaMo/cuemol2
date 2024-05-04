@@ -19,7 +19,8 @@ SET DEPLIBS_VERSION=v0.0.2
 wget --progress=dot:mega -c ^
      https://github.com/CueMol/build_prerequisites/releases/download/%DEPLIBS_VERSION%/%DEPLIBS_TGZ%
 tar xzf %DEPLIBS_TGZ%
-ren builds %BASEDIR%/deplibs
+dir
+ren proj64_deplibs %BASEDIR%/deplibs
 SET DEPLIBS_DIR=%BASEDIR/deplibs%
 echo "DEPLIBS_DIR: " %DEPLIBS_DIR%
 
