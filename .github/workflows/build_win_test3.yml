@@ -22,5 +22,6 @@ jobs:
     - name: Install deplibs and build libcuemol2
       shell: cmd
       run: |
+        echo on
         cd %GITHUB_WORKSPACE%
-        cmd /c build_scripts/build_libcuemol2_win.bat %HOME%
+        cmd /c %GITHUB_WORKSPACE%\build_scripts\build_libcuemol2_win.bat %HOME%
