@@ -24,4 +24,5 @@ jobs:
       run: |
         echo on
         cd %GITHUB_WORKSPACE%
+        set HOME=%HOMEDRIVE%%HOMEPATH%
         cmd /c %GITHUB_WORKSPACE%\build_scripts\build_libcuemol2_win.bat %HOME%
