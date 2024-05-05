@@ -12,6 +12,7 @@ jobs:
     steps:
     - name: Install prerequisite
       run: |
+        cmake --version
         choco install -r wget winflexbison3
 
     - uses: actions/checkout@v4
