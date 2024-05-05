@@ -1,19 +1,34 @@
-# vim: set filetype=python:
+# -*- Mode: python; c-basic-offset: 4; indent-tabs-mode: nil; tab-width: 40 -*-
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 warning("CUEMOL_DIR: <%s>" % CONFIG['CUEMOL_DIR'])
 
-LOCAL_INCLUDES += [
-    '%%%s/include' % CONFIG['CUEMOL_BOOST_DIR'],
-    '%%%s/include' % CONFIG['CUEMOL_DIR'],
-]
-OS_LIBS += ['-L%s/lib' % CONFIG['CUEMOL_DIR'],
-    'cuemol2',
-]
+if CONFIG['OS_ARCH'] == 'WINNT':
+    LOCAL_INCLUDES += [
+        '%%%s' % CONFIG['CUEMOL_BOOST_DIR'],
+        '%%%s/include' % CONFIG['CUEMOL_DIR'],
+    ]
+else:
+    LOCAL_INCLUDES += [
+        '%%%s/include' % CONFIG['CUEMOL_DIR'],
+        '%%%s/include' % CONFIG['CUEMOL_BOOST_DIR'],
+    ]
+
+
 DEFINES['HAVE_CONFIG_H'] = True
-CXXFLAGS += ['-fexceptions', '-frtti']
+
+if CONFIG['OS_ARCH'] == 'WINNT' and not CONFIG['GNU_CC']:
+    CXXFLAGS += ['-EHsc', '-GR', '-DLINK_SHARED']
+    OS_LIBS += ['-LIBPATH:%s/lib' % CONFIG['CUEMOL_DIR'],
+        'cuemol2',
+    ]
+else:
+    CXXFLAGS += ['-fexceptions', '-frtti']
+    OS_LIBS += ['-L%s/lib' % CONFIG['CUEMOL_DIR'],
+        'cuemol2',
+    ]
 
 XPIDL_SOURCES += [
     'qICueMol.idl',
@@ -23,11 +38,18 @@ XPIDL_SOURCES += [
 
 XPIDL_MODULE = 'molwidget'
 
+if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'windows':
+    osdep_src = 'XPCNativeWidgetWin.cpp'
+elif CONFIG['MOZ_WIDGET_TOOLKIT'] == 'cocoa':
+    osdep_src = 'XPCNativeWidgetCocoa.mm'
+elif CONFIG['MOZ_WIDGET_TOOLKIT'] in ('gtk2', 'gtk3'):
+    osdep_src = 'XPCNativeWidgetGDK.cpp'
+
 SOURCES += [
     'xpc_main.cpp',
     'XPCCueMol.cpp',
     'XPCNativeWidget.cpp',
-    'XPCNativeWidgetCocoa.mm',
+    osdep_src,
     'XPCObjWrapper.cpp',
     'XPCTimerImpl.cpp',
 ]
