@@ -32,3 +32,7 @@ cmake --build build_cli --config Release
 cmake --install build_cli --config Release
 
 copy %DEPLIBS_DIR%\boost_1_84_0\lib\*mt-x64*.dll %INSTPATH%\bin\
+
+REM check run
+%INSTPATH%\bin\cuetty.exe
+
