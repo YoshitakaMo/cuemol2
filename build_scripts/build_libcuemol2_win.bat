@@ -23,6 +23,7 @@ tar xzf %DEPLIBS_TGZ%
 dir
 SET DEPLIBS_DIR=%TMPDIR%\proj64_deplibs
 echo "DEPLIBS_DIR: " %DEPLIBS_DIR%
+del %DEPLIBS_DIR%\CGAL-4.14.3\lib\cmake\CGAL\CGALConfig-installation-dirs.cmake
 
 REM Build libcuemol2
 SET INSTPATH=%DEPLIBS_DIR%\cuemol2
@@ -30,8 +31,8 @@ rd /s /q build
 
 cmake -S %GITHUB_WORKSPACE% -B build ^
  -DCMAKE_INSTALL_PREFIX=%INSTPATH% ^
- -DCMAKE_PREFIX_PATH=%DEPLIBS_DIR% ^
  -DBoost_ROOT=%DEPLIBS_DIR%\boost_1_84_0 ^
+ -DCGAL_ROOT=%DEPLIBS_DIR%\CGAL-4.14.3 ^
  -DFFTW_ROOT=%DEPLIBS_DIR%\fftw-3.3.10 ^
  -DLCMS2_ROOT=%DEPLIBS_DIR%\lcms2-2.16 ^
  -DGLEW_ROOT=%DEPLIBS_DIR%\glew-2.2.0 ^
