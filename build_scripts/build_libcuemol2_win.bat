@@ -22,7 +22,7 @@ wget --progress=dot:mega -c ^
 tar xzf %DEPLIBS_TGZ%
 dir
 SET DEPLIBS_DIR=%TMPDIR%\proj64_deplibs
-echo "DEPLIBS_DIR: " %DEPLIBS_DIR%
+echo "DEPLIBS_DIR:" %DEPLIBS_DIR%
 del %DEPLIBS_DIR%\CGAL-4.14.3\lib\cmake\CGAL\CGALConfig-installation-dirs.cmake
 
 REM Build libcuemol2
