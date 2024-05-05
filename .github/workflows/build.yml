@@ -3,6 +3,10 @@ name: Build
 # on:
 #   pull_request:
 #     types: [ready_for_review, synchronize]
+on:
+  push:
+    branches-ignore:
+      - '**'
 
 env:
   PYTHON_VERSION: 3.8

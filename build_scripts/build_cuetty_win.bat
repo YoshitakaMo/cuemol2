@@ -1,23 +1,38 @@
+echo on
+
+REM Common Setup
 if "%1"=="" (
    echo "arg1 not specified"
-   exit /b
+   exit /b   
 )
+SET BASEDIR=%1
+SET RUNNER_OS=Windows
+SET RUNNER_ARCH=X64
+SET TMPDIR=%BASEDIR%\tmp
 
-REM SET DEPLIBS_DIR=c:\proj64_deplibs
-SET DEPLIBS_DIR=%1
+mkdir %TMPDIR%
+%~d1
+cd %TMPDIR%
 
-if not exist %DEPLIBS_DIR% (
-   echo "DEPLIBS_DIR not exists " %DEPLIBS_DIR%
-   exit /b
-)
+SET DEPLIBS_DIR=%TMPDIR%\proj64_deplibs
+echo "DEPLIBS_DIR:" %DEPLIBS_DIR%
 
-echo "DEPLIBS_DIR: " %DEPLIBS_DIR%
+REM Build cuetty
 SET INSTPATH=%DEPLIBS_DIR%\cuemol2
 rd /s /q build
 
-cmake -S . -B build ^
+cmake -S %GITHUB_WORKSPACE%\cli -B build_cli ^
  -DCMAKE_INSTALL_PREFIX=%INSTPATH% ^
  -DCMAKE_PREFIX_PATH=%DEPLIBS_DIR% ^
  -DBoost_ROOT=%DEPLIBS_DIR%\boost_1_84_0 ^
  -DLIBCUEMOL2_ROOT=%DEPLIBS_DIR%\cuemol2 ^
  -DCMAKE_BUILD_TYPE=Release
+
+cmake --build build_cli --config Release
+cmake --install build_cli --config Release
+
+copy %DEPLIBS_DIR%\boost_1_84_0\lib\*mt-x64*.dll %INSTPATH%\bin\
+
+REM check run
+%INSTPATH%\bin\cuetty.exe
+

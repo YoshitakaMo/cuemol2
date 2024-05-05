@@ -1,0 +1,38 @@
+name: Build and release
+
+on:
+  push:
+
+###############################################
+
+jobs:
+  build_win_x64:
+    name: "Windows intel msvc"
+    runs-on: windows-2022
+    steps:
+    - name: Install prerequisite
+      run: |
+        cmake --version
+        choco install -r wget winflexbison3
+
+    - uses: actions/checkout@v4
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Install deplibs and build libcuemol2
+      shell: cmd
+      run: |
+        echo on
+        cd %GITHUB_WORKSPACE%
+        set HOME=%HOMEDRIVE%%HOMEPATH%
+        cmd /c %GITHUB_WORKSPACE%\build_scripts\build_libcuemol2_win.bat %HOME%
+
+    - name: Build cuetty
+      shell: cmd
+      run: |
+        echo on
+        cd %GITHUB_WORKSPACE%
+        set HOME=%HOMEDRIVE%%HOMEPATH%
+        cmd /c %GITHUB_WORKSPACE%\build_scripts\build_cuetty_win.bat %HOME%
+
