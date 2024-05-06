@@ -2,8 +2,8 @@ name: Build test 2 (windows)
 
 on:
   push:
-    branches-ignore:
-      - '**'
+#    branches-ignore:
+#      - '**'
 
 ###############################################
 
@@ -32,13 +32,17 @@ jobs:
 
     - name: test1
       shell: bash
+      id: get-repos-dir
       run: |
         set -eux
-        echo '${{ github.workspace }}' | sed 's/\\/\//g'
+        REPOS_DIR=$(echo '${{ github.workspace }}' | sed 's/\\/\//g')
+        echo "repos-dir=$REPOS_DIR" >> $GITHUB_OUTPUT
 
     - name: Run mozilla build
       shell: cmd
       run: |
+        echo on
+        echo ${{ steps.get-repos-dir.outputs.repos-dir }}
         REM cmd /c C:/mozilla-build/start-shell.bat ${{ github.workspace }}/build_scripts/test_win1.sh
         cmd /c C:/mozilla-build/start-shell.bat D:/a/cuemol2/cuemol2/build_scripts/test_win1.sh
         REM cmd /c C:/mozilla-build/start-shell.bat ls -la D:/a/cuemol2/cuemol2

@@ -6,10 +6,10 @@ RUNNER_OS=$2
 RUNNER_ARCH=$3
 
 TMPDIR=$BASEDIR/tmp
-SCRIPT_DIR=$(cd $(dirname $0); pwd)
-
 mkdir -p $TMPDIR
 cd $TMPDIR
+
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 # Retrieve UXP tarball
 UXP_TGZ=RB_20231106.tar.gz

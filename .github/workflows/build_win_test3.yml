@@ -2,6 +2,8 @@ name: Build and release
 
 on:
   push:
+    branches-ignore:
+      - '**'
 
 ###############################################
 
@@ -14,6 +16,9 @@ jobs:
       run: |
         cmake --version
         choco install -r wget winflexbison3
+        Start-BitsTransfer -Source https://ftp.mozilla.org/pub/mozilla/libraries/win32/MozillaBuildSetup-3.4.exe -Destination ./MozillaBuildSetup.exe
+        .\MozillaBuildSetup.exe /S | Out-Null
+        dir c:\
 
     - uses: actions/checkout@v4
 
@@ -35,4 +40,9 @@ jobs:
         cd %GITHUB_WORKSPACE%
         set HOME=%HOMEDRIVE%%HOMEPATH%
         cmd /c %GITHUB_WORKSPACE%\build_scripts\build_cuetty_win.bat %HOME%
+
+    - name: Run mozilla build
+      shell: cmd
+      run: |
+        cmd /c C:/mozilla-build/start-shell.bat D:/a/cuemol2/cuemol2/build_scripts/test_win1.sh
 

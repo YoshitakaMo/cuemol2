@@ -2,25 +2,31 @@
 set -eux
 
 BASEDIR=$1
-WSDIR=$2
-# ARCH=$2
-# TMPDIR=$BASEDIR/tmp
+RUNNER_OS="Windows"
+RUNNER_ARCH="X64"
+
+TMPDIR=$BASEDIR/tmp
+mkdir -p $TMPDIR
+cd $TMPDIR
+
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
+WSDIR=$(cd $(dirname $0)/..; pwd)
 
-# mkdir -p $TMPDIR
-# cd $TMPDIR
+# Retrieve UXP tarball
+UXP_TGZ=RB_20231106.tar.gz
+UXP_VERSION=v0.0.1
+wget --progress=dot:giga -c \
+     https://github.com/CueMol/uxp_release/releases/download/$UXP_VERSION/$UXP_TGZ
+rm -rf uxp
+set +e
+tar xzf $UXP_TGZ
+set -e
+rm -rf ${WSDIR}/uxp_gui/platform
+mv uxp ${WSDIR}/uxp_gui/platform
 
-# # Retrieve UXP tarball
-# UXP_TGZ=RB_20231106.tar.gz
-# UXP_VERSION=v0.0.1
-# wget --progress=dot:giga -c \
-#      https://github.com/CueMol/uxp_release/releases/download/$UXP_VERSION/$UXP_TGZ
-# tar xzf $UXP_TGZ
-# mv uxp ${WSDIR}/uxp_gui/platform
-
-# # Apply patch
-# cd ${WSDIR}/uxp_gui
-# patch -p5 < uxp_diff.patch
+# Apply patch
+cd ${WSDIR}/uxp_gui
+patch -p5 < uxp_diff.patch
 
 # Setup bundle software
 BUNDLE_DIR=$BASEDIR/cuemol2_bundle
@@ -46,9 +52,8 @@ BUNDLE_DIR=$BASEDIR/cuemol2_bundle
 # Build UXP
 
 CUEMOL_DIR=$BASEDIR/cuemol2
-PROJ_DIR=$BASEDIR
-BOOST_DIR=$PROJ_DIR/boost_1_84_0
-DEPLIBS_DIR=$PROJ_DIR/boost_1_84_0/lib64-msvc-14.3
+BOOST_DIR=$BASEDIR/boost_1_84_0
+DEPLIBS_DIR=$BASEDIR/boost_1_84_0/lib
 
 cd ${WSDIR}/uxp_gui
 sed "s!@CUEMOL_BUNDLE@!$BUNDLE_DIR!g" $SCRIPT_DIR/mozconfig_win \
