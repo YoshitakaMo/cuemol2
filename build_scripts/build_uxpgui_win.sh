@@ -5,12 +5,9 @@ BASEDIR=$1
 RUNNER_OS="Windows"
 RUNNER_ARCH="X64"
 
-TMPDIR=$BASEDIR/tmp
-mkdir -p $TMPDIR
-cd $TMPDIR
-
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 WSDIR=$(cd $(dirname $0)/..; pwd)
+cd ${WSDIR}/uxp_gui
 
 # Retrieve UXP tarball
 UXP_TGZ=RB_20231106.tar.gz
@@ -64,8 +61,8 @@ sed "s!@CUEMOL_BUNDLE@!$BUNDLE_DIR!g" $SCRIPT_DIR/mozconfig_win \
 ./mach build
 ./mach package
 
-ls -l obj-*/dist/cuemol2-*.dmg
-cp obj-*/dist/cuemol2-*.dmg ${WSDIR}/
-cd ${WSDIR}
-ls -l cuemol2-*.dmg
-tar cjvf ${WSDIR}/${ARTIFACT_NAME} *.dmg
+# ls -l obj-*/dist/cuemol2-*.dmg
+# cp obj-*/dist/cuemol2-*.dmg ${WSDIR}/
+# cd ${WSDIR}
+# ls -l cuemol2-*.dmg
+# tar cjvf ${WSDIR}/${ARTIFACT_NAME} *.dmg
