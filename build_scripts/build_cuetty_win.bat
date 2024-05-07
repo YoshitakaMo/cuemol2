@@ -14,7 +14,7 @@ mkdir %TMPDIR%
 %~d1
 cd %TMPDIR%
 
-SET DEPLIBS_DIR=%TMPDIR%\proj64_deplibs
+SET DEPLIBS_DIR=%BASEDIR%\proj64_deplibs
 echo "DEPLIBS_DIR:" %DEPLIBS_DIR%
 
 REM Build cuetty
