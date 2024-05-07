@@ -2,6 +2,8 @@ name: Build and release
 
 on:
   push:
+    branches-ignore:
+      - '**'
 
 ###############################################
 
@@ -14,6 +16,9 @@ jobs:
       run: |
         cmake --version
         choco install -r wget winflexbison3
+        Start-BitsTransfer -Source https://ftp.mozilla.org/pub/mozilla/libraries/win32/MozillaBuildSetup-3.4.exe -Destination ./MozillaBuildSetup.exe
+        .\MozillaBuildSetup.exe /S | Out-Null
+        dir C:\mozilla-build
 
     - uses: actions/checkout@v4
 
@@ -36,3 +41,18 @@ jobs:
         set HOME=%HOMEDRIVE%%HOMEPATH%
         cmd /c %GITHUB_WORKSPACE%\build_scripts\build_cuetty_win.bat %HOME%
 
+    - name: Get repository dirname
+      id: get-repos-dir
+      shell: bash
+      run: |
+        set -eux
+        REPOS_DIR=$(echo '${{ github.workspace }}' | sed 's/\\/\//g')
+        echo "repos-dir=$REPOS_DIR" >> $GITHUB_OUTPUT
+
+    - name: Run mozilla build
+      shell: cmd
+      run: |
+        echo on
+        echo ${{ steps.get-repos-dir.outputs.repos-dir }}
+        cmd /c C:\mozilla-build\start-shell.bat ${{ steps.get-repos-dir.outputs.repos-dir }}/build_scripts/build_uxpgui_win.sh 
+        REM cmd /c C:/mozilla-build/start-shell.bat D:/a/cuemol2/cuemol2/build_scripts/test_win1.sh

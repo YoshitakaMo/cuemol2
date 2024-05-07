@@ -1,0 +1,39 @@
+name: Build test 2 (windows)
+
+on:
+  push:
+   branches-ignore:
+     - '**'
+
+###############################################
+
+jobs:
+  build_win_x64:
+    name: "Windows intel msvc"
+    runs-on: windows-2019
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install prerequisite
+      run: |
+        Start-BitsTransfer -Source https://ftp.mozilla.org/pub/mozilla/libraries/win32/MozillaBuildSetup-3.4.exe -Destination ./MozillaBuildSetup.exe
+        .\MozillaBuildSetup.exe /S | Out-Null
+        dir c:\
+        
+    - name: test1
+      shell: bash
+      id: get-repos-dir
+      run: |
+        set -eux
+        REPOS_DIR=$(echo '${{ github.workspace }}' | sed 's/\\/\//g')
+        echo "repos-dir=$REPOS_DIR" >> $GITHUB_OUTPUT
+        env
+
+    - name: Run mozilla build
+      shell: cmd
+      run: |
+        echo on
+        echo ${{ steps.get-repos-dir.outputs.repos-dir }}
+        cmd /c C:/mozilla-build/start-shell.bat ${{ steps.get-repos-dir.outputs.repos-dir }}/build_scripts/test_win1.sh
+

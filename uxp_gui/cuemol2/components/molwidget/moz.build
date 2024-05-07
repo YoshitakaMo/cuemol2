@@ -16,6 +16,7 @@ else:
         '%%%s/include' % CONFIG['CUEMOL_BOOST_DIR'],
     ]
 
+
 DEFINES['HAVE_CONFIG_H'] = True
 
 if CONFIG['OS_ARCH'] == 'WINNT' and not CONFIG['GNU_CC']:

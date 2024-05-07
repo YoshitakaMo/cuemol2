@@ -1,0 +1,18 @@
+name: 'Download deplibs posix'
+description: 'Download deplibs posix'
+
+inputs:
+  basedir:
+     description: 'base dir'
+     required: true
+
+runs:
+  using: "composite"
+  steps:
+
+  - name: Download deplibs
+    shell: bash
+    run: |
+      cd ${GITHUB_WORKSPACE}
+      BASEDIR=${{ inputs.basedir }}
+      bash build_scripts/download_deplibs/run.sh $BASEDIR ${{ runner.os }} ${{ runner.arch }}

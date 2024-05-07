@@ -106,9 +106,6 @@ tools repackage:: $(PROGRAM)
 	rsync -aL $(PROGRAM) '$(dist_dest)/Contents/MacOS'
 	cp -RL $(DIST)/branding/cuemol2.icns '$(dist_dest)/Contents/Resources/cuemol2.icns'
 	cp -RL $(DIST)/branding/document.icns '$(dist_dest)/Contents/Resources/document.icns'
-	# Copy CueMol2 files
-	# cp $(CUEMOL_DIR)/lib/*.dylib '$(dist_dest)/Contents/MacOS/'
-	# $(PYTHON) $(srcdir)/install_dylibs.py -i $(CUEMOL_DIR)/lib/libcuemol2.dylib --search_path=/Users/user1/proj64/boost_1_84/lib --out_dir '$(dist_dest)/Contents/MacOS/'
 	printf APPLMOZB > '$(dist_dest)/Contents/PkgInfo'
 endif
 

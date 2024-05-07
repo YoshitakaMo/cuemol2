@@ -36,8 +36,8 @@ ac_add_options --disable-debug
 ac_add_options --disable-necko-wifi
 ac_add_options --disable-updater
 
-ac_add_options --enable-av1
-ac_add_options --enable-jxl
+ac_add_options --disable-av1
+ac_add_options --disable-jxl
 
 # WIN32_REDIST_DIR="C:/{{VCINSTALLDIR}}/VC/redist/MSVC/14.36.32532/$BUILD_ARCH/Microsoft.VC143.CRT"
 WIN32_REDIST_DIR="C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Redist/MSVC/14.38.33130/$BUILD_ARCH/Microsoft.VC143.CRT"

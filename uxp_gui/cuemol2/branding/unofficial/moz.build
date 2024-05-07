@@ -8,10 +8,8 @@ JAR_MANIFESTS += ['jar.mn']
 BRANDING_FILES += ['license.txt']
 
 if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'windows':
-    FINAL_TARGET_FILES['..'] += [
+    FINAL_TARGET_FILES += [
         'cuemol2.VisualElementsManifest.xml',
-    ]
-    FINAL_TARGET_FILES.VisualElements += [
         'VisualElements_150.png',
         'VisualElements_70.png',
     ]
