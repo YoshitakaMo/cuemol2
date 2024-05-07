@@ -56,4 +56,3 @@ jobs:
         echo ${{ steps.get-repos-dir.outputs.repos-dir }}
         cmd /c C:\mozilla-build\start-shell.bat ${{ steps.get-repos-dir.outputs.repos-dir }}/build_scripts/build_uxpgui_win.sh 
         REM cmd /c C:/mozilla-build/start-shell.bat D:/a/cuemol2/cuemol2/build_scripts/test_win1.sh
-
