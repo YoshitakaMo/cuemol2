@@ -54,12 +54,14 @@ LIBDIR=$DEPLIBS_DIR/boost_1_84_0/lib
 CUEMOL_DIR=$DEPLIBS_DIR/cuemol2
 
 cd ${WSDIR}/uxp_gui
-sed "s!@CUEMOL_BUNDLE@!$BUNDLE_DIR!g" $SCRIPT_DIR/mozconfig_win \
-    | sed "s!@CUEMOL_DIR@!$CUEMOL_DIR!g" \
-    | sed "s!@BOOST_DIR@!$BOOST_DIR!g" \
-    | sed "s!@DEPLIBS_DIR@!$LIBDIR!g" > .mozconfig
-
+# sed "s!@CUEMOL_BUNDLE@!$BUNDLE_DIR!g" $SCRIPT_DIR/mozconfig_win \
+#     | sed "s!@CUEMOL_DIR@!$CUEMOL_DIR!g" \
+#     | sed "s!@BOOST_DIR@!$BOOST_DIR!g" \
+#     | sed "s!@DEPLIBS_DIR@!$LIBDIR!g" > .mozconfig
 cp $SCRIPT_DIR/mozconfig_win .mozconfig
+
+echo $(perl -e 'binmode(STDIN); while (<STDIN>) { if (/\r/) { print "1"; exit } } print "0"' < platform/client.mk)
+
 ./mach build
 
 # ./mach package
