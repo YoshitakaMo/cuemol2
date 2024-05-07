@@ -2,8 +2,8 @@ name: Build test 2 (windows)
 
 on:
   push:
-   # branches-ignore:
-   #   - '**'
+    branches-ignore:
+      - '**'
 
 ###############################################
 
