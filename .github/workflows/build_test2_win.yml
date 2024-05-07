@@ -28,7 +28,7 @@ jobs:
         set -eux
         REPOS_DIR=$(echo '${{ github.workspace }}' | sed 's/\\/\//g')
         echo "repos-dir=$REPOS_DIR" >> $GITHUB_OUTPUT
-        HOMEPATH_UX=$(echo '$HOMEPATH' | sed 's/\\/\//g')
+        HOMEPATH_UX=$(echo "$HOMEPATH" | sed 's/\\/\//g')
         echo "home-dir=$HOMEDRIVE$HOMEPATH_UX" >> $GITHUB_OUTPUT
         env
 
