@@ -23,7 +23,7 @@ mv uxp ${WSDIR}/uxp_gui/platform
 
 # Apply patch
 cd ${WSDIR}/uxp_gui
-patch -p5 < uxp_diff.patch
+# patch -p5 < uxp_diff.patch
 
 # Setup bundle software
 BUNDLE_DIR=$BASEDIR/cuemol2_bundle
@@ -58,8 +58,11 @@ sed "s!@CUEMOL_BUNDLE@!$BUNDLE_DIR!g" $SCRIPT_DIR/mozconfig_win \
     | sed "s!@CUEMOL_DIR@!$CUEMOL_DIR!g" \
     | sed "s!@BOOST_DIR@!$BOOST_DIR!g" \
     | sed "s!@DEPLIBS_DIR@!$LIBDIR!g" > .mozconfig
+
+cp $SCRIPT_DIR/mozconfig_win .mozconfig
 ./mach build
-./mach package
+
+# ./mach package
 
 # ls -l obj-*/dist/cuemol2-*.dmg
 # cp obj-*/dist/cuemol2-*.dmg ${WSDIR}/
