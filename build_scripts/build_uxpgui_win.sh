@@ -50,16 +50,17 @@ BUNDLE_DIR=$BASEDIR/cuemol2_bundle
 # popd
 
 # Build UXP
+DEPLIBS_DIR=$BASEDIR/proj64_deplibs
 
-CUEMOL_DIR=$BASEDIR/cuemol2
-BOOST_DIR=$BASEDIR/boost_1_84_0
-DEPLIBS_DIR=$BASEDIR/boost_1_84_0/lib
+BOOST_DIR=$DEPLIBS_DIR/boost_1_84_0/include/boost-1_84
+LIBDIR=$DEPLIBS_DIR/boost_1_84_0/lib
+CUEMOL_DIR=$DEPLIBS_DIR/cuemol2
 
 cd ${WSDIR}/uxp_gui
 sed "s!@CUEMOL_BUNDLE@!$BUNDLE_DIR!g" $SCRIPT_DIR/mozconfig_win \
     | sed "s!@CUEMOL_DIR@!$CUEMOL_DIR!g" \
     | sed "s!@BOOST_DIR@!$BOOST_DIR!g" \
-    | sed "s!@DEPLIBS_DIR@!$DEPLIBS_DIR!g" > .mozconfig
+    | sed "s!@DEPLIBS_DIR@!$LIBDIR!g" > .mozconfig
 ./mach build
 ./mach package
 

@@ -1,4 +1,7 @@
-# xxx
+
+
+# macOS specific install script
+ifeq (Darwin, $(OS_ARCH))
 
 PROGRAMS_DEST = $(DIST)/bin/components
 
@@ -12,3 +15,5 @@ libs::
 	$(PYTHON) $(srcdir)/install_dylibs.py -i '$(PROGRAMS_DEST)/$(SHARED_LIBRARY)' --search_path=$(CUEMOL_DEPLIB_DIRS):$(CUEMOL_DIR)/lib --out_dir '$(DIST)/bin'
 
 # @$(foreach V,$(sort $(.VARIABLES)),$(if $(filter-out environment% default automatic,$(origin $V)),$(warning $V=$($V) ($(value $V)))))
+
+endif
