@@ -75,9 +75,9 @@ jobs:
 
         BASEDIR=${{ steps.get-repos-dir.outputs.home-dir }}
         DEPLIBS_DIR=$BASEDIR/proj64_deplibs
-        
-        BOOST_DIR=$DEPLIBS_DIR/boost_1_84_0/include/boost-1_84
+        BUNDLE_DIR=$BASEDIR/cuemol2_bundle
 
+        BOOST_DIR=$DEPLIBS_DIR/boost_1_84_0/include/boost-1_84
         LIBDIR=$DEPLIBS_DIR/boost_1_84_0/lib
         CUEMOL_DIR=$DEPLIBS_DIR/cuemol2
         
