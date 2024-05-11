@@ -82,7 +82,7 @@ jobs:
         CUEMOL_DIR=$DEPLIBS_DIR/cuemol2
         
         cd uxp_gui
-        sed "s!@WIN32_REDIST_DIR@!$WIN32_REDIST_DIR!g" mozconfig_win_x64 \
+        sed "s!@WIN32_REDIST_DIR@!$WIN32_REDIST_DIR!g" $GITHUB_WORKSPACE/build_scripts/mozconfig_win \
         | sed "s!@WIN_UCRT_REDIST_DIR@!$WIN_UCRT_REDIST_DIR!g" \
         | sed "s!@CUEMOL_BUNDLE@!$BUNDLE_DIR!g" \
         | sed "s!@CUEMOL_DIR@!$CUEMOL_DIR!g" \
