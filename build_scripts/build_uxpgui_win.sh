@@ -9,21 +9,22 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 WSDIR=$(cd $(dirname $0)/..; pwd)
 cd ${WSDIR}/uxp_gui
 
-# Retrieve UXP tarball
-UXP_TGZ=RB_20231106.tar.gz
-UXP_VERSION=v0.0.1
-wget --progress=dot:giga -c \
-     https://github.com/CueMol/uxp_release/releases/download/$UXP_VERSION/$UXP_TGZ
-rm -rf uxp
-set +e
-tar xzf $UXP_TGZ
-set -e
-rm -rf ${WSDIR}/uxp_gui/platform
-mv uxp ${WSDIR}/uxp_gui/platform
+if [ ! -d ${WSDIR}/uxp_gui/platform ]; then
+    # Retrieve UXP tarball
+    UXP_TGZ=RB_20231106.tar.gz
+    UXP_VERSION=v0.0.1
+    wget --progress=dot:giga -c \
+         https://github.com/CueMol/uxp_release/releases/download/$UXP_VERSION/$UXP_TGZ
+    rm -rf uxp
+    set +e
+    tar xzf $UXP_TGZ
+    set -e
+    mv uxp platform
 
-# Apply patch
-cd ${WSDIR}/uxp_gui
-# patch -p5 < uxp_diff.patch
+    # Apply patch
+    patch -p5 < uxp_diff.patch
+fi
+
 
 # Setup bundle software
 BUNDLE_DIR=$BASEDIR/cuemol2_bundle
@@ -47,27 +48,17 @@ BUNDLE_DIR=$BASEDIR/cuemol2_bundle
 # popd
 
 # Build UXP
-DEPLIBS_DIR=$BASEDIR/proj64_deplibs
 
-BOOST_DIR=$DEPLIBS_DIR/boost_1_84_0/include/boost-1_84
-LIBDIR=$DEPLIBS_DIR/boost_1_84_0/lib
-CUEMOL_DIR=$DEPLIBS_DIR/cuemol2
+# DEPLIBS_DIR=$BASEDIR/proj64_deplibs
+# BOOST_DIR=$DEPLIBS_DIR/boost_1_84_0/include/boost-1_84
+# LIBDIR=$DEPLIBS_DIR/boost_1_84_0/lib
+# CUEMOL_DIR=$DEPLIBS_DIR/cuemol2
 
 cd ${WSDIR}/uxp_gui
 # sed "s!@CUEMOL_BUNDLE@!$BUNDLE_DIR!g" $SCRIPT_DIR/mozconfig_win \
 #     | sed "s!@CUEMOL_DIR@!$CUEMOL_DIR!g" \
 #     | sed "s!@BOOST_DIR@!$BOOST_DIR!g" \
 #     | sed "s!@DEPLIBS_DIR@!$LIBDIR!g" > .mozconfig
-cp $SCRIPT_DIR/mozconfig_win .mozconfig
-
-echo $(perl -e 'binmode(STDIN); while (<STDIN>) { if (/\r/) { print "1"; exit } } print "0"' < platform/client.mk)
 
 ./mach build
-
 # ./mach package
-
-# ls -l obj-*/dist/cuemol2-*.dmg
-# cp obj-*/dist/cuemol2-*.dmg ${WSDIR}/
-# cd ${WSDIR}
-# ls -l cuemol2-*.dmg
-# tar cjvf ${WSDIR}/${ARTIFACT_NAME} *.dmg

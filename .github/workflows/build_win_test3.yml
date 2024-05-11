@@ -5,6 +5,10 @@ on:
     # branches-ignore:
     #   - '**'
 
+env:
+  mozbuild-cache-version: v1
+  uxp-cache-version: v1
+
 ###############################################
 
 jobs:
@@ -12,18 +16,81 @@ jobs:
     name: "Windows intel msvc"
     runs-on: windows-2022
     steps:
-    - name: Install prerequisite
-      run: |
-        cmake --version
-        choco install -r wget winflexbison3
-        Start-BitsTransfer -Source https://ftp.mozilla.org/pub/mozilla/libraries/win32/MozillaBuildSetup-3.4.exe -Destination ./MozillaBuildSetup.exe
-        .\MozillaBuildSetup.exe /S | Out-Null
-        dir C:\mozilla-build
-
     - uses: actions/checkout@v4
 
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v2
+    - uses: actions/cache@v4
+      with:
+        path: C:\mozilla-build\
+        key: mozbuild-${{ env.mozbuild-cache-version }}
+        restore-keys: |
+          mozbuild-
+
+    - uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}\uxp_gui\platform
+        key: uxp-${{ env.uxp-cache-version }}
+        restore-keys: |
+          uxp-
+
+    - name: Install prerequisite
+      run: |
+        choco install -r wget winflexbison3
+
+        $mozilladir = "c:\mozilla-build"
+        $src_url = "https://ftp.mozilla.org/pub/mozilla/libraries/win32/MozillaBuildSetup-3.4.exe"
+        if((Test-Path $mozilladir) -eq "True"){
+          Write-Host "Cache exists"
+          dir $mozilladir
+        }else{
+          Start-BitsTransfer -Source $src_url -Destination ./MozillaBuildSetup.exe
+          .\MozillaBuildSetup.exe /S | Out-Null
+        }
+        dir $mozilladir
+
+    # - name: Add msbuild to PATH
+    #   uses: microsoft/setup-msbuild@v2
+    - uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+
+    - name: Get repository dirname
+      id: get-repos-dir
+      shell: bash
+      run: |
+        set -eux
+        REPOS_DIR=$(echo '${{ github.workspace }}' | sed 's/\\/\//g')
+        echo "repos-dir=$REPOS_DIR" >> $GITHUB_OUTPUT
+        HOMEPATH_UX=$(echo "$HOMEPATH" | sed 's/\\/\//g')
+        echo "home-dir=$HOMEDRIVE$HOMEPATH_UX" >> $GITHUB_OUTPUT
+
+    - name: Edit mozconfig
+      shell: bash
+      run: |
+        set -eux
+        cd $GITHUB_WORKSPACE
+        WIN32_REDIST_DIR=$(echo "${VCToolsRedistDir}x64\\Microsoft.VC142.CRT" | sed 's/\\/\//g')
+        echo "$WIN32_REDIST_DIR"
+        WIN_UCRT_REDIST_DIR=$(echo "${WindowsSdkDir}Redist\\${WindowsSDKLibVersion}ucrt\\DLLs\\x64" | sed 's/\\/\//g')
+        echo "$WIN_UCRT_REDIST_DIR"
+
+        BASEDIR=${{ steps.get-repos-dir.outputs.home-dir }}
+        DEPLIBS_DIR=$BASEDIR/proj64_deplibs
+        
+        BOOST_DIR=$DEPLIBS_DIR/boost_1_84_0/include/boost-1_84
+
+        LIBDIR=$DEPLIBS_DIR/boost_1_84_0/lib
+        CUEMOL_DIR=$DEPLIBS_DIR/cuemol2
+        
+        cd uxp_gui
+        sed "s!@WIN32_REDIST_DIR@!$WIN32_REDIST_DIR!g" mozconfig_win_x64 \
+        | sed "s!@WIN_UCRT_REDIST_DIR@!$WIN_UCRT_REDIST_DIR!g" \
+        | sed "s!@CUEMOL_BUNDLE@!$BUNDLE_DIR!g" \
+        | sed "s!@CUEMOL_DIR@!$CUEMOL_DIR!g" \
+        | sed "s!@BOOST_DIR@!$BOOST_DIR!g" \
+        | sed "s!@DEPLIBS_DIR@!$LIBDIR!g" > .mozconfig
+
+        cat .mozconfig
+
 
     # - name: Install deplibs and build libcuemol2
     #   shell: cmd
@@ -40,16 +107,6 @@ jobs:
     #     cd %GITHUB_WORKSPACE%
     #     set HOME=%HOMEDRIVE%%HOMEPATH%
     #     cmd /c %GITHUB_WORKSPACE%\build_scripts\build_cuetty_win.bat %HOME%
-
-    - name: Get repository dirname
-      id: get-repos-dir
-      shell: bash
-      run: |
-        set -eux
-        REPOS_DIR=$(echo '${{ github.workspace }}' | sed 's/\\/\//g')
-        echo "repos-dir=$REPOS_DIR" >> $GITHUB_OUTPUT
-        HOMEPATH_UX=$(echo "$HOMEPATH" | sed 's/\\/\//g')
-        echo "home-dir=$HOMEDRIVE$HOMEPATH_UX" >> $GITHUB_OUTPUT
 
     - name: Run mozilla build
       shell: cmd
