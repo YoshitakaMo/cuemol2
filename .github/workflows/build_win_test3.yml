@@ -36,7 +36,7 @@ jobs:
 
     - uses: actions/cache@v4
       with:
-        path: ${{ runner.temp }}\deplibs\cuemol2
+        path: ${{ runner.temp }}\proj64_deplibs\cuemol2
         key: libcuemol-${{ env.libcuemol-cache-version }}
         restore-keys: |
           libcuemol-
@@ -106,11 +106,11 @@ jobs:
       run: |
         echo on
         cd %GITHUB_WORKSPACE%
-        SET DEPLIBS_DIR=${{ runner.temp }}\deplibs
+        SET DEPLIBS_DIR=${{ runner.temp }}\proj64_deplibs
         IF EXIST %DEPLIBS_DIR%\cuemol2\ (
           echo %DEPLIBS_DIR%\cuemol2\ exists, skip build
         ) ELSE (
-          cmd /c %GITHUB_WORKSPACE%\build_scripts\build_libcuemol2_win.bat %DEPLIBS_DIR%
+          cmd /c %GITHUB_WORKSPACE%\build_scripts\build_libcuemol2_win.bat ${{ runner.temp }}
         )
 
     # - name: Build cuetty
