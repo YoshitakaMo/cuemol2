@@ -17,5 +17,5 @@ wget --progress=dot:mega -c \
      $DEPLIBS_URL/$DEPLIBS_VERSION/$DEPLIBS_TGZ
 
 tar xzf $DEPLIBS_TGZ
-mv proj64_deplibs $BASEDIR/
+mv -v proj64_deplibs/* $BASEDIR/proj64_deplibs
 

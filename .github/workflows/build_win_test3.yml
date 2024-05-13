@@ -116,6 +116,7 @@ jobs:
         echo on
         cd %GITHUB_WORKSPACE%
         SET DEPLIBS_DIR=${{ runner.temp }}\proj64_deplibs
+        dir %DEPLIBS_DIR%
         IF EXIST %DEPLIBS_DIR%\cuemol2\ (
           echo %DEPLIBS_DIR%\cuemol2\ exists, skip build
         ) ELSE (
