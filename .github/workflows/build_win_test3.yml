@@ -15,8 +15,8 @@ env:
 jobs:
   build_win_x64:
     name: "Windows intel msvc"
-    # runs-on: windows-2022
-    runs-on: windows-2019
+    runs-on: windows-2022
+    # runs-on: windows-2019
     steps:
     - uses: actions/checkout@v4
 
@@ -77,7 +77,8 @@ jobs:
       run: |
         set -eux
         cd $GITHUB_WORKSPACE
-        WIN32_REDIST_DIR=$(echo "${VCToolsRedistDir}x64\\Microsoft.VC142.CRT" | sed 's/\\/\//g')
+        # WIN32_REDIST_DIR=$(echo "${VCToolsRedistDir}x64\\Microsoft.VC142.CRT" | sed 's/\\/\//g')
+        WIN32_REDIST_DIR=$(echo "${VCToolsRedistDir}x64\\Microsoft.VC143.CRT" | sed 's/\\/\//g')
         echo "$WIN32_REDIST_DIR"
         WIN_UCRT_REDIST_DIR=$(echo "${WindowsSdkDir}Redist\\${WindowsSDKLibVersion}ucrt\\DLLs\\x64" | sed 's/\\/\//g')
         echo "$WIN_UCRT_REDIST_DIR"
