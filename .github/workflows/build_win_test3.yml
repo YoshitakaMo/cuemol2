@@ -106,8 +106,9 @@ jobs:
       shell: bash
       run: |
         set -eux
+        TEMP_DIR=$(echo '${{ runner.temp }}' | sed 's/\\/\//g')
         cd $GITHUB_WORKSPACE
-        bash build_scripts/download_deplibs/run_windows.sh ${{ runner.temp }}
+        bash build_scripts/download_deplibs/run_windows.sh $TEMP_DIR
         
 
     - name: Build libcuemol2
