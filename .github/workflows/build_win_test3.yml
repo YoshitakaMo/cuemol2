@@ -102,7 +102,15 @@ jobs:
         cat .mozconfig
 
 
-    - name: Install deplibs and build libcuemol2
+    - name: Download/install deplibs
+      shell: bash
+      run: |
+        set -eux
+        cd $GITHUB_WORKSPACE
+        bash build_scripts/download_deplibs/run_windows.sh ${{ runner.temp }}
+        
+
+    - name: Build libcuemol2
       shell: cmd
       run: |
         echo on

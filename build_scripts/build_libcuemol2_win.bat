@@ -14,17 +14,9 @@ mkdir %TMPDIR%
 %~d1
 cd %TMPDIR%
 
-REM Retrieve deplibs binary
-SET DEPLIBS_TGZ=deplibs_%RUNNER_OS%_%RUNNER_ARCH%.tar.gz
-SET DEPLIBS_VERSION=v0.0.2
-wget --progress=dot:mega -c ^
-     https://github.com/CueMol/build_prerequisites/releases/download/%DEPLIBS_VERSION%/%DEPLIBS_TGZ%
-tar xzf %DEPLIBS_TGZ%
-dir
-
-move proj64_deplibs %BASEDIR%
 SET DEPLIBS_DIR=%BASEDIR%\proj64_deplibs
 echo "DEPLIBS_DIR:" %DEPLIBS_DIR%
+dir %DEPLIBS_DIR%
 
 REM Remove CGAL install location file
 del %DEPLIBS_DIR%\CGAL-4.14.3\lib\cmake\CGAL\CGALConfig-installation-dirs.cmake
