@@ -11,6 +11,7 @@ TMPDIR=$BASEDIR/tmp
 mkdir -p $TMPDIR
 cd $TMPDIR
 
+###########
 # Retrieve UXP tarball
 UXP_TGZ=RB_20231106.tar.gz
 UXP_VERSION=v0.0.1
@@ -23,38 +24,11 @@ mv uxp ${GITHUB_WORKSPACE}/uxp_gui/platform
 cd ${GITHUB_WORKSPACE}/uxp_gui
 patch -p5 < uxp_diff.patch
 
-# Setup bundle software
-BUNDLE_DIR=$TMPDIR/cuemol2_bundle
-mkdir -p $BUNDLE_DIR
-pushd $BUNDLE_DIR
-
-# Retrieve povray prebuild binary
-POV_TGZ=povray_${RUNNER_OS}_${RUNNER_ARCH}.tar.bz2
-wget --progress=dot:mega -c \
-     https://github.com/CueMol/povray_build/releases/download/v0.0.5/$POV_TGZ
-xattr -cr $POV_TGZ
-tar xjf $POV_TGZ
-
-# Retrieve ffmpeg bin
-if [ $RUNNER_ARCH = "ARM64" ]; then
-    FFMPEG_DIST=ffmpeg61arm
-elif [ $RUNNER_ARCH = "X64" ]; then
-    FFMPEG_DIST=ffmpeg61intel
-else
-    echo "unknown runner arch: $RUNNER_ARCH"
-    exit 1
-fi
-
-wget --progress=dot:mega -c https://www.osxexperts.net/${FFMPEG_DIST}.zip
-xattr -cr ${FFMPEG_DIST}.zip
-mkdir -p $BUNDLE_DIR/ffmpeg/bin
-cd $BUNDLE_DIR/ffmpeg/bin
-unzip -o ../../${FFMPEG_DIST}.zip
-popd
-
+###########
 # Build UXP
 cd ${GITHUB_WORKSPACE}/uxp_gui
 
+BUNDLE_DIR=$BASEDIR/cuemol2_bundle_apps
 CUEMOL_DIR=$BASEDIR/cuemol2
 BOOST_DIR=$BASEDIR/boost_1_84_0
 DEPLIBS_DIR=$BASEDIR/boost_1_84_0/lib
