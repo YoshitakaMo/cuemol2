@@ -12,8 +12,8 @@ if CONFIG['OS_ARCH'] == 'WINNT':
     ]
 else:
     LOCAL_INCLUDES += [
-        '%%%s/include' % CONFIG['CUEMOL_DIR'],
         '%%%s/include' % CONFIG['CUEMOL_BOOST_DIR'],
+        '%%%s/include' % CONFIG['CUEMOL_DIR'],
     ]
 
 
