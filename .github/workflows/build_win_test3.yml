@@ -57,7 +57,7 @@ jobs:
         name: uxpbin_windows_x64
 
     - run: |
-        ls -lR
+        dir artifacts
 
     - name: Install prerequisite
       run: |
