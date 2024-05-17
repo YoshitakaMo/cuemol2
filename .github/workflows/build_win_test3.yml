@@ -47,6 +47,10 @@ jobs:
         restore-keys: |
           libcuemol-
 
+    - name: Install prerequisite
+      run: |
+        choco install -r wget winflexbison3
+
     - name: Download/install uxp bin
       # if: steps.uxp-cache.outputs.cache-hit != 'true'
       shell: bash
@@ -59,10 +63,6 @@ jobs:
         ls -la
         tar --use-compress-program "zstd -d" -xf uxpbin_windows_x64.tar.zst 
         ls -la
-
-    - name: Install prerequisite
-      run: |
-        choco install -r wget winflexbison3
 
     - name: Install mozbuild
       if: steps.mozbuild-cache.outputs.cache-hit != 'true'
