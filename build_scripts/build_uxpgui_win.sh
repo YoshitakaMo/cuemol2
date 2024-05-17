@@ -49,5 +49,6 @@ BUNDLE_DIR=$BASEDIR/cuemol2_bundle
 
 # Build UXP
 cd ${WSDIR}/uxp_gui
+./mach configure
 ./mach build
 ./mach package
