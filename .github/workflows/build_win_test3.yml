@@ -57,7 +57,7 @@ jobs:
         name: uxpbin_windows_x64
 
     - name: Extract UXPBIN Artifact
-    - shell: bash
+      shell: bash
       run: |
         cd $GITHUB_WORKSPACE/uxp_gui
         tar --use-compress-program "zstd -d" -xf uxpbin_Windows_X64.tar.zst
