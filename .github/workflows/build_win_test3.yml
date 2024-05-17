@@ -53,7 +53,8 @@ jobs:
         path: artifacts
         github-token: ${{ secrets.GITHUB_TOKEN }}
         repository: CueMol/uxp_release
-        run-id: 1511942925
+        run-id: 9122708661
+        name: uxpbin_windows_x64
 
     - run: |
         ls -lR
