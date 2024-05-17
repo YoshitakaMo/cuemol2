@@ -47,34 +47,38 @@ jobs:
         restore-keys: |
           libcuemol-
 
-    - name: Download All Artifacts
+    - name: Download UXPBIN Artifact
       uses: actions/download-artifact@v4
       with:
-        path: artifacts
+        path: ${{ github.workspace }}\uxp_gui
         github-token: ${{ secrets.GITHUB_TOKEN }}
         repository: CueMol/uxp_release
         run-id: 9122708661
         name: uxpbin_windows_x64
 
-    - run: |
-        dir artifacts
+    - name: Extract UXPBIN Artifact
+    - shell: bash
+      run: |
+        cd $GITHUB_WORKSPACE/uxp_gui
+        tar --use-compress-program "zstd -d" -xf uxpbin_Windows_X64.tar.zst
+        ls -la
 
     - name: Install prerequisite
       run: |
         choco install -r wget winflexbison3
 
-    - name: Download/install uxp bin
-      # if: steps.uxp-cache.outputs.cache-hit != 'true'
-      shell: bash
-      run: |
-        set -eux
-        cd $GITHUB_WORKSPACE/uxp_gui
-        wget --progress=dot:giga -c https://github.com/CueMol/uxp_release/actions/runs/9122708661/artifacts/1511942925
-        ls -la
-        unzip uxpbin_windows_x64.zip
-        ls -la
-        tar --use-compress-program "zstd -d" -xf uxpbin_windows_x64.tar.zst 
-        ls -la
+    # - name: Download/install uxp bin
+    #   # if: steps.uxp-cache.outputs.cache-hit != 'true'
+    #   shell: bash
+    #   run: |
+    #     set -eux
+    #     cd $GITHUB_WORKSPACE/uxp_gui
+    #     wget --progress=dot:giga -c https://github.com/CueMol/uxp_release/actions/runs/9122708661/artifacts/1511942925
+    #     ls -la
+    #     unzip uxpbin_windows_x64.zip
+    #     ls -la
+    #     tar --use-compress-program "zstd -d" -xf uxpbin_windows_x64.tar.zst 
+    #     ls -la
 
     - name: Install mozbuild
       if: steps.mozbuild-cache.outputs.cache-hit != 'true'
