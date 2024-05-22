@@ -17,3 +17,11 @@ libs::
 # @$(foreach V,$(sort $(.VARIABLES)),$(if $(filter-out environment% default automatic,$(origin $V)),$(warning $V=$($V) ($(value $V)))))
 
 endif
+ifeq (WINNT,$(OS_ARCH))
+libs::
+	echo 'srcdir: $(srcdir)'
+	echo 'PROGRAMS_DEST/SHARED_LIBRARY: $(PROGRAMS_DEST)/$(SHARED_LIBRARY)'
+	echo 'CUEMOL_DEPLIB_DIRS=$(CUEMOL_DEPLIB_DIRS)'
+	cp $(CUEMOL_DEPLIB_DIRS)/*-mt-x64-*.dll $(DIST)/bin/
+	cp $(CUEMOL_DIR)/bin/*.dll $(DIST)/bin/
+endif
