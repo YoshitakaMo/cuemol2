@@ -1,5 +1,5 @@
 
-export CC="sccache clang -Wimplicit-int"
+export CC="sccache clang -Wno-implicit-int"
 export CXX="sccache clang++"
 
 # Clear this if not a 64bit build
