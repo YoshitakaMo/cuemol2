@@ -26,15 +26,12 @@ jobs:
     - name: Run sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.4
 
-    # - shell: bash
-    #   run: |
-    #     set -eux
-    #     SDK_BASE_PATH=$(dirname $(xcrun --show-sdk-path))
-    #     # echo $SDK_BASE_PATH/MacOSX*.*.sdk | tr ' ' '\n' | sort | tail -1
-    #     SDK_PATH=$(echo $SDK_BASE_PATH/MacOSX*.*.sdk | tr ' ' '\n' | sort | tail -1)
-    #     echo $SDK_PATH
-    #     ls -la $SDK_PATH
-    #     # xcrun --show-sdk-version
+    - name: Show build env versions
+      shell: bash
+      run: |
+        set -eux
+        clang --version
+        xcodebuild -version
 
     - name: Download deplibs
       uses: ./build_scripts/download_deplibs
@@ -70,26 +67,6 @@ jobs:
       with:
         name: cuemol2_${{ runner.os }}_${{ runner.arch }}
         path: ${{ steps.build-artifact.outputs.artifact-path }}
-
-###############################################
-
-  build_windows:
-    name: "Windows2022 X64 MSVC"
-    runs-on: windows-2022
-
-    steps:
-    - name: Install prerequisite
-      run: |
-        cmake --version
-        choco install -r wget winflexbison3
-        Start-BitsTransfer -Source https://ftp.mozilla.org/pub/mozilla/libraries/win32/MozillaBuildSetup-3.4.exe -Destination ./MozillaBuildSetup.exe
-        .\MozillaBuildSetup.exe /S | Out-Null
-        dir c:\
-
-    - uses: actions/checkout@v4
-
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v2
 
 ###############################################
 
