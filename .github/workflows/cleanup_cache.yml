@@ -1,5 +1,7 @@
 name: cleanup all caches
 on:
+  push:
+
   workflow_dispatch:
 
 jobs:
