@@ -1,7 +1,5 @@
 name: cleanup all caches
 on:
-  push:
-
   workflow_dispatch:
 
 jobs:
@@ -13,10 +11,13 @@ jobs:
           gh extension install actions/gh-actions-cache
   
           set +e
+          while true
+          do
           echo "Deleting caches..."
           gh actions-cache list -R $REPO -L 100 | while IFS=$'\t' read -r cacheKey _ branch _
           do
             gh actions-cache delete "$cacheKey" -R $REPO -B "$branch" --confirm
+          done
           done
           echo "Done"
         env:
