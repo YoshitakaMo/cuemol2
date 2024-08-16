@@ -1,10 +1,17 @@
-#!/bin/sh
+#!/bin/bash
+#
+# build script for libcuemol2 in posix
+# usage: run.sh deplibs_dir dummy dummy
+#
+
 set -eux
 
 BASEDIR=$1
-RUNNER_OS=$2
-RUNNER_ARCH=$3
+# RUNNER_OS=$2
+# RUNNER_ARCH=$3
 
+REPOS_DIR=$(cd $(dirname $0)/../..; pwd)
+WORKSPACE=${GITHUB_WORKSPACE:-$REPOS_DIR}
 NCPU=8
 
 # Build
@@ -28,7 +35,7 @@ CMAKE_INSTALL_PREFIX=$BASEDIR/cuemol2
 CMAKE_PREFIX_PATH="$BASEDIR"
 ls -la $BASEDIR
 
-cmake -S ${GITHUB_WORKSPACE} -B $BUILD_DIR \
+cmake -S ${WORKSPACE} -B $BUILD_DIR \
       -DCMAKE_C_COMPILER_LAUNCHER=sccache \
       -DCMAKE_CXX_COMPILER_LAUNCHER=sccache \
       -DCMAKE_INSTALL_PREFIX=$CMAKE_INSTALL_PREFIX \
