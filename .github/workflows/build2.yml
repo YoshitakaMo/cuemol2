@@ -73,26 +73,6 @@ jobs:
 
 ###############################################
 
-  build_windows:
-    name: "Windows2022 X64 MSVC"
-    runs-on: windows-2022
-
-    steps:
-    - name: Install prerequisite
-      run: |
-        cmake --version
-        choco install -r wget winflexbison3
-        Start-BitsTransfer -Source https://ftp.mozilla.org/pub/mozilla/libraries/win32/MozillaBuildSetup-3.4.exe -Destination ./MozillaBuildSetup.exe
-        .\MozillaBuildSetup.exe /S | Out-Null
-        dir c:\
-
-    - uses: actions/checkout@v4
-
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v2
-
-###############################################
-
   release_build:
     needs: [build_posix]
     runs-on: ubuntu-latest
