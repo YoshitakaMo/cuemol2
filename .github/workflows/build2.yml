@@ -30,6 +30,7 @@ jobs:
       run: |
         set -eux
         clang --version
+        xcodebuild -version
     #     SDK_BASE_PATH=$(dirname $(xcrun --show-sdk-path))
     #     # echo $SDK_BASE_PATH/MacOSX*.*.sdk | tr ' ' '\n' | sort | tail -1
     #     SDK_PATH=$(echo $SDK_BASE_PATH/MacOSX*.*.sdk | tr ' ' '\n' | sort | tail -1)
