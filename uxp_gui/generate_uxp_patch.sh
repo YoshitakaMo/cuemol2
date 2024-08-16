@@ -1,5 +1,5 @@
 #!/bin/bash
 
-SRC_DIR=../../../src/Pale-Moon
+SRC_DIR=$HOME/tmp/proj64_deplibs/tmp/uxp
 
-diff -x "*.pyc" -x "*~" -r -u $SRC_DIR/platform platform > uxp_diff.patch
+diff -x "*.pyc" -x "*~" -r -u $SRC_DIR platform > uxp_diff.patch
