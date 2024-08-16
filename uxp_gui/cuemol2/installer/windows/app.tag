@@ -1,4 +1,4 @@
 ;!@Install@!UTF-8!
-Title="Pale Moon"
+Title="CueMol2"
 RunProgram="setup.exe"
 ;!@InstallEnd@!
