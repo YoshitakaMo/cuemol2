@@ -2,8 +2,6 @@ name: cleanup all caches
 on:
   workflow_dispatch:
 
-  push:
-
 jobs:
   cleanup:
     runs-on: ubuntu-latest
@@ -14,7 +12,7 @@ jobs:
   
           set +e
           echo "Deleting caches..."
-          gh actions-cache list -R $REPO -L 1000 | while IFS=$'\t' read -r cacheKey _ branch _
+          gh actions-cache list -R $REPO | while IFS=$'\t' read -r cacheKey _ branch _
           do
             gh actions-cache delete "$cacheKey" -R $REPO -B "$branch" --confirm
           done
