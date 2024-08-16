@@ -31,7 +31,7 @@ if [ ! -d ${WORKSPACE}/uxp_gui/platform ]; then
     
     # Apply patch
     cd ${WORKSPACE}/uxp_gui
-    patch -p5 < uxp_diff.patch
+    patch -p0 < uxp_diff.patch
 fi
 
 ###########
