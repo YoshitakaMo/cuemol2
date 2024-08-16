@@ -21,7 +21,7 @@ cd $TMPDIR
 
 ###########
 # Retrieve UXP tarball
-if [ ! -d ${WORKSPACE}/uxp_gui ]; then
+if [ ! -d ${WORKSPACE}/uxp_gui/platform ]; then
     UXP_TGZ=RB_20231106.tar.gz
     UXP_VERSION=v0.0.1
     wget --progress=dot:giga -c \
