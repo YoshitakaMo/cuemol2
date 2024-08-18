@@ -73,6 +73,13 @@ namespace molanl {
   extern void fini();
 }
 
+#ifdef BUILD_MOLCLIENT
+namespace molclient {
+  extern bool init();
+  extern void fini();
+}
+#endif
+
 #endif
 
 namespace molstr {
@@ -84,6 +91,10 @@ namespace lwview {
   extern void fini();
 }
 namespace anim {
+  extern bool init();
+  extern void fini();
+}
+namespace molclient {
   extern bool init();
   extern void fini();
 }
@@ -211,6 +222,10 @@ namespace cuemol2 {
       pybr::init(confpath);
 #endif
 
+#ifdef BUILD_MOLCLIENT
+      molclient::init();
+#endif
+
       if (reg_view) {
 #ifdef BUILD_OPENGL_SYSDEP
         registerViewFactory();
@@ -233,6 +248,10 @@ namespace cuemol2 {
 
   int fini()
   {
+#ifdef BUILD_MOLCLIENT
+    molclient::fini();
+#endif
+
 #ifdef BUILD_PYTHON_BINDINGS
   // unload python module
   pybr::fini();

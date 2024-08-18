@@ -1,0 +1,21 @@
+// -*-Mode: C++;-*-
+//
+
+#ifndef XML_RPC_CONN_QIF_INCLUDED
+#define XML_RPC_CONN_QIF_INCLUDED
+
+runtime_class XmlRpcConn
+{
+  client_hdr "XmlRpcConn.hpp";
+  client_name molclient::XmlRpcConn;
+  dllexport MOLCLIENT_API;
+
+  scriptable;
+  smartptr;
+
+  //////////
+
+  //   property boolean enabled => redirect(isEnabled, setEnabled);
+};
+
+#endif

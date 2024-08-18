@@ -420,7 +420,7 @@ NS_IMETHODIMP XPCCueMol::GetService(const char *svcname,
   ClassRegistry *pMgr = ClassRegistry::getInstance();
   if (pMgr==NULL) {
     LOG_DPRINTLN("XPCCueMol> ERROR: CueMol not initialized.");
-    return NS_ERROR_NOT_INITIALIZED;
+    return NS_ERROR_FAILURE;
   }
 
   qlib::LDynamic *pobj;
@@ -430,17 +430,22 @@ NS_IMETHODIMP XPCCueMol::GetService(const char *svcname,
   catch (const qlib::LException &e) {
     LOG_DPRINTLN("GetService> Caught exception <%s>", typeid(e).name());
     LOG_DPRINTLN("GetService> Reason: %s", e.getMsg().c_str());
-    return NS_ERROR_NOT_IMPLEMENTED;
+    return NS_ERROR_FAILURE;
   }
   catch (...) {
     LOG_DPRINTLN("Caught unknown exception");
-    return NS_ERROR_NOT_IMPLEMENTED;
+    return NS_ERROR_FAILURE;
   }
+  if (pobj == nullptr) {
+    LOG_DPRINTLN("GetService> getSinbletonObj(%s) returned nullptr!!", svcname);
+    return NS_ERROR_FAILURE;
+  }
+  // MB_DPRINTLN("GetService> pobj: %p <%s>", pobj, typeid(pobj).name());
 
   qlib::LScriptable *pscr = dynamic_cast<qlib::LScriptable *>(pobj);
   if (pscr==NULL) {
     LOG_DPRINTLN("GetService> Fatal error dyncast to scriptable failed!!");
-    return NS_ERROR_NOT_IMPLEMENTED;
+    return NS_ERROR_FAILURE;
   }
 
   XPCObjWrapper *pWrap = createWrapper();

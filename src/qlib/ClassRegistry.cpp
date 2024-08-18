@@ -180,7 +180,9 @@ LDynamic *ClassRegistry::createObj(const LString &name)
 
 LDynamic *ClassRegistry::getSingletonObj(const LString &name)
 {
+  // LOG_DPRINTLN("getSingletonObj(%s) called", name.c_str());
   LClass *pCls = getClassObj(name);
+  // LOG_DPRINTLN("class obj: %p <%s>", pCls, pCls->getClassName().c_str() ); //typeid(pCls).name());
 
   if (!pCls->isSingleton()) {
     LString msg = LString::format("\"%s\" is not a singleton class",
