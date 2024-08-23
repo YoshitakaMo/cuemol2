@@ -34,18 +34,19 @@ namespace molclient {
 
     xmlrpc_env env;
     xmlrpc_env_init(&env);
-    if (env.fault_occurred) {
-      LOG_DPRINTLN("Error occurred: %d", env.fault_occurred);
-      LOG_DPRINTLN("Code: %d", env.fault_code);
-      LOG_DPRINTLN("Msg: %s", env.fault_string);
-      return false;
-    }
+    xmlrpc_client_setup_global_const(&env);
+    // if (env.fault_occurred) {
+    //   LOG_DPRINTLN("Error occurred: %d", env.fault_occurred);
+    //   LOG_DPRINTLN("Code: %d", env.fault_code);
+    //   LOG_DPRINTLN("Msg: %s", env.fault_string);
+    //   return false;
+    // }
 
     xmlrpc_client *clientP;
     xmlrpc_client_create(&env, XMLRPC_CLIENT_NO_FLAGS, NAME, VERSION, NULL, 0,
                          &clientP);
     if (env.fault_occurred) {
-      LOG_DPRINTLN("Error occurred: %d", env.fault_occurred);
+      LOG_DPRINTLN("Error occurred: %d in xmlrpc_client_create", env.fault_occurred);
       LOG_DPRINTLN("Code: %d", env.fault_code);
       LOG_DPRINTLN("Msg: %s", env.fault_string);
       return false;
@@ -74,18 +75,18 @@ namespace molclient {
 
     xmlrpc_env env;
     xmlrpc_env_init(&env);
-    if (env.fault_occurred) {
-      LOG_DPRINTLN("Error occurred: %d", env.fault_occurred);
-      LOG_DPRINTLN("Code: %d", env.fault_code);
-      LOG_DPRINTLN("Msg: %s", env.fault_string);
-      MB_THROW(qlib::IllegalArgumentException, "not connected");
-      return qsys::ObjectPtr();
-    }
+    // if (env.fault_occurred) {
+    //   LOG_DPRINTLN("Error occurred: %d", env.fault_occurred);
+    //   LOG_DPRINTLN("Code: %d", env.fault_code);
+    //   LOG_DPRINTLN("Msg: %s", env.fault_string);
+    //   MB_THROW(qlib::IllegalArgumentException, "not connected");
+    //   return qsys::ObjectPtr();
+    // }
 
-    resultP = xmlrpc_client_call(&env, serverUrl, methodName, "(s)", smiles_str);
+    xmlrpc_client_call2f(&env, clientP, serverUrl, methodName, &resultP,"(s)", smiles_str);
     if (env.fault_occurred) {
       // TODO: cleanup
-      LOG_DPRINTLN("Error occurred: %d", env.fault_occurred);
+      LOG_DPRINTLN("Error occurred: %d in xmlrpc_client_call2", env.fault_occurred);
       LOG_DPRINTLN("Code: %d", env.fault_code);
       LOG_DPRINTLN("Msg: %s", env.fault_string);
       MB_THROW(qlib::IllegalArgumentException, "not connected");
@@ -96,16 +97,12 @@ namespace molclient {
     xmlrpc_read_string(&env, resultP, &sdf_buf);
     if (env.fault_occurred) {
       // TODO: cleanup
-      LOG_DPRINTLN("Error occurred: %d", env.fault_occurred);
+      LOG_DPRINTLN("Error occurred: %d in xmlrpc_read_string", env.fault_occurred);
       LOG_DPRINTLN("Code: %d", env.fault_code);
       LOG_DPRINTLN("Msg: %s", env.fault_string);
       MB_THROW(qlib::IllegalArgumentException, "not connected");
       return qsys::ObjectPtr();
     }
-    LOG_DPRINTLN("The sum is %d", sum);
-
-    xmlrpc_DECREF(resultP);
-    xmlrpc_client_cleanup();
 
     LOG_DPRINTLN("Received: %s", sdf_buf);
 
@@ -124,6 +121,10 @@ namespace molclient {
     // scene->addObject(obj);
 
     free((void *) sdf_buf);
+
+    xmlrpc_DECREF(resultP);
+    // xmlrpc_client_cleanup();
+
     return obj;
   }
 

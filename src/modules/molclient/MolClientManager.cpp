@@ -18,7 +18,7 @@ namespace molclient {
   
   qlib::LScrSp<XmlRpcConn> MolClientManager::connect(const LString &server) const
   {
-    LOG_DPRINTLN("connecting to server: %s", server.c_str());
+    // LOG_DPRINTLN("connecting to server: %s", server.c_str());
     XmlRpcConn *pconn = new XmlRpcConn();
     bool result = pconn->connect(server);
     if (!result) {

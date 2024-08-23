@@ -4,6 +4,8 @@
 #ifndef XML_RPC_CONN_QIF_INCLUDED
 #define XML_RPC_CONN_QIF_INCLUDED
 
+#include <qsys/Object.qif>
+
 runtime_class XmlRpcConn
 {
   client_hdr "XmlRpcConn.hpp";
@@ -14,6 +16,8 @@ runtime_class XmlRpcConn
   smartptr;
 
   //////////
+
+  object<Object$> molFromSmiles(string);
 
   //   property boolean enabled => redirect(isEnabled, setEnabled);
 };
