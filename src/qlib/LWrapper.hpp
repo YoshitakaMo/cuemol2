@@ -68,7 +68,7 @@ namespace qlib {
     void cleanup() {
       funcmap_t::const_iterator iter = m_funcmap.begin();
       for (; iter!=m_funcmap.end(); ++iter)
-	delete iter->second;
+        delete iter->second;
       m_funcmap.clear();
       m_propdb.clear();
       m_deftab.clear();
@@ -115,8 +115,8 @@ namespace qlib {
     {
       funcmap_t::const_iterator iter = m_funcmap.find(name);
       if (iter==m_funcmap.end()) {
-	// MB_DPRINTLN("getFunc %s not found", name.c_str());
-	return NULL;
+        // MB_DPRINTLN("getFunc %s not found", name.c_str());
+        return NULL;
       }
       return iter->second;
     }
@@ -144,57 +144,26 @@ namespace qlib {
     bool hasProp(const LString &propnm) const
     {
       if (getGetPropFunc(propnm)!=NULL)
-	return true;
+        return true;
       else
-	return false;
+        return false;
     }
     
     bool hasWProp(const LString &propnm) const
     {
       if (getSetPropFunc(propnm)!=NULL)
-	return true;
+        return true;
       else
-	return false;
+        return false;
     }
     
     bool setProp(qlib::LScriptable *pthis,
-		 const qlib::LString &propnm,
-		 const qlib::LVariant &val)
-    {
-      FuncMap::funcobj_t *pfunc = getSetPropFunc(propnm);
-      if (pfunc==NULL) {
-	LOG_DPRINTLN("setProp %s not found", propnm.c_str());
-	return false;
-      }
-      //MB_DPRINTLN("*** setProp %s", propnm.c_str());
-
-      LVarArgs args(1);
-      args.setThisPtr(pthis);
-      args.at(0) = val;
-      
-      return pfunc->execute(args);
-    }
+                 const qlib::LString &propnm,
+                 const qlib::LVariant &val);
 
     bool getProp(const qlib::LScriptable *pthis,
-		 const qlib::LString &propnm,
-		 qlib::LVariant &val)
-    {
-      FuncMap::funcobj_t *pfunc = getGetPropFunc(propnm);
-      if (pfunc==NULL) {
-	LOG_DPRINTLN("getProp %s not found", propnm.c_str());
-	return false;
-      }
-      
-      LVarArgs args(0);
-      args.setThisPtr( const_cast<qlib::LScriptable *>(pthis) );
-      
-      //MB_DPRINTLN("*** getProp %s", propnm.c_str());
-      if (!pfunc->execute(args))
-	return false;
-      
-      val = args.retval();
-      return true;
-    }
+                 const qlib::LString &propnm,
+                 qlib::LVariant &val);
 
     void getPropNames(std::set<LString> &rs) const
     {
@@ -203,7 +172,7 @@ namespace qlib {
         // skip attribute definitions
         if (iter->first.startsWith("@"))
           continue;
-	rs.insert(iter->first);
+        rs.insert(iter->first);
       }
     }
 
@@ -236,29 +205,14 @@ namespace qlib {
 
     bool hasMethod(const qlib::LString &mthnm) const {
       if (getMthFunc(mthnm)!=NULL)
-	return true;
+        return true;
       else
-	return false;
+        return false;
     }
 
     bool invokeMethod(const qlib::LScriptable *pthis,
-		      const qlib::LString &mthnm,
-		      LVarArgs &args)
-    {
-      FuncMap::funcobj_t *pfunc = getMthFunc(mthnm);
-      if (pfunc==NULL) {
-	LOG_DPRINTLN("invokeMethod %s not found", mthnm.c_str());
-	return false;
-      }
-      //MB_DPRINTLN("*** invk mth %s", mthnm.c_str());
-      
-      args.setThisPtr( const_cast<qlib::LScriptable *>(pthis) );
-      
-      if (!pfunc->execute(args))
-	return false;
-      
-      return true;
-    }
+                      const qlib::LString &mthnm,
+                      LVarArgs &args);
 
     //////////
 
@@ -288,10 +242,10 @@ namespace qlib {
     {
       deftab_t::const_iterator iter = m_deftab.find(propnm);
       if (iter==m_deftab.end()) {
-	// MB_DPRINTLN("getFunc %s not found", propnm.c_str());
-	return false;
+        // MB_DPRINTLN("getFunc %s not found", propnm.c_str());
+        return false;
       }
-
+      
       val = iter->second;
       return true;
     }
@@ -300,66 +254,66 @@ namespace qlib {
     {
       deftab_t::const_iterator iter = m_deftab.find(name);
       if (iter==m_deftab.end()) {
-	// MB_DPRINTLN("getFunc %s not found", name.c_str());
-	return false;
+        // MB_DPRINTLN("getFunc %s not found", name.c_str());
+        return false;
       }
       return true;
     }
-
+    
     //////////
 
     static inline
     LString makeEnumKeyName(const LString &propname,
-			const LString &enumname) {
+                            const LString &enumname) {
       return propname+"/"+enumname;
     }
 
     // register a new enum definition
     bool putEnumDef(const LString &propname,
-		    const LString &enumname,
-		    int value) {
+                    const LString &enumname,
+                    int value) {
       LString name = makeEnumKeyName(propname, enumname);
       enumtab_t::const_iterator iter = m_enumtab.find(name);
       if (iter!=m_enumtab.end())
-	return false;
+        return false;
       m_enumtab.insert(enumtab_t::value_type(name, value));
       return true;
     }
-
+    
     // get a enum definition (key --> int value)
     bool getEnumDef(const LString &propname,
-		    const LString &enumname,
-		    int &value) const
+                    const LString &enumname,
+                    int &value) const
     {
       LString name = makeEnumKeyName(propname, enumname);
       enumtab_t::const_iterator iter = m_enumtab.find(name);
       if (iter==m_enumtab.end()) {
-	// MB_DPRINTLN("getFunc %s not found", name.c_str());
-	return false;
+        // MB_DPRINTLN("getFunc %s not found", name.c_str());
+        return false;
       }
-
+      
       value = iter->second;
       return true;
     }
-
+    
     // get a enum definition (int value-->key)
     bool getEnumDef(const LString &propname,
-		    int value,
-		    LString &enumname) const
+                    int value,
+                    LString &enumname) const
     {
       LString hdrname = propname+"/";
       int nhdr = hdrname.length();
       enumtab_t::const_iterator iter = m_enumtab.begin();
       for (; iter!=m_enumtab.end(); ++iter) {
-	if (! iter->first.startsWith(hdrname) )
-	  continue;
-	if (value==iter->second) {
-	  // found
-	  enumname = iter->first.substr(nhdr);
-	  return true;
-	}
+        if (! iter->first.startsWith(hdrname) )
+          continue;
+        if (value==iter->second) {
+          // found
+          enumname = iter->first.substr(nhdr);
+          return true;
+        }
       }
-
+      
       // not found
       return false;
     }
@@ -373,28 +327,28 @@ namespace qlib {
       int nfound = 0;
       enumtab_t::const_iterator iter = m_enumtab.begin();
       for (; iter!=m_enumtab.end(); ++iter) {
-	if (! iter->first.startsWith(hdrname) )
-	  continue;
-	LString enumkey = iter->first.substr(nhdr);
-	rs.insert(EnumDef::value_type(enumkey, iter->second));
-	++nfound;
+        if (! iter->first.startsWith(hdrname) )
+          continue;
+        LString enumkey = iter->first.substr(nhdr);
+        rs.insert(EnumDef::value_type(enumkey, iter->second));
+        ++nfound;
       }
-
+      
       return nfound;
     }
-
+    
     bool hasEnumDef(const LString &propname,
-		    const LString &enumname) const
+                    const LString &enumname) const
     {
       LString name = makeEnumKeyName(propname, enumname);
       enumtab_t::const_iterator iter = m_enumtab.find(name);
       if (iter==m_enumtab.end()) {
-	// MB_DPRINTLN("getFunc %s not found", name.c_str());
-	return false;
+        // MB_DPRINTLN("getFunc %s not found", name.c_str());
+        return false;
       }
       return true;
     }
-
+    
   };
 
   ////////////////////////////////////
@@ -413,24 +367,24 @@ namespace qlib {
 
     // reset property to the default value
     template <class _Class>
-    bool resetProp(const qlib::LString &name,
-		   _Class *pthat)
+      bool resetProp(const qlib::LString &name,
+                     _Class *pthat)
     {
       LVariant var; // transient
       if (!hasWProp(name))
         return false; // readonly (-->cannot reset)
       if (!getDefVal(name, var))
-	return false; // no default value
+        return false; // no default value
       if (!setProp(pthat, name, var))
-	return false; // set failed
+        return false; // set failed
       // update the parent data
       pthat->setupParentData(name);
       return true;
     }
-
+    
     // reset all propertis to their default values
     template <class _Class>
-    void resetAllProps(_Class *pthat)
+      void resetAllProps(_Class *pthat)
     {
       // MB_DPRINTLN("ResetAllProp<%s> called", typeid(_Class).name());
       std::set<LString> nameset;
@@ -438,25 +392,25 @@ namespace qlib {
       std::set<LString>::const_iterator iter = nameset.begin();
       std::set<LString>::const_iterator eiter = nameset.end();
       for (; iter!=eiter; ++iter) {
-	const LString &name = *iter;
-	// MB_DPRINTLN("ResetAllProp: %s", name.c_str());
-	if (!hasDefVal(name)) continue;
+        const LString &name = *iter;
+        // MB_DPRINTLN("ResetAllProp: %s", name.c_str());
+        if (!hasDefVal(name)) continue;
         if (!hasWProp(name)) continue; // readonly (-->cannot reset)
-	resetProp<_Class>(name, pthat);
-	// MB_DPRINTLN("ResetAllProp: %s OK", name.c_str());
+        resetProp<_Class>(name, pthat);
+        // MB_DPRINTLN("ResetAllProp: %s OK", name.c_str());
       }
       // MB_DPRINTLN("ResetAllProp<%s> END", typeid(_Class).name());
     }
-
+    
     template <class _Wrapper>
-    static inline
-    bool setPropHelper(const qlib::LString &name,
-		       const qlib::LVariant &rvalue,
-		       typename _Wrapper::client_t *pthat)
+      static inline
+      bool setPropHelper(const qlib::LString &name,
+                         const qlib::LVariant &rvalue,
+                         typename _Wrapper::client_t *pthat)
     {
       bool res = _Wrapper::getInstance()->setProp(pthat, name, rvalue);
       if (!res) return false;
-
+      
       pthat->setupParentData(name);
       return true;
     }
@@ -577,17 +531,17 @@ namespace qlib {
     static inline
     void convToEnumInt(LInt &aDest, const LVariant &value, const LString &name) {
       if (value.isInt()) {
-	aDest = value.getIntValue();
-	return;
+        aDest = value.getIntValue();
+        return;
       }
       LString enumkey = value.toString();
       int rval;
       LWrapperImpl *pthat = _Wrapper::getInstance();
       if (!pthat->getEnumDef(name, enumkey, rval)) {
-	LString msg = LString::format("ConvEnum: cannot convert %s/%s to enum",
-				      name.c_str(), enumkey.c_str());
-	MB_THROW(InvalidCastException, msg);
-	return;
+        LString msg = LString::format("ConvEnum: cannot convert %s/%s to enum",
+                                      name.c_str(), enumkey.c_str());
+        MB_THROW(InvalidCastException, msg);
+        return;
       }
       aDest = rval;
     }
@@ -599,10 +553,10 @@ namespace qlib {
       LString enumkey;
       // int-->enumkey conversion
       if (!pthat->getEnumDef(name, aSrc, enumkey)) {
-	LString msg = LString::format("ConvEnum: cannot convert %s/%d to enum",
-				      name.c_str(), aSrc);
-	MB_THROW(InvalidCastException, msg);
-	return;
+        LString msg = LString::format("ConvEnum: cannot convert %s/%d to enum",
+                                      name.c_str(), aSrc);
+        MB_THROW(InvalidCastException, msg);
+        return;
       }
       aDest.setEnumValue(enumkey);
     }
@@ -660,7 +614,7 @@ namespace qlib {
     {
       if (aSrc.isString()) {
         const LString &strval = aSrc.getStringValue();
-	typedef typename _Type::has_fromString HFS;
+        typedef typename _Type::has_fromString HFS;
         return tryConvStrToObj_impl<_Type>(strval, HFS());
       }
       return NULL;
@@ -673,9 +627,9 @@ namespace qlib {
     {
       _Type *pObj = tryConvStrToObj<_Type>(aSrc);
       if (pObj!=NULL) {
-	aDest = *pObj;
+        aDest = *pObj;
         delete pObj;
-	return;
+        return;
       }      
 
       aDest = *aSrc.getObjectPtrT<_Type>();
@@ -704,31 +658,31 @@ namespace qlib {
       LScriptable *pObj = aSrc.getObjectPtr();
 
       if (pObj->isSmartPtr()) {
-	// This cast should not be fail
-	LSupScrSp *pBaseSP = static_cast<LSupScrSp *>(pObj);
-	// This performs dynamic_cast
-	aDest = LScrSp<_Type>(*pBaseSP);
-	//return;
+        // This cast should not be fail
+        LSupScrSp *pBaseSP = static_cast<LSupScrSp *>(pObj);
+        // This performs dynamic_cast
+        aDest = LScrSp<_Type>(*pBaseSP);
+        //return;
       }
       else {
-	_Type *pCasted = dynamic_cast<_Type *>(pObj);
-	if (pCasted==NULL) {
-	  LString msg =
-	    LString::format("Cannot convert object variant (%s) to %s",
-			    typeid(*pObj).name(), typeid(_Type).name());
-	  MB_THROW(InvalidCastException, msg);
-	}
-
-	if (pObj->getSpRefCounter()!=NULL) {
-	  // raw object, already reference-counted by LScrSp<>
-	  aDest = LScrSp<_Type>(pCasted);
-	  //return;
-	}
-	else {
-	  // new object, not reference-counted by LScrSp<>
-	  aDest = LScrSp<_Type>( static_cast<_Type*>(pCasted->copy()) );
-	  //return;
-	}
+        _Type *pCasted = dynamic_cast<_Type *>(pObj);
+        if (pCasted==NULL) {
+          LString msg =
+            LString::format("Cannot convert object variant (%s) to %s",
+                            typeid(*pObj).name(), typeid(_Type).name());
+          MB_THROW(InvalidCastException, msg);
+        }
+        
+        if (pObj->getSpRefCounter()!=NULL) {
+          // raw object, already reference-counted by LScrSp<>
+          aDest = LScrSp<_Type>(pCasted);
+          //return;
+        }
+        else {
+          // new object, not reference-counted by LScrSp<>
+          aDest = LScrSp<_Type>( static_cast<_Type*>(pCasted->copy()) );
+          //return;
+        }
       }
     }
 
@@ -739,8 +693,8 @@ namespace qlib {
     {
       // Don't copy a null reference
       if (aSrc.isnull()) {
-	aDest.setNull();
-	return;
+        aDest.setNull();
+        return;
       }
       LScriptable *pCopy = aSrc.copy();
       aDest.setObjectPtr(pCopy);
