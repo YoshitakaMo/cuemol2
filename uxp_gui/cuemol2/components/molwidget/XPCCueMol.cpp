@@ -268,23 +268,11 @@ NS_IMETHODIMP XPCCueMol::Init(const char *confpath, bool *_retval)
   initTextRender();
   MB_DPRINTLN("---------- initTextRender() OK");
 
-  try {
-    registerFileType();
+  registerFileType();
 
+  try {
     // setup timer
     qlib::EventManager::getInstance()->initTimer(new XPCTimerImpl);
-
-    // setup quit-app observer
-    nsCOMPtr<nsIObserverService> obs = do_GetService("@mozilla.org/observer-service;1", &rv);
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    rv = obs->AddObserver(this, "xpcom-shutdown", PR_FALSE);
-    // rv = obs->AddObserver(this, "quit-application", PR_FALSE);
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    MB_DPRINTLN("---------- setup observers OK");
-
-    // registerViewFactory();
   }
   catch (const qlib::LException &e) {
     LOG_DPRINTLN("Init> Caught exception <%s>", typeid(e).name());
@@ -295,7 +283,19 @@ NS_IMETHODIMP XPCCueMol::Init(const char *confpath, bool *_retval)
     LOG_DPRINTLN("Init> Caught unknown exception");
     return NS_ERROR_NOT_IMPLEMENTED;
   }
-
+  
+  // setup quit-app observer
+  nsCOMPtr<nsIObserverService> obs = do_GetService("@mozilla.org/observer-service;1", &rv);
+  NS_ENSURE_SUCCESS(rv, rv);
+  
+  rv = obs->AddObserver(this, "xpcom-shutdown", PR_FALSE);
+  // rv = obs->AddObserver(this, "quit-application", PR_FALSE);
+  NS_ENSURE_SUCCESS(rv, rv);
+  
+  MB_DPRINTLN("---------- setup observers OK");
+  
+  // registerViewFactory();
+  
   MB_DPRINTLN("XPCCueMol> CueMol initialized.");
   m_bInit = true;
   *_retval = PR_TRUE;
@@ -366,11 +366,7 @@ NS_IMETHODIMP XPCCueMol::Fini()
 
 bool XPCCueMol::initTextRender()
 {
-  // gfx::TextRenderImpl *pTR = (gfx::TextRenderImpl *) sysdep::createTextRender();
-  // gfx::TextRenderManager *pTRM = gfx::TextRenderManager::getInstance();
-  // pTRM->setImpl(pTR);
-
-  m_pTR =cuemol2::initTextRender(); // pTR;
+  m_pTR = cuemol2::initTextRender();
   return true;
 }
 
@@ -381,7 +377,6 @@ NS_IMETHODIMP XPCCueMol::IsInitialized(bool *_retval)
   return NS_OK;
   //return NS_ERROR_NOT_IMPLEMENTED;
 }
-
 
 using qlib::ClassRegistry;
 
@@ -417,30 +412,18 @@ NS_IMETHODIMP XPCCueMol::HasClass(const char * clsname, bool *_retval)
 NS_IMETHODIMP XPCCueMol::GetService(const char *svcname,
                                     qIObjWrapper **_retval)
 {
-  ClassRegistry *pMgr = ClassRegistry::getInstance();
-  if (pMgr==NULL) {
-    LOG_DPRINTLN("XPCCueMol> ERROR: CueMol not initialized.");
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
+  LString errmsg;
   qlib::LDynamic *pobj;
-  try {
-    pobj = pMgr->getSingletonObj(svcname);
-  }
-  catch (const qlib::LException &e) {
-    LOG_DPRINTLN("GetService> Caught exception <%s>", typeid(e).name());
-    LOG_DPRINTLN("GetService> Reason: %s", e.getMsg().c_str());
-    return NS_ERROR_NOT_IMPLEMENTED;
-  }
-  catch (...) {
-    LOG_DPRINTLN("Caught unknown exception");
-    return NS_ERROR_NOT_IMPLEMENTED;
+  bool ok = cuemol2::getService(svcname, &pobj, errmsg);
+  if (!ok) {
+    setErrMsg(errmsg);
+    return NS_ERROR_FAILURE;
   }
 
   qlib::LScriptable *pscr = dynamic_cast<qlib::LScriptable *>(pobj);
   if (pscr==NULL) {
     LOG_DPRINTLN("GetService> Fatal error dyncast to scriptable failed!!");
-    return NS_ERROR_NOT_IMPLEMENTED;
+    return NS_ERROR_FAILURE;
   }
 
   XPCObjWrapper *pWrap = createWrapper();
@@ -462,36 +445,25 @@ NS_IMETHODIMP XPCCueMol::CreateFromString(const char *clsname,
                                           const char *strval,
                                           qIObjWrapper **_retval)
 {
-  ClassRegistry *pMgr = ClassRegistry::getInstance();
-  if (pMgr==NULL) {
-    LOG_DPRINTLN("XPCCueMol> ERROR: CueMol not initialized.");
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
+  LString errmsg;
   qlib::LDynamic *pobj;
-  try {
-    qlib::LClass *pcls = pMgr->getClassObj(clsname);
-    if (pcls==NULL)
-      MB_THROW(qlib::NullPointerException, "null");
-    if (strval==NULL)
-      pobj = pcls->createScrObj();
-    else
-      pobj = pcls->createScrObjFromStr(strval);
+  bool ok;
+  
+  if (strval==nullptr) {
+    ok = cuemol2::createObj(clsname, "", &pobj, errmsg);
   }
-  catch (const qlib::LException &e) {
-    LOG_DPRINTLN("CreateObj> Caught exception <%s>", typeid(e).name());
-    LOG_DPRINTLN("CreateObj> Reason: %s", e.getMsg().c_str());
-    return NS_ERROR_NOT_IMPLEMENTED;
+  else {
+    ok = cuemol2::createObj(clsname, strval, &pobj, errmsg);
   }
-  catch (...) {
-    LOG_DPRINTLN("CreateObj> Caught unknown exception");
-    return NS_ERROR_NOT_IMPLEMENTED;
+  if (!ok) {
+    setErrMsg(errmsg);
+    return NS_ERROR_FAILURE;
   }
 
   qlib::LScriptable *pscr = dynamic_cast<qlib::LScriptable *>(pobj);
   if (pscr==NULL) {
     LOG_DPRINTLN("CreateObj> Fatal error dyncast to scriptable failed!!");
-    return NS_ERROR_NOT_IMPLEMENTED;
+    return NS_ERROR_FAILURE;
   }
 
   XPCObjWrapper *pWrap = createWrapper();

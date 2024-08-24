@@ -494,28 +494,10 @@ NS_IMETHODIMP XPCObjWrapper::GetProp(const char *propname, nsIVariant **_retval)
 
   //MB_DPRINTLN("wrapped: %p/%s", m_pWrapped, typeid(*m_pWrapped).name());
   qlib::LVariant lvar;
-
   bool ok;
   LString errmsg;
 
-  try {
-    //qlib::NestedPropHandler nph(propname, m_pWrapped);
-    //ok = nph.apply()->getProperty(nph.last_name(), lvar);
-    ok = m_pWrapped->getNestedProperty(propname, lvar);
-  }
-  catch (qlib::LException &e) {
-    ok = false;
-    errmsg = 
-      LString::format("Exception occured in getProp for %s: %s",
-                      propname,
-                      e.getFmtMsg().c_str());
-  }
-  catch (...) {
-    ok = false;
-    errmsg = 
-      LString::format("Unknown Exception occured in getProp for %s",
-                      propname);
-  }
+  ok = cuemol2::getProp(m_pWrapped, propname, lvar, errmsg);
   
   if (!ok) {
     LOG_DPRINTLN("GetProp: getProperty(\"%s\") call failed.", propname);
@@ -541,29 +523,10 @@ NS_IMETHODIMP XPCObjWrapper::SetProp(const char *propname, nsIVariant *value)
   rv = NSVarToLVar(value, lvar);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  //////////
-
   bool ok;
   LString errmsg;
 
-  try {
-    //qlib::NestedPropHandler nph(propname, m_pWrapped);
-    //ok = nph.apply()->setProperty(nph.last_name(), lvar);
-
-    ok = m_pWrapped->setNestedProperty(propname, lvar);
-  }
-  catch (qlib::LException &e) {
-    ok = false;
-    errmsg = 
-      LString::format("Exception occured in setProp for %s: %s",
-                      propname, e.getFmtMsg().c_str());
-  }
-  catch (...) {
-    ok = false;
-    errmsg = 
-      LString::format("Unknown Exception occured in setProp for %s",
-                      propname);
-  }
+  ok = cuemol2::setProp(m_pWrapped, propname, lvar, errmsg);
   
   if (!ok) {
     LOG_DPRINTLN("Error: SetProp for property \"%s\" failed.", propname);
