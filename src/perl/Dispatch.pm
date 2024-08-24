@@ -497,7 +497,8 @@ sub genRegFuncCode($) {
 
   # generate code for importing super classes
   foreach my $i (@extends) {
-    print $fhout "  ::${i}_funcReg(pmap);\n";
+    # print $fhout "  ::${i}_funcReg(pmap);\n";
+    print $fhout "  ${i}::funcReg(pmap);\n";
   }
 
   print $fhout "\n";
@@ -529,11 +530,11 @@ sub genRegFuncCode($) {
   print $fhout "\n";
 
   my $modifier = $cls->{"dllexport"};
-  print $fhout "\n";
-  print $fhout "void ${cpp_wp_clsname}_funcReg(qlib::FuncMap *pmap)\n";
-  print $fhout "{\n";
-  print $fhout "    ${cpp_wp_clsname}::funcReg(pmap);\n";
-  print $fhout "}\n";
+  # print $fhout "\n";
+  # print $fhout "void ${cpp_wp_clsname}_funcReg(qlib::FuncMap *pmap)\n";
+  # print $fhout "{\n";
+  # print $fhout "    ${cpp_wp_clsname}::funcReg(pmap);\n";
+  # print $fhout "}\n";
 }
 
 1;
