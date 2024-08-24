@@ -16,7 +16,7 @@
 
 #include <common.h>
 
-namespace qlib { class LString; }
+namespace qlib { class LString; class LScriptable; class LVarArgs; }
 namespace gfx { class TextRenderImpl; }
 namespace sysdep { class MouseEventHandler; }
 
@@ -33,4 +33,8 @@ namespace cuemol2 {
   LIBCUEMOL_API sysdep::MouseEventHandler *createMouseEventHander();
 #endif
     
+  LIBCUEMOL_API bool invokeMethod(qlib::LScriptable *pthis,
+                                  const qlib::LString &mthnm,
+                                  qlib::LVarArgs &args,
+                                  qlib::LString &errmsg) noexcept;
 } // namespace cuemol2

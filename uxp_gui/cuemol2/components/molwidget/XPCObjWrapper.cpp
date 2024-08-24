@@ -15,6 +15,7 @@
 #include <qlib/LVarArray.hpp>
 #include <qlib/LUnicode.hpp>
 #include <qlib/PropSpec.hpp>
+#include <loader.hpp>
 //#include <qlib/NestedPropHandler.hpp>
 
 using namespace xpcom;
@@ -775,23 +776,7 @@ nsresult XPCObjWrapper::invokeImpl(const char *name, LVarArgs &largs, nsIVariant
   bool ok;
   LString errmsg;
 
-  try {
-    ok = m_pWrapped->invokeMethod(name, largs);
-  }
-  catch (qlib::LException &e) {
-    ok = false;
-    errmsg = 
-      LString::format("Exception occured in native method \"%s\"\nReason: %s",
-                      name, e.getMsg().c_str());
-    m_pParent->setErrMsg(e.getMsg());
-  }
-  catch (...) {
-    ok = false;
-    errmsg = 
-      LString::format("Unknown Exception occured in native method \"%s\"",
-                      name);
-    m_pParent->setErrMsg("(unknown)");
-  }
+  ok = cuemol2::invokeMethod(m_pWrapped, name, largs, errmsg);
   
   if (!ok) {
     if (!errmsg.isEmpty()) {
@@ -802,9 +787,10 @@ nsresult XPCObjWrapper::invokeImpl(const char *name, LVarArgs &largs, nsIVariant
                    " on object %s (%p).",
                    name, typeid(*m_pWrapped).name(), m_pWrapped);
     }
+    m_pParent->setErrMsg(errmsg);
     return NS_ERROR_FAILURE;
   }
-
+  
   rv = LVarToNSVar(largs.retval(), _retval, m_pParent);
   
   return rv;

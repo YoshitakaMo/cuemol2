@@ -302,4 +302,29 @@ namespace cuemol2 {
   }
 #endif
 
+  bool invokeMethod(qlib::LScriptable *pthis,
+                    const qlib::LString &mthnm,
+                    qlib::LVarArgs &args,
+                    qlib::LString &errmsg) noexcept
+  {
+    errmsg = "";
+
+    try {
+      return pthis->invokeMethod(mthnm, args);
+    }
+    catch (qlib::LException &e) {
+      errmsg = 
+        LString::format("Exception occured in native method \"%s\"\nReason: %s",
+                        mthnm.c_str(), e.getMsg().c_str());
+    }
+    catch (...) {
+      errmsg = 
+        LString::format("Unknown Exception occured in native method \"%s\"",
+                        mthnm.c_str());
+    }
+
+    return false;
+  }
+
+
 } // namespace cuemol2
