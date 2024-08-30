@@ -232,41 +232,67 @@ namespace cuemol2 {
     return 0;
   }
 
-  int fini()
+  int fini() noexcept
   {
+    try {
 #ifdef BUILD_PYTHON_BINDINGS
-  // unload python module
-  pybr::fini();
-  MB_DPRINTLN("=== pybr::fini() OK ===");
+      // unload python module
+      pybr::fini();
+      MB_DPRINTLN("=== pybr::fini() OK ===");
 #endif
-
+      
 #ifdef HAVE_JAVASCRIPT
-  jsbr::fini();
-  MB_DPRINTLN("=== jsbr::fini() OK ===");
+      jsbr::fini();
+      MB_DPRINTLN("=== jsbr::fini() OK ===");
 #endif
-
-    // load other modules
-    render::fini();
-    molvis::fini();
-    xtal::fini();
-    symm::fini();
-    surface::fini();
-    molanl::fini();
-
-    anim::fini();
-    lwview::fini();
-    molstr::fini();
-    MB_DPRINTLN("=== molstr::fini() OK ===");
-
+      
+      // load other modules
+      render::fini();
+      molvis::fini();
+      xtal::fini();
+      symm::fini();
+      surface::fini();
+      molanl::fini();
+      
+      anim::fini();
+      lwview::fini();
+      molstr::fini();
+      MB_DPRINTLN("=== molstr::fini() OK ===");
+      
 #ifdef BUILD_OPENGL_SYSDEP
-    sysdep::fini();
+      sysdep::fini();
 #endif
-    qsys::fini();
-    MB_DPRINTLN("=== qsys::fini() OK ===");
+      qsys::fini();
+      MB_DPRINTLN("=== qsys::fini() OK ===");
+    }
+    catch (const qlib::LException &e) {
+      LOG_DPRINTLN("fini> Caught exception <%s>", typeid(e).name());
+      LOG_DPRINTLN("fini> Reason: %s", e.getMsg().c_str());
+      return -1;
+    }
+    catch (...) {
+      LOG_DPRINTLN("fini> Caught unknown exception");
+      return -1;
+    }
+    
+    return 0;
+  }
 
-    qlib::fini();
-
-    std::cerr << "=== Terminated normaly ===" << std::endl;
+  int fini_qlib() noexcept
+  {
+    try {
+      qlib::fini();
+      std::cerr << "=== Terminated normaly ===" << std::endl;
+    }
+    catch (const qlib::LException &e) {
+      LOG_DPRINTLN("fini_qlib> Caught exception <%s>", typeid(e).name());
+      LOG_DPRINTLN("fini_qlib> Reason: %s", e.getMsg().c_str());
+      return -1;
+    }
+    catch (...) {
+      LOG_DPRINTLN("fini_qlib> Caught unknown exception");
+      return -1;
+    }
     return 0;
   }
 

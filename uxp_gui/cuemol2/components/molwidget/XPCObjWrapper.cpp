@@ -15,7 +15,7 @@
 #include <qlib/LVarArray.hpp>
 #include <qlib/LUnicode.hpp>
 #include <qlib/PropSpec.hpp>
-#include <loader.hpp>
+#include <libcuemol2_api/binding.hpp>
 //#include <qlib/NestedPropHandler.hpp>
 
 using namespace xpcom;

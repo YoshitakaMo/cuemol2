@@ -26,73 +26,19 @@
 
 //
 
-#include <loader.hpp>
+#include <libcuemol2_api/loader.hpp>
+#include <libcuemol2_api/binding.hpp>
+#include <libcuemol2_api/gui.hpp>
+
 #include <qlib/ClassRegistry.hpp>
 #include <qlib/EventManager.hpp>
 #include <qlib/LByteArray.hpp>
-#include <gfx/TextRenderManager.hpp>
 #include <qsys/qsys.hpp>
 #include <sysdep/sysdep.hpp>
 
-#ifdef HAVE_JAVASCRIPT
-#include <jsbr/jsbr.hpp>
-#endif
-
-#ifdef HAVE_PYTHON
-#include <pybr/pybr.hpp>
-#endif
-
-#ifdef USE_XMLRPC
-#include <xmlrpc_bridge/xrbr.hpp>
-#endif
-
-//#define _num_to_str(num) #num
-//#define num_to_str(num) _num_to_str(num)
-//#pragma message ("new = " num_to_str(new))
-
-#if defined(XP_WIN)
-#include <sysdep/WglView.hpp>
-namespace {
-  class WglViewFactory : public qsys::ViewFactory
-  {
-  public:
-    WglViewFactory() {}
-    virtual ~WglViewFactory() {}
-    virtual qsys::View* create() {
-      return new sysdep::WglView();
-    }
-  };
-  void registerViewFactory()
-  {
-    qsys::View::setViewFactory(new WglViewFactory);
-  }
-}
-
-void registerFileType()
-{
-}
-#elif defined(XP_MACOSX)
-#include <OpenGL/OpenGL.h>
-#include <sysdep/CglView.hpp>
-namespace {
-  class CglViewFactory : public qsys::ViewFactory
-  {
-  public:
-    CglViewFactory() {}
-    virtual ~CglViewFactory() {}
-    virtual qsys::View* create() {
-      return new sysdep::CglView();
-    }
-  };
-  void registerViewFactory()
-  {
-    qsys::View::setViewFactory(new CglViewFactory);
-  }
-}
-
+#if defined(XP_MACOSX)
 #include <Carbon/Carbon.h>
 #include <ApplicationServices/ApplicationServices.h>
-
 void registerFileType()
 {
   CFBundleRef myAppsBundle = CFBundleGetMainBundle();
@@ -123,84 +69,8 @@ void registerFileType()
   MB_DPRINTLN(">>>>> registerFileType OK (%s)!! <<<<<", sbuf);
 }
 #else
-#include <sysdep/XglView.hpp>
-namespace {
-  class XglViewFactory : public qsys::ViewFactory
-  {
-  public:
-    XglViewFactory() {}
-    virtual ~XglViewFactory() {}
-    virtual qsys::View* create() {
-      return new sysdep::XglView();
-    }
-  };
-  void registerViewFactory()
-  {
-    qsys::View::setViewFactory(new XglViewFactory);
-  }
-}
 void registerFileType()
 {
-}
-#endif
-
-namespace render {
-  extern bool init();
-  extern void fini();
-}
-
-namespace molstr {
-  extern bool init();
-  extern void fini();
-}
-
-namespace molvis {
-  extern bool init();
-  extern void fini();
-}
-
-namespace xtal {
-  extern bool init();
-  extern void fini();
-}
-
-namespace molanl {
-  extern bool init();
-  extern void fini();
-}
-
-namespace surface {
-  extern bool init();
-  extern void fini();
-}
-
-namespace symm {
-  extern bool init();
-  extern void fini();
-}
-
-namespace lwview {
-  extern bool init();
-  extern void fini();
-}
-
-namespace anim {
-  extern bool init();
-  extern void fini();
-}
-
-#ifdef HAVE_MDTOOLS_MODULE
-namespace mdtools {
-  extern bool init();
-  extern void fini();
-}
-#endif
-
-#define HAVE_IMPORTERS_MODULE 1
-#ifdef HAVE_IMPORTERS_MODULE
-namespace importers {
-  extern bool init();
-  extern void fini();
 }
 #endif
 
@@ -294,8 +164,6 @@ NS_IMETHODIMP XPCCueMol::Init(const char *confpath, bool *_retval)
   
   MB_DPRINTLN("---------- setup observers OK");
   
-  // registerViewFactory();
-  
   MB_DPRINTLN("XPCCueMol> CueMol initialized.");
   m_bInit = true;
   *_retval = PR_TRUE;
@@ -305,61 +173,7 @@ NS_IMETHODIMP XPCCueMol::Init(const char *confpath, bool *_retval)
 
 NS_IMETHODIMP XPCCueMol::Fini()
 {
-  int i;
-
-#ifdef USE_XMLRPC
-  // unload XMLRPC module
-  xrbr::fini();
-  MB_DPRINTLN("=== xrbr::fini() OK ===");
-#endif
-
-#ifdef HAVE_PYTHON
-  // unload python module
-  pybr::fini();
-  MB_DPRINTLN("=== pybr::fini() OK ===");
-#endif
-
-#ifdef HAVE_JAVASCRIPT
-  jsbr::fini();
-  MB_DPRINTLN("=== jsbr::fini() OK ===");
-#endif
-
-  //finiTextRender();
-  sysdep::destroyTextRender(m_pTR);
-
-  cleanupWrappers();
-
-  // cleanup timer
-  qlib::EventManager::getInstance()->finiTimer();
-
-  if (!m_bInit) {
-    LOG_DPRINTLN("XPCCueMol> ERROR: CueMol not initialized.");
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-#ifdef HAVE_IMPORTERS_MODULE
-  importers::fini();
-#endif
-
-#ifdef HAVE_MDTOOLS_MODULE
-  mdtools::fini();
-#endif
-
-  anim::fini();
-  lwview::fini();
-  molanl::fini();
-  surface::fini();
-  symm::fini();
-  xtal::fini();
-  molvis::fini();
-  molstr::fini();
-  render::fini();
-
-  // CueMol-App finalization
-  sysdep::fini();
-  qsys::fini();
-
-  MB_DPRINTLN("XPCCueMol> CueMol finalized.");
+  cuemol2::fini();
   m_bInit = false;
   return NS_OK;
 }
@@ -529,7 +343,7 @@ void XPCCueMol::setWrapperDbgMsg(int nind, const char *dbgmsg)
 void XPCCueMol::dumpWrappers() const
 {
   MB_DPRINTLN("=== Unreleased wrappers... ===");
-  for (int i=0; i<m_pool.size(); ++i) {
+  for (size_t i=0; i<m_pool.size(); ++i) {
     if (m_pool[i].ptr) {
       XPCObjWrapper *pwr = m_pool[i].ptr;
       LScriptable *pscr = pwr->getWrappedObj();
@@ -618,8 +432,6 @@ NS_IMETHODIMP XPCCueMol::ConvBAryToStr(qIObjWrapper *aObj, nsACString & _retval 
 /// qIObjWrapper createBAryFromStr (in ACString aString, in PRUint32 aCount)
 NS_IMETHODIMP XPCCueMol::CreateBAryFromStr(const nsACString & aString, qIObjWrapper **_retval )
 {
-  nsresult rv = NS_OK;
-
   PRUint32 nlen = aString.Length();
 
   qlib::LByteArray *pNewObj = new qlib::LByteArray(nlen);
@@ -666,10 +478,8 @@ NS_IMETHODIMP XPCCueMol::CreateBAryFromIStream(nsIInputStream *aInputStream, qIO
 
 void XPCCueMol::cleanupWrappers()
 {
-  int i;
-  
   MB_DPRINTLN("=== Cleaning up the unreleased %d wrappers... ===", m_pool.size());
-  for (i=0; i<m_pool.size(); ++i) {
+  for (size_t i=0; i<m_pool.size(); ++i) {
     if (m_pool[i].ptr) {
       XPCObjWrapper *pwr = m_pool[i].ptr;
       qlib::LScriptable *pscr = pwr->getWrappedObj();
@@ -695,12 +505,8 @@ void XPCCueMol::cleanupWrappers()
   MB_DPRINTLN("=== Done ===");
 }
 
-///////////////////////
-
 NS_IMETHODIMP XPCCueMol::Test(nsISupports *arg)
 {
-  *((int *) 0) = 100;
   dumpWrappers();
   return NS_OK;
 }
-
