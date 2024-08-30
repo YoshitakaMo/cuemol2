@@ -73,6 +73,14 @@ namespace qlib {
       return i!=m_abitab.end();
     }
 
+    /**
+       Check if the class is already registered by system independent name.
+    */
+    bool isRegistered(const LString &name) const {
+      ClassTable::const_iterator i = m_nametab.find(name);
+      return i!=m_nametab.end();
+    }
+
     ///////////////////////
 
     /** get class object by system dependent ABI's name (not throw exception) */

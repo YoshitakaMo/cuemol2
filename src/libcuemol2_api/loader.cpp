@@ -2,6 +2,7 @@
 #include <common.h>
 
 #include "loader.hpp"
+#include "gui.hpp"
 
 #include <iostream>
 #include "boost/filesystem/path.hpp"
@@ -11,15 +12,12 @@
 #include <qlib/FileStream.hpp>
 #include <qlib/ClassRegistry.hpp>
 
-#include <gfx/TextRenderManager.hpp>
-
 #include <qsys/qsys.hpp>
 #include <qsys/SceneManager.hpp>
 #include <qsys/SysConfig.hpp>
 
 #ifdef BUILD_OPENGL_SYSDEP
 #include <sysdep/sysdep.hpp>
-#include <sysdep/MouseEventHandler.hpp>
 #endif
 
 #ifdef HAVE_JAVASCRIPT
@@ -89,71 +87,14 @@ namespace anim {
   extern void fini();
 }
 
-#if (GUI_ARCH == MB_GUI_ARCH_WIN)
-// Win32
-#include <sysdep/WglView.hpp>
-namespace {
-  class WglViewFactory : public qsys::ViewFactory
-  {
-  public:
-    WglViewFactory() {}
-    virtual ~WglViewFactory() {}
-    virtual qsys::View* create() {
-      return new sysdep::WglView();
-    }
-  };
-  void registerViewFactory()
-  {
-    qsys::View::setViewFactory(new WglViewFactory);
-  }
-}
-#elif (GUI_ARCH == MB_GUI_ARCH_OSX)
-// MacOS
-#include <OpenGL/OpenGL.h>
-#include <sysdep/CglView.hpp>
-namespace {
-  class CglViewFactory : public qsys::ViewFactory
-  {
-  public:
-    CglViewFactory() {}
-    virtual ~CglViewFactory() {}
-    virtual qsys::View* create() {
-      return new sysdep::CglView();
-    }
-  };
-  void registerViewFactory()
-  {
-    qsys::View::setViewFactory(new CglViewFactory);
-  }
-}
-#elif (GUI_ARCH == MB_GUI_ARCH_X11)
-#include <sysdep/XglView.hpp>
-namespace {
-  class XglViewFactory : public qsys::ViewFactory
-  {
-  public:
-    XglViewFactory() {}
-    virtual ~XglViewFactory() {}
-    virtual qsys::View* create() {
-      return new sysdep::XglView();
-    }
-  };
-  void registerViewFactory()
-  {
-    qsys::View::setViewFactory(new XglViewFactory);
-  }
-}
-#else
-#error "No suitable view impl found for current environment"
-#endif
-
-using qlib::LString;
 
 #ifndef DEFAULT_CONFIG
 #define DEFAULT_CONFIG "./sysconfig.xml"
 #endif
 
 namespace cuemol2 {
+
+  using qlib::LString;
 
   int init_qlib() noexcept
   {
@@ -314,220 +255,5 @@ namespace cuemol2 {
 
     return 0;
   }
-  
-
-#ifdef BUILD_OPENGL_SYSDEP
-  gfx::TextRenderImpl *initTextRender()
-  {
-    try {
-      gfx::TextRenderImpl *pTR = (gfx::TextRenderImpl *) sysdep::createTextRender();
-      gfx::TextRenderManager *pTRM = gfx::TextRenderManager::getInstance();
-      pTRM->setImpl(pTR);
-      return pTR;
-    }
-    catch (const qlib::LException &e) {
-      LOG_DPRINTLN("Loader.initTextRender> Caught exception <%s>", typeid(e).name());
-      LOG_DPRINTLN("Loader.initTextRender> Reason: %s", e.getMsg().c_str());
-    }
-    catch (...) {
-      LOG_DPRINTLN("Loader.initTextRender> Caught unknown exception");
-    }
-    
-    return NULL;
-  }
-
-  void finiTextRender(gfx::TextRenderImpl *pTR)
-  {
-    sysdep::destroyTextRender(pTR);
-  }
-#endif
-
-#ifdef BUILD_OPENGL_SYSDEP
-  sysdep::MouseEventHandler *createMouseEventHander() {
-    return new sysdep::MouseEventHandler();
-  }
-#endif
-
-  ////////////////////
-
-  bool hasClass(const qlib::LString &clsname,
-                bool *retval,
-                qlib::LString &errmsg) noexcept
-  {
-    *retval = false;
-
-    qlib::ClassRegistry *pMgr = qlib::ClassRegistry::getInstance();
-    if (pMgr==NULL) {
-      errmsg = "ERROR: CueMol not initialized.";
-      return false;
-    }
-
-    qlib::LDynamic *pobj;
-    try {
-      qlib::LClass *pcls = pMgr->getClassObjNx(clsname);
-      if (pcls!=NULL)
-        *retval = true;
-      return true;
-    }
-    catch (const qlib::LException &e) {
-      MB_DPRINTLN("HasClass> Caught exception <%s>", typeid(e).name());
-      MB_DPRINTLN("HasClass> Reason: %s", e.getMsg().c_str());
-      errmsg = LString::format("Caught exception <%s> Reason: %s",
-                               typeid(e).name(),
-                               e.getMsg().c_str());
-    }
-    catch (...) {
-      MB_DPRINTLN("HasClass> Caught unknown exception for class name %s", clsname.c_str());
-      errmsg = LString::format("Caught unknown exception for class name %s", clsname.c_str());
-    }
-
-    return false;
-  }
-
-  bool getService(const qlib::LString &svcname,
-                  qlib::LDynamic **prval,
-                  qlib::LString &errmsg) noexcept
-  {
-    qlib::ClassRegistry *pMgr = qlib::ClassRegistry::getInstance();
-    if (pMgr==NULL) {
-      errmsg = "ERROR: CueMol not initialized.";
-      return false;
-    }
-    
-    try {
-      *prval = pMgr->getSingletonObj(svcname);
-      return true;
-    }
-    catch (const qlib::LException &e) {
-      errmsg = LString::format("Exception occured in getService for %s: %s",
-                               svcname.c_str(),
-                               e.getFmtMsg().c_str());
-      LOG_DPRINTLN("GetService> Caught exception <%s>", typeid(e).name());
-      LOG_DPRINTLN("GetService> Reason: %s", e.getMsg().c_str());
-    }
-    catch (...) {
-      errmsg = 
-        LString::format("Unknown Exception occured in getProp for %s",
-                        svcname.c_str());
-      LOG_DPRINTLN("Caught unknown exception");
-    }
-    
-    return false;
-  }
-
-  bool createObj(const qlib::LString &clsname,
-                 const qlib::LString &strval,
-                 qlib::LDynamic **prval,
-                 qlib::LString &errmsg) noexcept
-  {
-    qlib::ClassRegistry *pMgr = qlib::ClassRegistry::getInstance();
-    if (pMgr==NULL) {
-      errmsg = "ERROR: CueMol not initialized.";
-      return false;
-    }
-
-    try {
-      qlib::LClass *pcls = pMgr->getClassObj(clsname);
-      if (pcls==NULL)
-        MB_THROW(qlib::NullPointerException, "null");
-      if (strval.isEmpty())
-        *prval = pcls->createScrObj();
-      else
-        *prval = pcls->createScrObjFromStr(strval);
-      return true;
-    }
-    catch (const qlib::LException &e) {
-      errmsg = LString::format("Exception occured in createObj for %s: %s",
-                               clsname.c_str(),
-                               e.getFmtMsg().c_str());
-      LOG_DPRINTLN("CreateObj> Caught exception <%s>", typeid(e).name());
-      LOG_DPRINTLN("CreateObj> Reason: %s", e.getMsg().c_str());
-      return false;
-    }
-    catch (...) {
-      errmsg = 
-        LString::format("Unknown Exception occured in createObj for %s",
-                        clsname.c_str());
-      LOG_DPRINTLN("CreateObj> Caught unknown exception");
-      return false;
-    }
-    
-    errmsg = "Unexpected condition in createObj()";
-    return false;
-  }
-
-  bool getProp(qlib::LScriptable *pthis,
-               const qlib::LString &propname,
-               qlib::LVariant &lvar,
-               qlib::LString &errmsg) noexcept
-  {
-    errmsg = "";
-
-    try {
-      return pthis->getNestedProperty(propname, lvar);
-    }
-    catch (qlib::LException &e) {
-      errmsg = 
-        LString::format("Exception occured in getProp for %s: %s",
-                        propname.c_str(),
-                        e.getFmtMsg().c_str());
-    }
-    catch (...) {
-      errmsg = 
-        LString::format("Unknown Exception occured in getProp for %s",
-                        propname.c_str());
-    }
-
-    return false;
-  }
-  
-  bool setProp(qlib::LScriptable *pthis,
-               const qlib::LString &propname,
-               const qlib::LVariant &lvar,
-               qlib::LString &errmsg) noexcept
-  {
-    errmsg = "";
-    
-    try {
-      return pthis->setNestedProperty(propname, lvar);
-    }
-    catch (qlib::LException &e) {
-      errmsg = 
-        LString::format("Exception occured in setProp for %s: %s",
-                        propname.c_str(), e.getFmtMsg().c_str());
-    }
-    catch (...) {
-      errmsg = 
-        LString::format("Unknown Exception occured in setProp for %s",
-                        propname.c_str());
-    }
-
-    return false;
-  }
-
-  bool invokeMethod(qlib::LScriptable *pthis,
-                    const qlib::LString &mthnm,
-                    qlib::LVarArgs &args,
-                    qlib::LString &errmsg) noexcept
-  {
-    errmsg = "";
-
-    try {
-      return pthis->invokeMethod(mthnm, args);
-    }
-    catch (qlib::LException &e) {
-      errmsg = 
-        LString::format("Exception occured in native method \"%s\"\nReason: %s",
-                        mthnm.c_str(), e.getMsg().c_str());
-    }
-    catch (...) {
-      errmsg = 
-        LString::format("Unknown Exception occured in native method \"%s\"",
-                        mthnm.c_str());
-    }
-
-    return false;
-  }
-
 
 } // namespace cuemol2

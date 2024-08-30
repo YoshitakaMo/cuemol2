@@ -249,7 +249,7 @@ target_link_libraries(cuemol2 PRIVATE ${CUEMOL2_LINK_LIBRARIES})
 target_compile_definitions(cuemol2 PUBLIC LIBCUEMOL_EXPORTS=1)
 
 target_sources(cuemol2
-  PRIVATE libcuemol2_api/loader.cpp
+  PRIVATE libcuemol2_api/loader.cpp libcuemol2_api/binding.cpp libcuemol2_api/gui.cpp
   PUBLIC FILE_SET HEADERS 
   BASE_DIRS ${PROJECT_SOURCE_DIR}/src
   FILES common.h qmtypes.h _version.h libcuemol2_api/api.hpp libcuemol2_api/loader.hpp libcuemol2_api/gui.hpp libcuemol2_api/binding.hpp
