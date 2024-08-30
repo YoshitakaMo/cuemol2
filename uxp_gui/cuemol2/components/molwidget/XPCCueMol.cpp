@@ -173,12 +173,12 @@ NS_IMETHODIMP XPCCueMol::Init(const char *confpath, bool *_retval)
 
 NS_IMETHODIMP XPCCueMol::Fini()
 {
-  cuemol2::fini();
-
   sysdep::destroyTextRender(m_pTR);
   cleanupWrappers();
   // cleanup timer
   qlib::EventManager::getInstance()->finiTimer();
+
+  cuemol2::fini();
 
   m_bInit = false;
   return NS_OK;
