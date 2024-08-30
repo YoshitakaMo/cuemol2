@@ -140,18 +140,9 @@ NS_IMETHODIMP XPCCueMol::Init(const char *confpath, bool *_retval)
 
   registerFileType();
 
-  try {
-    // setup timer
-    qlib::EventManager::getInstance()->initTimer(new XPCTimerImpl);
-  }
-  catch (const qlib::LException &e) {
-    LOG_DPRINTLN("Init> Caught exception <%s>", typeid(e).name());
-    LOG_DPRINTLN("Init> Reason: %s", e.getMsg().c_str());
-    return NS_ERROR_NOT_IMPLEMENTED;
-  }
-  catch (...) {
-    LOG_DPRINTLN("Init> Caught unknown exception");
-    return NS_ERROR_NOT_IMPLEMENTED;
+  result = cuemol2::init_timer(new XPCTimerImpl);
+  if (result < 0) {
+    return NS_ERROR_FAILURE;
   }
   
   // setup quit-app observer
@@ -202,28 +193,11 @@ using qlib::ClassRegistry;
 
 NS_IMETHODIMP XPCCueMol::HasClass(const char * clsname, bool *_retval)
 {
-  ClassRegistry *pMgr = ClassRegistry::getInstance();
-  if (pMgr==NULL) {
-    LOG_DPRINTLN("XPCCueMol> ERROR: CueMol not initialized.");
-    return NS_ERROR_NOT_INITIALIZED;
-  }
-
-  qlib::LDynamic *pobj;
-  *_retval = false;
-  try {
-    qlib::LClass *pcls = pMgr->getClassObj(clsname);
-    //MB_DPRINTLN("XPCCueMol.hasClass(%s)=%p", clsname, pcls);
-    if (pcls!=NULL)
-      *_retval = true;
-  }
-  catch (const qlib::LException &e) {
-    MB_DPRINTLN("XPCCueMol::HasClass> Caught exception <%s>", typeid(e).name());
-    MB_DPRINTLN("XPCCueMol::HasClass> Reason: %s", e.getMsg().c_str());
-    // return NS_ERROR_NOT_IMPLEMENTED;
-  }
-  catch (...) {
-    MB_DPRINTLN("XPCCueMol::HasClass> Caught unknown exception for class name %s", clsname);
-    // return NS_ERROR_NOT_IMPLEMENTED;
+  LString errmsg;
+  bool result = cuemol2::hasClass(clsname, _retval, errmsg);
+  if (!result) {
+    setErrMsg(errmsg);
+    return NS_ERROR_FAILURE;
   }
 
   return NS_OK;

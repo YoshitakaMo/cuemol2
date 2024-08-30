@@ -12,6 +12,10 @@ namespace qlib {
 
 namespace cuemol2 {
 
+  LIBCUEMOL_API bool hasClass(const qlib::LString &clsname,
+                              bool *retval,
+                              qlib::LString &errmsg) noexcept;
+
   LIBCUEMOL_API bool getService(const qlib::LString &svcname,
                                 qlib::LDynamic **prval,
                                 qlib::LString &errmsg) noexcept;

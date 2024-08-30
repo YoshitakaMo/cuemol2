@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # build script for libcuemol2 in posix
-# usage: run.sh deplibs_dir host_os host_arch <sdk_path>
+# usage: run.sh deplibs_dir host_os host_arch
 #  host_os ... macOS
 #  host_arch ... ARM64 X64
 
@@ -14,6 +14,8 @@ RUNNER_ARCH=$3
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 REPOS_DIR=$(cd $(dirname $0)/../..; pwd)
 WORKSPACE=${GITHUB_WORKSPACE:-$REPOS_DIR}
+# DEBUG Flag
+CUEMOL_DEBUG=""
 
 TMPDIR=$BASEDIR/tmp
 mkdir -p $TMPDIR
@@ -67,6 +69,7 @@ if [ $RUNNER_OS = "macOS" ]; then
 
     sed "s!@CUEMOL_BUNDLE@!$BUNDLE_DIR!g" $SCRIPT_DIR/mozconfig_macOS \
         | sed "s!@CUEMOL_DIR@!$CUEMOL_DIR!g" \
+        | sed "s!@CUEMOL_DEBUG@!$CUEMOL_DEBUG!g" \
         | sed "s!@BOOST_DIR@!$BOOST_DIR!g" \
         | sed "s!@DEPLIBS_DIR@!$DEPLIBS_DIR!g" \
         | sed "s!@BUILD_ARCH@!$BUILD_ARCH!g" \

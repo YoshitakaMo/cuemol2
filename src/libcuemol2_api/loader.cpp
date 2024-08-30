@@ -296,6 +296,26 @@ namespace cuemol2 {
     return 0;
   }
 
+  int init_timer(qlib::TimerImpl *pTimer) noexcept
+  {
+    try {
+      // setup timer
+      qlib::EventManager::getInstance()->initTimer(pTimer);
+    }
+    catch (const qlib::LException &e) {
+      LOG_DPRINTLN("Init> Caught exception <%s>", typeid(e).name());
+      LOG_DPRINTLN("Init> Reason: %s", e.getMsg().c_str());
+      return -1;
+    }
+    catch (...) {
+      LOG_DPRINTLN("Init> Caught unknown exception");
+      return -1;
+    }
+
+    return 0;
+  }
+  
+
 #ifdef BUILD_OPENGL_SYSDEP
   gfx::TextRenderImpl *initTextRender()
   {
@@ -320,7 +340,6 @@ namespace cuemol2 {
   {
     sysdep::destroyTextRender(pTR);
   }
-
 #endif
 
 #ifdef BUILD_OPENGL_SYSDEP
@@ -331,9 +350,43 @@ namespace cuemol2 {
 
   ////////////////////
 
+  bool hasClass(const qlib::LString &clsname,
+                bool *retval,
+                qlib::LString &errmsg) noexcept
+  {
+    *retval = false;
+
+    qlib::ClassRegistry *pMgr = qlib::ClassRegistry::getInstance();
+    if (pMgr==NULL) {
+      errmsg = "ERROR: CueMol not initialized.";
+      return false;
+    }
+
+    qlib::LDynamic *pobj;
+    try {
+      qlib::LClass *pcls = pMgr->getClassObjNx(clsname);
+      if (pcls!=NULL)
+        *retval = true;
+      return true;
+    }
+    catch (const qlib::LException &e) {
+      MB_DPRINTLN("HasClass> Caught exception <%s>", typeid(e).name());
+      MB_DPRINTLN("HasClass> Reason: %s", e.getMsg().c_str());
+      errmsg = LString::format("Caught exception <%s> Reason: %s",
+                               typeid(e).name(),
+                               e.getMsg().c_str());
+    }
+    catch (...) {
+      MB_DPRINTLN("HasClass> Caught unknown exception for class name %s", clsname.c_str());
+      errmsg = LString::format("Caught unknown exception for class name %s", clsname.c_str());
+    }
+
+    return false;
+  }
+
   bool getService(const qlib::LString &svcname,
-                       qlib::LDynamic **prval,
-                       qlib::LString &errmsg) noexcept
+                  qlib::LDynamic **prval,
+                  qlib::LString &errmsg) noexcept
   {
     qlib::ClassRegistry *pMgr = qlib::ClassRegistry::getInstance();
     if (pMgr==NULL) {
@@ -373,15 +426,15 @@ namespace cuemol2 {
       return false;
     }
 
-    qlib::LDynamic *pobj;
     try {
       qlib::LClass *pcls = pMgr->getClassObj(clsname);
       if (pcls==NULL)
         MB_THROW(qlib::NullPointerException, "null");
       if (strval.isEmpty())
-        pobj = pcls->createScrObj();
+        *prval = pcls->createScrObj();
       else
-        pobj = pcls->createScrObjFromStr(strval);
+        *prval = pcls->createScrObjFromStr(strval);
+      return true;
     }
     catch (const qlib::LException &e) {
       errmsg = LString::format("Exception occured in createObj for %s: %s",
@@ -399,6 +452,7 @@ namespace cuemol2 {
       return false;
     }
     
+    errmsg = "Unexpected condition in createObj()";
     return false;
   }
 

@@ -93,6 +93,7 @@ namespace qlib {
        Get class object by system-independent class name.
     */
     LClass *getClassObj(const LString &name);
+    LClass *getClassObjNx(const LString &name) noexcept;
 
     /**
        Create an instance of the class by its name.
