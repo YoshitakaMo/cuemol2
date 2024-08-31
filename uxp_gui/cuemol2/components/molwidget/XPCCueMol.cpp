@@ -207,32 +207,26 @@ NS_IMETHODIMP XPCCueMol::GetService(const char *svcname,
                                     qIObjWrapper **_retval)
 {
   LString errmsg;
-  qlib::LDynamic *pobj;
+  qlib::LScriptable *pobj;
   bool ok = cuemol2::getService(svcname, &pobj, errmsg);
   if (!ok) {
     setErrMsg(errmsg);
     return NS_ERROR_FAILURE;
   }
 
-  qlib::LScriptable *pscr = dynamic_cast<qlib::LScriptable *>(pobj);
-  if (pscr==NULL) {
-    LOG_DPRINTLN("GetService> Fatal error dyncast to scriptable failed!!");
-    return NS_ERROR_FAILURE;
-  }
-
   XPCObjWrapper *pWrap = createWrapper();
-  pWrap->setWrappedObj(pscr);
+  pWrap->setWrappedObj(pobj);
 
   *_retval = pWrap;
   NS_ADDREF((*_retval));
-  MB_DPRINTLN("getService(%s) OK: %p", svcname, pscr);
+  MB_DPRINTLN("getService(%s) OK: %p", svcname, pobj);
   return NS_OK;
 }
 
 NS_IMETHODIMP XPCCueMol::CreateObj(const char *clsname,
                                    qIObjWrapper **_retval)
 {
-  return CreateFromString(clsname, NULL, _retval);
+  return CreateFromString(clsname, "", _retval);
 }
 
 NS_IMETHODIMP XPCCueMol::CreateFromString(const char *clsname,
@@ -240,32 +234,21 @@ NS_IMETHODIMP XPCCueMol::CreateFromString(const char *clsname,
                                           qIObjWrapper **_retval)
 {
   LString errmsg;
-  qlib::LDynamic *pobj;
+  qlib::LScriptable *pobj;
   bool ok;
   
-  if (strval==nullptr) {
-    ok = cuemol2::createObj(clsname, "", &pobj, errmsg);
-  }
-  else {
-    ok = cuemol2::createObj(clsname, strval, &pobj, errmsg);
-  }
+  ok = cuemol2::createObj(clsname, strval, &pobj, errmsg);
   if (!ok) {
     setErrMsg(errmsg);
     return NS_ERROR_FAILURE;
   }
 
-  qlib::LScriptable *pscr = dynamic_cast<qlib::LScriptable *>(pobj);
-  if (pscr==NULL) {
-    LOG_DPRINTLN("CreateObj> Fatal error dyncast to scriptable failed!!");
-    return NS_ERROR_FAILURE;
-  }
-
   XPCObjWrapper *pWrap = createWrapper();
-  pWrap->setWrappedObj(pscr);
+  pWrap->setWrappedObj(pobj);
 
   *_retval = pWrap;
   NS_ADDREF((*_retval));
-  MB_DPRINTLN("XPCCueMol> createObj(%s) OK: %p", clsname, pscr);
+  MB_DPRINTLN("XPCCueMol> createObj(%s) OK: %p", clsname, pobj);
   return NS_OK;
 }
 

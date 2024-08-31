@@ -33,12 +33,7 @@ namespace cuemol2 {
       return false;
     }
 
-    // qlib::LDynamic *pobj;
     try {
-      // qlib::LClass *pcls = pMgr->getClassObjNx(clsname);
-      // if (pcls!=NULL)
-      //   *retval = true;
-      // return true;
       *retval =  pMgr->isRegistered(clsname);
       return true;
     }
@@ -58,7 +53,8 @@ namespace cuemol2 {
   }
 
   bool getService(const qlib::LString &svcname,
-                  qlib::LDynamic **prval,
+                  // qlib::LDynamic **prval,
+                  qlib::LScriptable **prval,
                   qlib::LString &errmsg) noexcept
   {
     qlib::ClassRegistry *pMgr = qlib::ClassRegistry::getInstance();
@@ -68,7 +64,12 @@ namespace cuemol2 {
     }
     
     try {
-      *prval = pMgr->getSingletonObj(svcname);
+      auto pobj = pMgr->getSingletonObj(svcname);
+      *prval = dynamic_cast<qlib::LScriptable *>(pobj);
+      if (*prval==nullptr) {
+        errmsg = "Fatal error dyncast to scriptable failed!!";
+        return false;
+      }
       return true;
     }
     catch (const qlib::LException &e) {
@@ -90,7 +91,8 @@ namespace cuemol2 {
 
   bool createObj(const qlib::LString &clsname,
                  const qlib::LString &strval,
-                 qlib::LDynamic **prval,
+                 // qlib::LDynamic **prval,
+                 qlib::LScriptable **prval,
                  qlib::LString &errmsg) noexcept
   {
     qlib::ClassRegistry *pMgr = qlib::ClassRegistry::getInstance();
@@ -103,10 +105,16 @@ namespace cuemol2 {
       qlib::LClass *pcls = pMgr->getClassObj(clsname);
       if (pcls==NULL)
         MB_THROW(qlib::NullPointerException, "null");
+      qlib::LDynamic *pobj;
       if (strval.isEmpty())
-        *prval = pcls->createScrObj();
+        pobj = pcls->createScrObj();
       else
-        *prval = pcls->createScrObjFromStr(strval);
+        pobj = pcls->createScrObjFromStr(strval);
+      *prval = dynamic_cast<qlib::LScriptable *>(pobj);
+      if (*prval==nullptr) {
+        errmsg = "Fatal error dyncast to scriptable failed!!";
+        return false;
+      }
       return true;
     }
     catch (const qlib::LException &e) {

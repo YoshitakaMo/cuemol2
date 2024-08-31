@@ -7,7 +7,7 @@ namespace qlib {
   class LScriptable;
   class LVariant;
   class LVarArgs;
-  class LDynamic;
+  // class LDynamic;
 }
 
 namespace cuemol2 {
@@ -17,12 +17,14 @@ namespace cuemol2 {
                               qlib::LString &errmsg) noexcept;
 
   LIBCUEMOL_API bool getService(const qlib::LString &svcname,
-                                qlib::LDynamic **prval,
+                                // qlib::LDynamic **prval,
+                                qlib::LScriptable **prval,
                                 qlib::LString &errmsg) noexcept;
 
   LIBCUEMOL_API bool createObj(const qlib::LString &svcname,
                                const qlib::LString &strval,
-                               qlib::LDynamic **prval,
+                               // qlib::LDynamic **prval,
+                               qlib::LScriptable **prval,
                                qlib::LString &errmsg) noexcept;
 
   LIBCUEMOL_API bool hasProp(qlib::LScriptable *pthis,
