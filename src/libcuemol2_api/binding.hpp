@@ -39,4 +39,9 @@ namespace cuemol2 {
                                   const qlib::LString &mthnm,
                                   qlib::LVarArgs &args,
                                   qlib::LString &errmsg) noexcept;
+
+  LIBCUEMOL_API bool toString(qlib::LScriptable *pthis,
+                              qlib::LString &val,
+                              qlib::LString &errmsg) noexcept;
+
 } // namespace cuemol2

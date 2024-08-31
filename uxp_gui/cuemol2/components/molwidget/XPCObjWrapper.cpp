@@ -1064,20 +1064,8 @@ NS_IMETHODIMP XPCObjWrapper::ToString(char **_retval)
   }
 
   LString str, errmsg;
-  bool ok = false;
-  try {
-    str = m_pWrapped->toString();
-    ok = true;
-  }
-  catch (qlib::LException &e) {
-    errmsg = 
-      LString::format("Exception occured in toString(): %s",
-                      e.getFmtMsg().c_str());
-  }
-  catch (...) {
-    errmsg = "Unknown Exception occured in toString()";
-  }
-  
+  bool ok = cuemol2::toString(m_pWrapped, str, errmsg);
+
   if (!ok) {
     LOG_DPRINTLN("CallNativeMethod: Error in invoking toString() on object %p.", m_pWrapped);
     if (!errmsg.isEmpty()) {
@@ -1092,6 +1080,7 @@ NS_IMETHODIMP XPCObjWrapper::ToString(char **_retval)
   nsAutoCString nsstr(str.c_str());
   *_retval = ToNewCString(nsstr);
 
+  LOG_DPRINTLN("************** ToString called: %s", *_retval);
   return NS_OK;
 }
 
