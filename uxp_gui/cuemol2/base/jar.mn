@@ -282,6 +282,9 @@ cuemol2.jar:
 # CutByPlane tool
   content/cuemol2/tools/surf-cutbyplane.xul (content/tools/surf-cutbyplane.xul)
   content/cuemol2/tools/surf-cutbyplane.js (content/tools/surf-cutbyplane.js)
+# MolClient tools
+  content/cuemol2/tools/molclient-tools.xul (content/tools/molclient-tools.xul)
+  content/cuemol2/tools/molclient-tools.js (content/tools/molclient-tools.js)
 # Symm-edit dialog
   content/cuemol2/tools/symm-chg-dlg.xul (content/tools/symm-chg-dlg.xul)
   content/cuemol2/tools/symm-chg-dlg.js (content/tools/symm-chg-dlg.js)
