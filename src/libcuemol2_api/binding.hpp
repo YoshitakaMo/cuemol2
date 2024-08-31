@@ -25,6 +25,11 @@ namespace cuemol2 {
                                qlib::LDynamic **prval,
                                qlib::LString &errmsg) noexcept;
 
+  LIBCUEMOL_API bool hasProp(qlib::LScriptable *pthis,
+                             const qlib::LString &propname,
+                             bool &retval,
+                             qlib::LString &errmsg) noexcept;
+    
   LIBCUEMOL_API bool getProp(qlib::LScriptable *pthis,
                              const qlib::LString &propnm,
                              qlib::LVariant &val,
@@ -47,5 +52,14 @@ namespace cuemol2 {
   LIBCUEMOL_API bool resetProp(qlib::LScriptable *pthis,
                                const qlib::LString &propname,
                                qlib::LString &errmsg) noexcept;
+
+  LIBCUEMOL_API bool getPropsJSON(qlib::LScriptable *pthis,
+                                  qlib::LString &retval,
+                                  qlib::LString &errmsg) noexcept;
+
+  LIBCUEMOL_API bool getPropDefaultStatus(qlib::LScriptable *pthis,
+                                          const qlib::LString &propnm,
+                                          int &retval,
+                                          qlib::LString &errmsg) noexcept;
 
 } // namespace cuemol2

@@ -326,8 +326,8 @@ void XPCCueMol::dumpWrappers() const
   for (size_t i=0; i<m_pool.size(); ++i) {
     if (m_pool[i].ptr) {
       XPCObjWrapper *pwr = m_pool[i].ptr;
-      LScriptable *pscr = pwr->getWrappedObj();
-      //MB_DPRINTLN("Wrapper: %d %p (%s)", i, pwr, typeid(*pscr).name());
+      // LScriptable *pscr = pwr->getWrappedObj();
+      // MB_DPRINTLN("Wrapper: %d %p (%s)", i, pwr, typeid(*pscr).name());
       MB_DPRINTLN("Wrapper: %d %p", i, pwr);
 #ifdef MB_DEBUG
       MB_DPRINT("   MSG: ", m_pool[i].dbgmsg.c_str() );

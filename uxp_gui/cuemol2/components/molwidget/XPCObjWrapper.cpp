@@ -16,7 +16,6 @@
 #include <qlib/LUnicode.hpp>
 #include <qlib/PropSpec.hpp>
 #include <libcuemol2_api/binding.hpp>
-//#include <qlib/NestedPropHandler.hpp>
 
 using namespace xpcom;
 using qlib::LVariant;
@@ -471,18 +470,29 @@ nsresult XPCObjWrapper::checkPropImpl(const char *propname, bool *rval /*= NULL*
     return NS_ERROR_INVALID_POINTER;
   }
 
-  bool hasProperty = m_pWrapped->hasNestedProperty(propname);
+  LString errmsg;
+  bool hasProperty;
+  bool ok = cuemol2::hasProp(m_pWrapped, propname, hasProperty, errmsg);
+  // bool hasProperty = m_pWrapped->hasNestedProperty(propname);
 
   if (rval!=NULL)
     *rval = hasProperty;
 
-  if (rval==NULL && !hasProperty) {
-    LOG_DPRINTLN("Obj %s: prop <%s> not found",
-		 typeid(*m_pWrapped).name(),
-		 propname);
+  // if (rval==NULL && !hasProperty) {
+  //   LOG_DPRINTLN("Obj %s: prop <%s> not found",
+  //   	 typeid(*m_pWrapped).name(),
+  //   	 propname);
+  //   return NS_ERROR_FAILURE;
+  // }
+  if (!ok) {
+    LOG_DPRINTLN("checkPropImpl: hasProp(\"%s\") call failed.", propname);
+    if (!errmsg.isEmpty()) {
+      LOG_DPRINTLN("Reason: %s", errmsg.c_str());
+    }
     return NS_ERROR_FAILURE;
   }
 
+  LOG_DPRINTLN("********** checkPropImpl: %s, %d", propname, hasProperty);
   return NS_OK;
 }
 
@@ -572,42 +582,10 @@ NS_IMETHODIMP XPCObjWrapper::IsPropDefault(const char *propname, PRInt32 *_retva
 
   //////////
 
-  bool ok = true;
   int result;
   LString errmsg;
+  bool ok = cuemol2::getPropDefaultStatus(m_pWrapped, propname, result, errmsg);
 
-  try {
-    //qlib::NestedPropHandler nph(propname, m_pWrapped);
-    //qlib::LPropSupport *pTmp = nph.apply();
-    /*
-    if (! pTmp->hasPropDefault(nph.last_name()) )
-      result = 0; // no default value
-    else if (! pTmp->isPropDefault(nph.last_name()) )
-      result = 1; // has default but not default now
-    else
-      result = 2; // has default and now is default
-      */
-
-    if (! m_pWrapped->hasNestedPropDefault(propname) )
-      result = 0; // no default value
-    else if (! m_pWrapped->isPropDefault(propname) )
-      result = 1; // has default but not default now
-    else
-      result = 2; // has default and now is default
-  }
-  catch (qlib::LException &e) {
-    ok = false;
-    errmsg = 
-      LString::format("Exception occured in isPropDef for %s: %s",
-                      propname, e.getFmtMsg().c_str());
-  }
-  catch (...) {
-    ok = false;
-    errmsg = 
-      LString::format("Unknown Exception occured in isPropDef for %s",
-                      propname);
-  }
-  
   if (!ok) {
     LOG_DPRINTLN("Error: isPropDef for property \"%s\" failed.", propname);
     if (!errmsg.isEmpty()) {
@@ -619,6 +597,7 @@ NS_IMETHODIMP XPCObjWrapper::IsPropDefault(const char *propname, PRInt32 *_retva
   if (_retval!=NULL)
     *_retval = result;
 
+  // LOG_DPRINTLN("********** IsPropDefault called: %s %d", propname, result);
   return NS_OK;
 }
 
@@ -1072,27 +1051,20 @@ NS_IMETHODIMP XPCObjWrapper::GetPropsJSON(nsAString &_retval)
     return NS_ERROR_INVALID_POINTER;
   }
 
-  try {
-    LString str = qlib::getPropsJSONImpl(m_pWrapped);
-    nsAutoCString nsstr(str.c_str());
-    ::CopyUTF8toUTF16(nsstr, _retval);
-  }
-  catch (qlib::LException &e) {
-    LString errmsg = 
-      LString::format("Exception occured in getPropsJSON: %s",
-                      e.getFmtMsg().c_str());
-    LOG_DPRINTLN(errmsg);
-    return NS_ERROR_FAILURE;
-  }
-  catch (...) {
-    LString errmsg = 
-      LString::format("Unknown Exception occured in getPropsJSON");
-    LOG_DPRINTLN(errmsg);
+  LString str, errmsg;
+  bool ok = cuemol2::getPropsJSON(m_pWrapped, str, errmsg);
+  if (!ok) {
+    LOG_DPRINTLN("Error in getPropsJSON() on object %p.", m_pWrapped);
+    if (!errmsg.isEmpty()) {
+      LOG_DPRINTLN("Reason: %s", errmsg.c_str());
+    }
     return NS_ERROR_FAILURE;
   }
 
-  //*_retval = ToNewCString(nsstr);
+  nsAutoCString nsstr(str.c_str());
+  ::CopyUTF8toUTF16(nsstr, _retval);
 
+  // LOG_DPRINTLN("********** GetPropsJSON called: %s", str.c_str());
   return NS_OK;
 }
 

@@ -151,9 +151,37 @@ namespace cuemol2 {
                         propname.c_str());
     }
 
+    errmsg = "Unexpected condition in getProp()";
     return false;
   }
   
+  bool hasProp(qlib::LScriptable *pthis,
+               const qlib::LString &propname,
+               bool &retval,
+               qlib::LString &errmsg) noexcept
+  {
+    errmsg = "";
+
+    try {
+      retval = pthis->hasNestedProperty(propname);
+      return true;
+    }
+    catch (qlib::LException &e) {
+      errmsg = 
+        LString::format("Exception occured in hasProp for %s: %s",
+                        propname.c_str(),
+                        e.getFmtMsg().c_str());
+    }
+    catch (...) {
+      errmsg = 
+        LString::format("Unknown Exception occured in hasProp for %s",
+                        propname.c_str());
+    }
+
+    errmsg = "Unexpected condition in hasProp()";
+    return false;
+  }
+
   bool setProp(qlib::LScriptable *pthis,
                const qlib::LString &propname,
                const qlib::LVariant &lvar,
@@ -175,6 +203,7 @@ namespace cuemol2 {
                         propname.c_str());
     }
 
+    errmsg = "Unexpected condition in ()";
     return false;
   }
 
@@ -199,6 +228,7 @@ namespace cuemol2 {
                         mthnm.c_str());
     }
 
+    errmsg = "Unexpected condition in ()";
     return false;
   }
 
@@ -250,5 +280,59 @@ namespace cuemol2 {
     return false;
   }
   
+  bool getPropsJSON(qlib::LScriptable *pthis,
+                    qlib::LString &retval,
+                    qlib::LString &errmsg) noexcept
+  {
+    try {
+      retval = qlib::getPropsJSONImpl(pthis);
+      return true;
+    }
+    catch (qlib::LException &e) {
+      LString errmsg = 
+        LString::format("Exception occured in getPropsJSON: %s",
+                        e.getFmtMsg().c_str());
+      return false;
+    }
+    catch (...) {
+      LString errmsg = 
+        LString::format("Unknown Exception occured in getPropsJSON");
+      return false;
+    }
+
+    errmsg = "Unexpected condition in getPropsJSON()";
+    return false;
+  }
+  
+  bool getPropDefaultStatus(qlib::LScriptable *pthis,
+                            const qlib::LString &propname,
+                            int &retval,
+                            qlib::LString &errmsg) noexcept
+  {
+    try {
+      if (! pthis->hasNestedPropDefault(propname) )
+        retval = 0; // no default value
+      else if (! pthis->isPropDefault(propname) )
+        retval = 1; // has default but not default now
+      else
+        retval = 2; // has default and now is default
+      return true;
+    }
+    catch (qlib::LException &e) {
+      errmsg = 
+        LString::format("Exception occured in isPropDef for %s: %s",
+                        propname.c_str(), e.getFmtMsg().c_str());
+      return false;
+    }
+    catch (...) {
+      errmsg = 
+        LString::format("Unknown Exception occured in isPropDef for %s",
+                        propname.c_str());
+      return false;
+    }
+
+    errmsg = "Unexpected condition in getPropDefaultStatus()";
+    return false;
+  }
 
 } // namespace cuemol2
