@@ -44,4 +44,8 @@ namespace cuemol2 {
                               qlib::LString &val,
                               qlib::LString &errmsg) noexcept;
 
+  LIBCUEMOL_API bool resetProp(qlib::LScriptable *pthis,
+                               const qlib::LString &propname,
+                               qlib::LString &errmsg) noexcept;
+
 } // namespace cuemol2

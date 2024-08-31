@@ -225,4 +225,30 @@ namespace cuemol2 {
     return false;
   }
 
+  bool resetProp(qlib::LScriptable *pthis,
+                 const qlib::LString &propname,
+                 qlib::LString &errmsg) noexcept
+  {
+    try {
+      pthis->resetNestedProperty(propname);
+      return true;
+    }
+    catch (qlib::LException &e) {
+      errmsg = 
+        LString::format("Exception occured in resetProp for %s: %s",
+                        propname.c_str(), e.getFmtMsg().c_str());
+      return false;
+    }
+    catch (...) {
+      errmsg = 
+        LString::format("Unknown Exception occured in resetProp for %s",
+                        propname.c_str());
+      return false;
+    }
+    
+    errmsg = "Unexpected condition in resetProp()";
+    return false;
+  }
+  
+
 } // namespace cuemol2

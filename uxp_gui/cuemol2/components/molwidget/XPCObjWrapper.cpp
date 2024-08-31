@@ -547,29 +547,10 @@ NS_IMETHODIMP XPCObjWrapper::ResetProp(const char *propname)
   rv = checkPropImpl(propname);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  //////////
-
   bool ok;
   LString errmsg;
+  ok = cuemol2::resetProp(m_pWrapped, propname, errmsg);
 
-  try {
-    //qlib::NestedPropHandler nph(propname, m_pWrapped);
-    //ok = nph.apply()->resetProperty(nph.last_name());
-    ok = m_pWrapped->resetNestedProperty(propname);
-  }
-  catch (qlib::LException &e) {
-    ok = false;
-    errmsg = 
-      LString::format("Exception occured in resetProp for %s: %s",
-                      propname, e.getFmtMsg().c_str());
-  }
-  catch (...) {
-    ok = false;
-    errmsg = 
-      LString::format("Unknown Exception occured in resetProp for %s",
-                      propname);
-  }
-  
   if (!ok) {
     LOG_DPRINTLN("Error: ReSetProp for property \"%s\" failed.", propname);
     if (!errmsg.isEmpty()) {
@@ -578,6 +559,7 @@ NS_IMETHODIMP XPCObjWrapper::ResetProp(const char *propname)
     return NS_ERROR_FAILURE;
   }
 
+  // LOG_DPRINTLN("********** ResetProp called");
   return NS_OK;
 }
 
@@ -1080,7 +1062,6 @@ NS_IMETHODIMP XPCObjWrapper::ToString(char **_retval)
   nsAutoCString nsstr(str.c_str());
   *_retval = ToNewCString(nsstr);
 
-  LOG_DPRINTLN("************** ToString called: %s", *_retval);
   return NS_OK;
 }
 
