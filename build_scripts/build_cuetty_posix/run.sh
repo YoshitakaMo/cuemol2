@@ -1,7 +1,15 @@
 #!/bin/sh
+#
+# build script for cuetty in posix
+# usage: run.sh deplibs_dir
+#
+
 set -eux
 
 BASEDIR=$1
+REPOS_DIR=$(cd $(dirname $0)/../..; pwd)
+WORKSPACE=${GITHUB_WORKSPACE:-$REPOS_DIR}
+
 BOOST_VER=boost_1_84_0
 
 # Install location
@@ -17,7 +25,7 @@ BUILD_TYPE=Release
 
 ls -la $BASEDIR
 
-cmake -S ${GITHUB_WORKSPACE}/cli -B $BUILD_DIR \
+cmake -S ${WORKSPACE}/cli -B $BUILD_DIR \
       -DCMAKE_INSTALL_PREFIX=$INST_PATH \
       -DCMAKE_PREFIX_PATH=$BASEDIR \
       -DBoost_ROOT=$BASEDIR/$BOOST_VER/ \

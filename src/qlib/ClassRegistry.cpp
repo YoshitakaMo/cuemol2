@@ -158,6 +158,15 @@ LClass *ClassRegistry::getClassObj(const LString &name)
   return iter->second;
 }
 
+LClass *ClassRegistry::getClassObjNx(const LString &name) noexcept
+{
+  ClassTable::const_iterator iter = m_nametab.find(name);
+  if (iter==m_nametab.end()) {
+    return NULL;
+  }
+  return iter->second;
+}
+
 LDynamic *ClassRegistry::createObj(const LString &name)
 {
   LClass *pCls = getClassObj(name);

@@ -11,6 +11,66 @@
 
 using namespace qlib;
 
+bool FuncMap::setProp(qlib::LScriptable *pthis,
+                      const qlib::LString &propnm,
+                      const qlib::LVariant &val)
+{
+  FuncMap::funcobj_t *pfunc = getSetPropFunc(propnm);
+  if (pfunc==NULL) {
+	LOG_DPRINTLN("setProp %s not found", propnm.c_str());
+	return false;
+  }
+  //MB_DPRINTLN("*** setProp %s", propnm.c_str());
+  
+  LVarArgs args(1);
+  args.setThisPtr(pthis);
+  args.at(0) = val;
+  
+  return pfunc->execute(args);
+}
+
+bool FuncMap::getProp(const qlib::LScriptable *pthis,
+                      const qlib::LString &propnm,
+                      qlib::LVariant &val)
+{
+  FuncMap::funcobj_t *pfunc = getGetPropFunc(propnm);
+  if (pfunc==NULL) {
+	LOG_DPRINTLN("getProp %s not found", propnm.c_str());
+	return false;
+  }
+  
+  LVarArgs args(0);
+  args.setThisPtr( const_cast<qlib::LScriptable *>(pthis) );
+  
+  //MB_DPRINTLN("*** getProp %s", propnm.c_str());
+  if (!pfunc->execute(args))
+	return false;
+  
+  val = args.retval();
+  return true;
+}
+
+bool FuncMap::invokeMethod(const qlib::LScriptable *pthis,
+                           const qlib::LString &mthnm,
+                           LVarArgs &args)
+{
+  FuncMap::funcobj_t *pfunc = getMthFunc(mthnm);
+  if (pfunc==NULL) {
+	LOG_DPRINTLN("invokeMethod %s not found", mthnm.c_str());
+	return false;
+  }
+  //MB_DPRINTLN("*** invk mth %s", mthnm.c_str());
+  
+  args.setThisPtr( const_cast<qlib::LScriptable *>(pthis) );
+  
+  if (!pfunc->execute(args))
+	return false;
+  
+  return true;
+}
+
+//////////////////////////////
+
 LWrapperImpl::LWrapperImpl()
 {
 }

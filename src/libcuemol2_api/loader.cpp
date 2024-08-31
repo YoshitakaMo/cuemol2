@@ -2,6 +2,7 @@
 #include <common.h>
 
 #include "loader.hpp"
+#include "gui.hpp"
 
 #include <iostream>
 #include "boost/filesystem/path.hpp"
@@ -9,8 +10,7 @@
 
 #include <qlib/qlib.hpp>
 #include <qlib/FileStream.hpp>
-
-#include <gfx/TextRenderManager.hpp>
+#include <qlib/ClassRegistry.hpp>
 
 #include <qsys/qsys.hpp>
 #include <qsys/SceneManager.hpp>
@@ -18,7 +18,6 @@
 
 #ifdef BUILD_OPENGL_SYSDEP
 #include <sysdep/sysdep.hpp>
-#include <sysdep/MouseEventHandler.hpp>
 #endif
 
 #ifdef HAVE_JAVASCRIPT
@@ -88,71 +87,14 @@ namespace anim {
   extern void fini();
 }
 
-#if (GUI_ARCH == MB_GUI_ARCH_WIN)
-// Win32
-#include <sysdep/WglView.hpp>
-namespace {
-  class WglViewFactory : public qsys::ViewFactory
-  {
-  public:
-    WglViewFactory() {}
-    virtual ~WglViewFactory() {}
-    virtual qsys::View* create() {
-      return new sysdep::WglView();
-    }
-  };
-  void registerViewFactory()
-  {
-    qsys::View::setViewFactory(new WglViewFactory);
-  }
-}
-#elif (GUI_ARCH == MB_GUI_ARCH_OSX)
-// MacOS
-#include <OpenGL/OpenGL.h>
-#include <sysdep/CglView.hpp>
-namespace {
-  class CglViewFactory : public qsys::ViewFactory
-  {
-  public:
-    CglViewFactory() {}
-    virtual ~CglViewFactory() {}
-    virtual qsys::View* create() {
-      return new sysdep::CglView();
-    }
-  };
-  void registerViewFactory()
-  {
-    qsys::View::setViewFactory(new CglViewFactory);
-  }
-}
-#elif (GUI_ARCH == MB_GUI_ARCH_X11)
-#include <sysdep/XglView.hpp>
-namespace {
-  class XglViewFactory : public qsys::ViewFactory
-  {
-  public:
-    XglViewFactory() {}
-    virtual ~XglViewFactory() {}
-    virtual qsys::View* create() {
-      return new sysdep::XglView();
-    }
-  };
-  void registerViewFactory()
-  {
-    qsys::View::setViewFactory(new XglViewFactory);
-  }
-}
-#else
-#error "No suitable view impl found for current environment"
-#endif
-
-using qlib::LString;
 
 #ifndef DEFAULT_CONFIG
 #define DEFAULT_CONFIG "./sysconfig.xml"
 #endif
 
 namespace cuemol2 {
+
+  using qlib::LString;
 
   int init_qlib() noexcept
   {
@@ -231,75 +173,87 @@ namespace cuemol2 {
     return 0;
   }
 
-  int fini()
+  int fini() noexcept
   {
+    try {
 #ifdef BUILD_PYTHON_BINDINGS
-  // unload python module
-  pybr::fini();
-  MB_DPRINTLN("=== pybr::fini() OK ===");
+      // unload python module
+      pybr::fini();
+      MB_DPRINTLN("=== pybr::fini() OK ===");
 #endif
-
+      
 #ifdef HAVE_JAVASCRIPT
-  jsbr::fini();
-  MB_DPRINTLN("=== jsbr::fini() OK ===");
+      jsbr::fini();
+      MB_DPRINTLN("=== jsbr::fini() OK ===");
 #endif
-
-    // load other modules
-    render::fini();
-    molvis::fini();
-    xtal::fini();
-    symm::fini();
-    surface::fini();
-    molanl::fini();
-
-    anim::fini();
-    lwview::fini();
-    molstr::fini();
-    MB_DPRINTLN("=== molstr::fini() OK ===");
-
+      
+      // load other modules
+      render::fini();
+      molvis::fini();
+      xtal::fini();
+      symm::fini();
+      surface::fini();
+      molanl::fini();
+      
+      anim::fini();
+      lwview::fini();
+      molstr::fini();
+      MB_DPRINTLN("=== molstr::fini() OK ===");
+      
 #ifdef BUILD_OPENGL_SYSDEP
-    sysdep::fini();
+      sysdep::fini();
 #endif
-    qsys::fini();
-    MB_DPRINTLN("=== qsys::fini() OK ===");
-
-    qlib::fini();
-
-    std::cerr << "=== Terminated normaly ===" << std::endl;
+      qsys::fini();
+      MB_DPRINTLN("=== qsys::fini() OK ===");
+    }
+    catch (const qlib::LException &e) {
+      LOG_DPRINTLN("fini> Caught exception <%s>", typeid(e).name());
+      LOG_DPRINTLN("fini> Reason: %s", e.getMsg().c_str());
+      return -1;
+    }
+    catch (...) {
+      LOG_DPRINTLN("fini> Caught unknown exception");
+      return -1;
+    }
+    
     return 0;
   }
 
-#ifdef BUILD_OPENGL_SYSDEP
-  gfx::TextRenderImpl *initTextRender()
+  int fini_qlib() noexcept
   {
     try {
-      gfx::TextRenderImpl *pTR = (gfx::TextRenderImpl *) sysdep::createTextRender();
-      gfx::TextRenderManager *pTRM = gfx::TextRenderManager::getInstance();
-      pTRM->setImpl(pTR);
-      return pTR;
+      qlib::fini();
+      std::cerr << "=== Terminated normaly ===" << std::endl;
     }
     catch (const qlib::LException &e) {
-      LOG_DPRINTLN("Loader.initTextRender> Caught exception <%s>", typeid(e).name());
-      LOG_DPRINTLN("Loader.initTextRender> Reason: %s", e.getMsg().c_str());
+      LOG_DPRINTLN("fini_qlib> Caught exception <%s>", typeid(e).name());
+      LOG_DPRINTLN("fini_qlib> Reason: %s", e.getMsg().c_str());
+      return -1;
     }
     catch (...) {
-      LOG_DPRINTLN("Loader.initTextRender> Caught unknown exception");
+      LOG_DPRINTLN("fini_qlib> Caught unknown exception");
+      return -1;
     }
-    
-    return NULL;
+    return 0;
   }
 
-  void finiTextRender(gfx::TextRenderImpl *pTR)
+  int init_timer(qlib::TimerImpl *pTimer) noexcept
   {
-    sysdep::destroyTextRender(pTR);
-  }
+    try {
+      // setup timer
+      qlib::EventManager::getInstance()->initTimer(pTimer);
+    }
+    catch (const qlib::LException &e) {
+      LOG_DPRINTLN("Init> Caught exception <%s>", typeid(e).name());
+      LOG_DPRINTLN("Init> Reason: %s", e.getMsg().c_str());
+      return -1;
+    }
+    catch (...) {
+      LOG_DPRINTLN("Init> Caught unknown exception");
+      return -1;
+    }
 
-#endif
-
-#ifdef BUILD_OPENGL_SYSDEP
-  sysdep::MouseEventHandler *createMouseEventHander() {
-    return new sysdep::MouseEventHandler();
+    return 0;
   }
-#endif
 
 } // namespace cuemol2

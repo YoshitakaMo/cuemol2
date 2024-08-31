@@ -161,13 +161,16 @@ Qm2Main.prototype.fileOpenHelper1 = function(path, newobj_name, reader_name)
                     "chrome,modal,resizable=yes,dependent,centerscreen",
                     dlgdata);
 
+
   delete dlgdata.target[0].reader;
+
 
   if (!dlgdata.ok) {
     dd("option dialog canceled");
     dlgdata = null;
     return;
   }
+
   
   //////////////////////
   // Do the actual tasks
@@ -189,6 +192,7 @@ Qm2Main.prototype.fileOpenHelper1 = function(path, newobj_name, reader_name)
     this.doSetupRend(scene, dlgdata);
   }
   catch (e) {
+    cuemol.putLogMsg("File Open Error: "+e);
     dd("File Open Error: "+e);
     debug.exception(e);
     

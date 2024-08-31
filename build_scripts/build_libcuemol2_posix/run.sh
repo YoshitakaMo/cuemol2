@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # build script for libcuemol2 in posix
-# usage: run.sh deplibs_dir dummy dummy
+# usage: run.sh deplibs_dir [Debug]
 #
 
 set -eux
@@ -12,6 +12,7 @@ BASEDIR=$1
 
 REPOS_DIR=$(cd $(dirname $0)/../..; pwd)
 WORKSPACE=${GITHUB_WORKSPACE:-$REPOS_DIR}
+DEBUG_FLAG=${2:-}
 NCPU=8
 
 # Build
@@ -19,8 +20,11 @@ BUILD_DIR=$BASEDIR/build_libcuemol2
 mkdir -p $BUILD_DIR
 cd $BUILD_DIR
 
-# BUILD_TYPE=Debug
-BUILD_TYPE=Release
+if [ $DEBUG_FLAG = "Debug" ]; then
+    BUILD_TYPE=Debug
+else
+    BUILD_TYPE=Release
+fi
 
 PYTHON=python3
 PYTHON_ROOT=$($PYTHON -c 'import sys;import pathlib; print(pathlib.Path(sys.executable).parent.parent)')
