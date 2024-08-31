@@ -1,6 +1,6 @@
 
 #include <common.h>
-#include <loader.hpp>
+#include <libcuemol2_api/loader.hpp>
 
 #include <iostream>
 #include "boost/filesystem/path.hpp"
@@ -111,6 +111,7 @@ int internal_main(int argc, const char *argv[])
   //}
 
   cuemol2::fini();
+  cuemol2::fini_qlib();
 
   printf("=== Terminated normaly ===\n");
   return 0;

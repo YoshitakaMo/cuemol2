@@ -39,30 +39,30 @@ namespace xpcom {
     // NS_DECL_NSIDOMEVENTLISTENER;
     // NS_DECL_QINATIVEWIDGET
 
-     NS_IMETHOD Setup(nsIDocShell *docShell, nsIBaseWindow *arg);
-     NS_IMETHOD Load(PRInt32 scid, PRInt32 vwid);
-     NS_IMETHOD Unload(void);
-     NS_IMETHOD Reload(bool *_retval );
+     NS_IMETHOD Setup(nsIDocShell *docShell, nsIBaseWindow *arg) override;
+     NS_IMETHOD Load(PRInt32 scid, PRInt32 vwid) override;
+     NS_IMETHOD Unload(void) override;
+     NS_IMETHOD Reload(bool *_retval ) override;
 
-     NS_IMETHOD GetUseGlShader(bool *);
-     NS_IMETHOD SetUseGlShader(bool);
+     NS_IMETHOD GetUseGlShader(bool *) override;
+     NS_IMETHOD SetUseGlShader(bool) override;
 
-     NS_IMETHOD GetUseMultiPad(bool *aUseMultiPad);
-     NS_IMETHOD SetUseMultiPad(bool aUseMultiPad);
+     NS_IMETHOD GetUseMultiPad(bool *aUseMultiPad) override;
+     NS_IMETHOD SetUseMultiPad(bool aUseMultiPad) override;
 
-     NS_IMETHOD GetUseRbtnEmul(bool *aUseRbtnEmul);
-     NS_IMETHOD SetUseRbtnEmul(bool aUseRbtnEmul);
+     NS_IMETHOD GetUseRbtnEmul(bool *aUseRbtnEmul) override;
+     NS_IMETHOD SetUseRbtnEmul(bool aUseRbtnEmul) override;
 
     /* attribute boolean useHiDPI; */
-     NS_IMETHOD GetUseHiDPI(bool *aUseHiDPI);
-     NS_IMETHOD SetUseHiDPI(bool aUseHiDPI);
+     NS_IMETHOD GetUseHiDPI(bool *aUseHiDPI) override;
+     NS_IMETHOD SetUseHiDPI(bool aUseHiDPI) override;
 
-     NS_IMETHOD GetSceneID(PRInt32 *aSceneID);
-     NS_IMETHOD SetSceneID(PRInt32 aSceneID);
-     NS_IMETHOD GetViewID(PRInt32 *aViewID);
-     NS_IMETHOD SetViewID(PRInt32 aViewID);
+     NS_IMETHOD GetSceneID(PRInt32 *aSceneID) override;
+     NS_IMETHOD SetSceneID(PRInt32 aSceneID) override;
+     NS_IMETHOD GetViewID(PRInt32 *aViewID) override;
+     NS_IMETHOD SetViewID(PRInt32 aViewID) override;
 
-     NS_IMETHOD HandleEvent(nsIDOMEvent* aEvent);
+     NS_IMETHOD HandleEvent(nsIDOMEvent* aEvent) override;
     
   public:
     virtual nsresult setupImpl(nativeWindow widget) =0;

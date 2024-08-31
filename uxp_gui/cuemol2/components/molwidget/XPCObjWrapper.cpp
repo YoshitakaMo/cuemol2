@@ -15,7 +15,7 @@
 #include <qlib/LVarArray.hpp>
 #include <qlib/LUnicode.hpp>
 #include <qlib/PropSpec.hpp>
-//#include <qlib/NestedPropHandler.hpp>
+#include <libcuemol2_api/binding.hpp>
 
 using namespace xpcom;
 using qlib::LVariant;
@@ -470,18 +470,29 @@ nsresult XPCObjWrapper::checkPropImpl(const char *propname, bool *rval /*= NULL*
     return NS_ERROR_INVALID_POINTER;
   }
 
-  bool hasProperty = m_pWrapped->hasNestedProperty(propname);
+  LString errmsg;
+  bool hasProperty;
+  bool ok = cuemol2::hasProp(m_pWrapped, propname, hasProperty, errmsg);
+  // bool hasProperty = m_pWrapped->hasNestedProperty(propname);
 
   if (rval!=NULL)
     *rval = hasProperty;
 
-  if (rval==NULL && !hasProperty) {
-    LOG_DPRINTLN("Obj %s: prop <%s> not found",
-		 typeid(*m_pWrapped).name(),
-		 propname);
+  // if (rval==NULL && !hasProperty) {
+  //   LOG_DPRINTLN("Obj %s: prop <%s> not found",
+  //   	 typeid(*m_pWrapped).name(),
+  //   	 propname);
+  //   return NS_ERROR_FAILURE;
+  // }
+  if (!ok) {
+    LOG_DPRINTLN("checkPropImpl: hasProp(\"%s\") call failed.", propname);
+    if (!errmsg.isEmpty()) {
+      LOG_DPRINTLN("Reason: %s", errmsg.c_str());
+    }
     return NS_ERROR_FAILURE;
   }
 
+  LOG_DPRINTLN("********** checkPropImpl: %s, %d", propname, hasProperty);
   return NS_OK;
 }
 
@@ -493,28 +504,10 @@ NS_IMETHODIMP XPCObjWrapper::GetProp(const char *propname, nsIVariant **_retval)
 
   //MB_DPRINTLN("wrapped: %p/%s", m_pWrapped, typeid(*m_pWrapped).name());
   qlib::LVariant lvar;
-
   bool ok;
   LString errmsg;
 
-  try {
-    //qlib::NestedPropHandler nph(propname, m_pWrapped);
-    //ok = nph.apply()->getProperty(nph.last_name(), lvar);
-    ok = m_pWrapped->getNestedProperty(propname, lvar);
-  }
-  catch (qlib::LException &e) {
-    ok = false;
-    errmsg = 
-      LString::format("Exception occured in getProp for %s: %s",
-                      propname,
-                      e.getFmtMsg().c_str());
-  }
-  catch (...) {
-    ok = false;
-    errmsg = 
-      LString::format("Unknown Exception occured in getProp for %s",
-                      propname);
-  }
+  ok = cuemol2::getProp(m_pWrapped, propname, lvar, errmsg);
   
   if (!ok) {
     LOG_DPRINTLN("GetProp: getProperty(\"%s\") call failed.", propname);
@@ -540,29 +533,10 @@ NS_IMETHODIMP XPCObjWrapper::SetProp(const char *propname, nsIVariant *value)
   rv = NSVarToLVar(value, lvar);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  //////////
-
   bool ok;
   LString errmsg;
 
-  try {
-    //qlib::NestedPropHandler nph(propname, m_pWrapped);
-    //ok = nph.apply()->setProperty(nph.last_name(), lvar);
-
-    ok = m_pWrapped->setNestedProperty(propname, lvar);
-  }
-  catch (qlib::LException &e) {
-    ok = false;
-    errmsg = 
-      LString::format("Exception occured in setProp for %s: %s",
-                      propname, e.getFmtMsg().c_str());
-  }
-  catch (...) {
-    ok = false;
-    errmsg = 
-      LString::format("Unknown Exception occured in setProp for %s",
-                      propname);
-  }
+  ok = cuemol2::setProp(m_pWrapped, propname, lvar, errmsg);
   
   if (!ok) {
     LOG_DPRINTLN("Error: SetProp for property \"%s\" failed.", propname);
@@ -583,29 +557,10 @@ NS_IMETHODIMP XPCObjWrapper::ResetProp(const char *propname)
   rv = checkPropImpl(propname);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  //////////
-
   bool ok;
   LString errmsg;
+  ok = cuemol2::resetProp(m_pWrapped, propname, errmsg);
 
-  try {
-    //qlib::NestedPropHandler nph(propname, m_pWrapped);
-    //ok = nph.apply()->resetProperty(nph.last_name());
-    ok = m_pWrapped->resetNestedProperty(propname);
-  }
-  catch (qlib::LException &e) {
-    ok = false;
-    errmsg = 
-      LString::format("Exception occured in resetProp for %s: %s",
-                      propname, e.getFmtMsg().c_str());
-  }
-  catch (...) {
-    ok = false;
-    errmsg = 
-      LString::format("Unknown Exception occured in resetProp for %s",
-                      propname);
-  }
-  
   if (!ok) {
     LOG_DPRINTLN("Error: ReSetProp for property \"%s\" failed.", propname);
     if (!errmsg.isEmpty()) {
@@ -614,6 +569,7 @@ NS_IMETHODIMP XPCObjWrapper::ResetProp(const char *propname)
     return NS_ERROR_FAILURE;
   }
 
+  // LOG_DPRINTLN("********** ResetProp called");
   return NS_OK;
 }
 
@@ -626,42 +582,10 @@ NS_IMETHODIMP XPCObjWrapper::IsPropDefault(const char *propname, PRInt32 *_retva
 
   //////////
 
-  bool ok = true;
   int result;
   LString errmsg;
+  bool ok = cuemol2::getPropDefaultStatus(m_pWrapped, propname, result, errmsg);
 
-  try {
-    //qlib::NestedPropHandler nph(propname, m_pWrapped);
-    //qlib::LPropSupport *pTmp = nph.apply();
-    /*
-    if (! pTmp->hasPropDefault(nph.last_name()) )
-      result = 0; // no default value
-    else if (! pTmp->isPropDefault(nph.last_name()) )
-      result = 1; // has default but not default now
-    else
-      result = 2; // has default and now is default
-      */
-
-    if (! m_pWrapped->hasNestedPropDefault(propname) )
-      result = 0; // no default value
-    else if (! m_pWrapped->isPropDefault(propname) )
-      result = 1; // has default but not default now
-    else
-      result = 2; // has default and now is default
-  }
-  catch (qlib::LException &e) {
-    ok = false;
-    errmsg = 
-      LString::format("Exception occured in isPropDef for %s: %s",
-                      propname, e.getFmtMsg().c_str());
-  }
-  catch (...) {
-    ok = false;
-    errmsg = 
-      LString::format("Unknown Exception occured in isPropDef for %s",
-                      propname);
-  }
-  
   if (!ok) {
     LOG_DPRINTLN("Error: isPropDef for property \"%s\" failed.", propname);
     if (!errmsg.isEmpty()) {
@@ -673,6 +597,7 @@ NS_IMETHODIMP XPCObjWrapper::IsPropDefault(const char *propname, PRInt32 *_retva
   if (_retval!=NULL)
     *_retval = result;
 
+  // LOG_DPRINTLN("********** IsPropDefault called: %s %d", propname, result);
   return NS_OK;
 }
 
@@ -775,23 +700,7 @@ nsresult XPCObjWrapper::invokeImpl(const char *name, LVarArgs &largs, nsIVariant
   bool ok;
   LString errmsg;
 
-  try {
-    ok = m_pWrapped->invokeMethod(name, largs);
-  }
-  catch (qlib::LException &e) {
-    ok = false;
-    errmsg = 
-      LString::format("Exception occured in native method \"%s\"\nReason: %s",
-                      name, e.getMsg().c_str());
-    m_pParent->setErrMsg(e.getMsg());
-  }
-  catch (...) {
-    ok = false;
-    errmsg = 
-      LString::format("Unknown Exception occured in native method \"%s\"",
-                      name);
-    m_pParent->setErrMsg("(unknown)");
-  }
+  ok = cuemol2::invokeMethod(m_pWrapped, name, largs, errmsg);
   
   if (!ok) {
     if (!errmsg.isEmpty()) {
@@ -802,9 +711,10 @@ nsresult XPCObjWrapper::invokeImpl(const char *name, LVarArgs &largs, nsIVariant
                    " on object %s (%p).",
                    name, typeid(*m_pWrapped).name(), m_pWrapped);
     }
+    m_pParent->setErrMsg(errmsg);
     return NS_ERROR_FAILURE;
   }
-
+  
   rv = LVarToNSVar(largs.retval(), _retval, m_pParent);
   
   return rv;
@@ -1115,20 +1025,8 @@ NS_IMETHODIMP XPCObjWrapper::ToString(char **_retval)
   }
 
   LString str, errmsg;
-  bool ok = false;
-  try {
-    str = m_pWrapped->toString();
-    ok = true;
-  }
-  catch (qlib::LException &e) {
-    errmsg = 
-      LString::format("Exception occured in toString(): %s",
-                      e.getFmtMsg().c_str());
-  }
-  catch (...) {
-    errmsg = "Unknown Exception occured in toString()";
-  }
-  
+  bool ok = cuemol2::toString(m_pWrapped, str, errmsg);
+
   if (!ok) {
     LOG_DPRINTLN("CallNativeMethod: Error in invoking toString() on object %p.", m_pWrapped);
     if (!errmsg.isEmpty()) {
@@ -1153,27 +1051,20 @@ NS_IMETHODIMP XPCObjWrapper::GetPropsJSON(nsAString &_retval)
     return NS_ERROR_INVALID_POINTER;
   }
 
-  try {
-    LString str = qlib::getPropsJSONImpl(m_pWrapped);
-    nsAutoCString nsstr(str.c_str());
-    ::CopyUTF8toUTF16(nsstr, _retval);
-  }
-  catch (qlib::LException &e) {
-    LString errmsg = 
-      LString::format("Exception occured in getPropsJSON: %s",
-                      e.getFmtMsg().c_str());
-    LOG_DPRINTLN(errmsg);
-    return NS_ERROR_FAILURE;
-  }
-  catch (...) {
-    LString errmsg = 
-      LString::format("Unknown Exception occured in getPropsJSON");
-    LOG_DPRINTLN(errmsg);
+  LString str, errmsg;
+  bool ok = cuemol2::getPropsJSON(m_pWrapped, str, errmsg);
+  if (!ok) {
+    LOG_DPRINTLN("Error in getPropsJSON() on object %p.", m_pWrapped);
+    if (!errmsg.isEmpty()) {
+      LOG_DPRINTLN("Reason: %s", errmsg.c_str());
+    }
     return NS_ERROR_FAILURE;
   }
 
-  //*_retval = ToNewCString(nsstr);
+  nsAutoCString nsstr(str.c_str());
+  ::CopyUTF8toUTF16(nsstr, _retval);
 
+  // LOG_DPRINTLN("********** GetPropsJSON called: %s", str.c_str());
   return NS_OK;
 }
 

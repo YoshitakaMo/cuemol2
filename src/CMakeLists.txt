@@ -268,10 +268,10 @@ list(APPEND CUEMOL2_DEFS "LIBCUEMOL_EXPORTS=1")
 target_compile_definitions(cuemol2 PUBLIC ${CUEMOL2_DEFS})
 
 target_sources(cuemol2
-  PRIVATE loader.cpp
+  PRIVATE libcuemol2_api/loader.cpp libcuemol2_api/binding.cpp libcuemol2_api/gui.cpp
   PUBLIC FILE_SET HEADERS 
   BASE_DIRS ${PROJECT_SOURCE_DIR}/src
-  FILES common.h qmtypes.h _version.h loader.hpp
+  FILES common.h qmtypes.h _version.h libcuemol2_api/api.hpp libcuemol2_api/loader.hpp libcuemol2_api/gui.hpp libcuemol2_api/binding.hpp
 )
 
 # message(STATUS "PROJECT_BINARY_DIR=${PROJECT_BINARY_DIR}")
