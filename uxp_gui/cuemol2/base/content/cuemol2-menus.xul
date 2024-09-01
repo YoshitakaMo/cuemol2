@@ -417,9 +417,9 @@
 	      type="checkbox"
 	      command="cmd_toggle_perfmeas"/>
 
-	    <menuseparator/>
+	    <menuseparator class="mol-client-tools-menu" hidden="true"/>
 
-	    <menuitem label="Mol clinet tools ..." oncommand="gQm2Main.molClientTools();" />
+	    <menuitem class="mol-client-tools-menu" label="Mol clinet tools ..." oncommand="gQm2Main.molClientTools();" hidden="true"/>
 	  </menupopup>
 	</menu>
 

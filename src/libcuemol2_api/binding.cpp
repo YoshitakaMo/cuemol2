@@ -204,14 +204,16 @@ namespace cuemol2 {
       errmsg = 
         LString::format("Exception occured in setProp for %s: %s",
                         propname.c_str(), e.getFmtMsg().c_str());
+      return false;
     }
     catch (...) {
       errmsg = 
         LString::format("Unknown Exception occured in setProp for %s",
                         propname.c_str());
+      return false;
     }
 
-    errmsg = "Unexpected condition in ()";
+    errmsg = "Unexpected condition in setProp()";
     return false;
   }
 
@@ -229,14 +231,16 @@ namespace cuemol2 {
       errmsg = 
         LString::format("Exception occured in native method \"%s\"\nReason: %s",
                         mthnm.c_str(), e.getMsg().c_str());
+      return false;
     }
     catch (...) {
       errmsg = 
         LString::format("Unknown Exception occured in native method \"%s\"",
                         mthnm.c_str());
+      return false;
     }
 
-    errmsg = "Unexpected condition in ()";
+    errmsg = "Unexpected condition in invokeMethod()";
     return false;
   }
 

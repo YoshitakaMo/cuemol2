@@ -27,6 +27,7 @@
 	    src="chrome://cuemol2/content/tools/prot2ndry-tool.js"/>
     <script type="application/javascript; version=1.8"
 	    src="chrome://cuemol2/content/tools/morphanim-tool.js"/>
+    <script type="application/javascript; version=1.8" src="tools/molclient-tools.js"/>
 
     <script>
       // instantiate the main object
