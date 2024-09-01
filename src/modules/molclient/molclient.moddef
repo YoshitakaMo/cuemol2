@@ -1,0 +1,14 @@
+// -*-Mode: C++;-*-
+
+#include "MolClientManager.qif"
+#include "XmlRpcConn.qif"
+
+module molclient
+{
+  init molclient::init();
+  fini molclient::fini();
+
+  MolClientManager;
+  XmlRpcConn;
+};
+

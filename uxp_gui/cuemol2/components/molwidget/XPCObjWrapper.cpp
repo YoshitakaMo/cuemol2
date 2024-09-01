@@ -473,17 +473,10 @@ nsresult XPCObjWrapper::checkPropImpl(const char *propname, bool *rval /*= NULL*
   LString errmsg;
   bool hasProperty;
   bool ok = cuemol2::hasProp(m_pWrapped, propname, hasProperty, errmsg);
-  // bool hasProperty = m_pWrapped->hasNestedProperty(propname);
 
   if (rval!=NULL)
     *rval = hasProperty;
 
-  // if (rval==NULL && !hasProperty) {
-  //   LOG_DPRINTLN("Obj %s: prop <%s> not found",
-  //   	 typeid(*m_pWrapped).name(),
-  //   	 propname);
-  //   return NS_ERROR_FAILURE;
-  // }
   if (!ok) {
     LOG_DPRINTLN("checkPropImpl: hasProp(\"%s\") call failed.", propname);
     if (!errmsg.isEmpty()) {
@@ -492,7 +485,7 @@ nsresult XPCObjWrapper::checkPropImpl(const char *propname, bool *rval /*= NULL*
     return NS_ERROR_FAILURE;
   }
 
-  LOG_DPRINTLN("********** checkPropImpl: %s, %d", propname, hasProperty);
+  // LOG_DPRINTLN("********** checkPropImpl: %s, %d", propname, hasProperty);
   return NS_OK;
 }
 

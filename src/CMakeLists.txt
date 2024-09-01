@@ -197,6 +197,16 @@ endif ()
 # utils (blendpng)
 add_subdirectory(utils)
 
+find_package(XMLRPC COMPONENTS client)
+# find_package(XMLRPC)
+message(STATUS "XMLRPC_FOUND: ${XMLRPC_FOUND}")
+if (${XMLRPC_FOUND})
+  message(STATUS "XMLRPC_INCLUDE_DIRS: ${XMLRPC_INCLUDE_DIRS}")
+  message(STATUS "XMLRPC_LIBRARIES: ${XMLRPC_LIBRARIES}")
+  add_subdirectory(modules/molclient)
+endif()
+
+
 #########################################
 # libcuemol2 library target
 
@@ -223,6 +233,8 @@ SET(CUEMOL2_LINK_LIBRARIES
   CGAL::CGAL
 )
 
+SET(CUEMOL2_DEFS "")
+
 if (BUILD_PYTHON_BINDINGS)
   if (BUILD_PYTHON_MODULE)
     list(APPEND CUEMOL2_LINK_LIBRARIES pymodule)
@@ -236,6 +248,11 @@ if (BUILD_OPENGL_SYSDEP)
   list(APPEND CUEMOL2_LINK_LIBRARIES sysdep)
 endif ()
 
+if (${XMLRPC_FOUND})
+  list(APPEND CUEMOL2_LINK_LIBRARIES molclient)
+  list(APPEND CUEMOL2_DEFS "BUILD_MOLCLIENT=1")
+endif ()
+
 ##########
 
 add_library(cuemol2 SHARED)
@@ -246,7 +263,9 @@ target_include_directories(
   ${Boost_INCLUDE_DIRS}
 )
 target_link_libraries(cuemol2 PRIVATE ${CUEMOL2_LINK_LIBRARIES})
-target_compile_definitions(cuemol2 PUBLIC LIBCUEMOL_EXPORTS=1)
+
+list(APPEND CUEMOL2_DEFS "LIBCUEMOL_EXPORTS=1")
+target_compile_definitions(cuemol2 PUBLIC ${CUEMOL2_DEFS})
 
 target_sources(cuemol2
   PRIVATE libcuemol2_api/loader.cpp libcuemol2_api/binding.cpp libcuemol2_api/gui.cpp

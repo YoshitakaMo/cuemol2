@@ -263,6 +263,8 @@ Qm2Main.prototype.onLoad = function ()
     debug.exception(e);
   }
   
+  dd("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+
   //////////
 
 /*
@@ -280,8 +282,6 @@ Qm2Main.prototype.onLoad = function ()
   
   //////////
 
-*/
-
   if (cuemol.hasClass("XmlRpcManager")) {
     try {
       var xrmgr = cuemol.getService("XmlRpcManager");
@@ -292,6 +292,19 @@ Qm2Main.prototype.onLoad = function ()
       debug.exception(e);
     }
   }
+*/
+
+  if (cuemol.hasClass("MolClientManager")) {
+    const mgr = cuemol.getService("MolClientManager");
+    if (mgr) {
+      const tgts = document.getElementsByClassName("mol-client-tools-menu");
+      const ary_tgts = Array.prototype.slice.call(tgts, 0);
+      ary_tgts.forEach( function (elem, ind, ary) {
+          elem.setAttribute("hidden", false);
+        });
+    }
+  }
+  
 }
   
 
@@ -920,7 +933,7 @@ Qm2Main.prototype.surfCutByPlaneTool = function()
     window.openDialog("chrome://cuemol2/content/tools/surf-cutbyplane.xul",
 		      "", stylestr, scene_id, view_id);
 }
-
+  
 Qm2Main.prototype.showConfigDlg = function ()
 {
 #ifdef XP_MACOSX

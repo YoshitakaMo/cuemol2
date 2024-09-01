@@ -1,0 +1,21 @@
+// -*-Mode: C++;-*-
+
+#ifndef MOLCLIENT_MANAGER_QIF_INCLUDED
+#define MOLCLIENT_MANAGER_QIF_INCLUDED
+
+#include <qlib/LScrObject.qif>
+#include "XmlRpcConn.qif"
+
+runtime_class MolClientManager
+{
+  client_hdr "MolClientManager.hpp";
+  client_name molclient::MolClientManager;
+
+  scriptable;
+  singleton;
+
+  object<XmlRpcConn$> connect(string);
+
+};
+
+#endif
