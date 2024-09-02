@@ -19,7 +19,7 @@ namespace {
     WglViewFactory() {}
     virtual ~WglViewFactory() {}
     virtual qsys::View* create() {
-      return new sysdep::WglView();
+      return MB_NEW sysdep::WglView();
     }
   };
 }
@@ -40,7 +40,7 @@ namespace {
     CglViewFactory() {}
     virtual ~CglViewFactory() {}
     virtual qsys::View* create() {
-      return new sysdep::CglView();
+      return MB_NEW sysdep::CglView();
     }
   };
 }
@@ -59,7 +59,7 @@ namespace {
     XglViewFactory() {}
     virtual ~XglViewFactory() {}
     virtual qsys::View* create() {
-      return new sysdep::XglView();
+      return MB_NEW sysdep::XglView();
     }
   };
 }
@@ -70,10 +70,23 @@ namespace cuemol2 {
   }
 }
 #else
+#include <qsys/TTYView.hpp>
+namespace {
+  class TTYViewFactory : public qsys::ViewFactory
+  {
+  public:
+    TTYViewFactory() {}
+    virtual ~TTYViewFactory() {}
+    virtual qsys::View *create()
+    {
+      return MB_NEW qsys::TTYView();
+    }
+  };
+}
 namespace cuemol2 {
   void registerViewFactory()
   {
-    // TODO: add TTYViewFactory here
+    qsys::View::setViewFactory(MB_NEW TTYViewFactory());
   }
 }
 #endif
