@@ -7,7 +7,7 @@
 #ifndef QUE_DATA_TYPES_HPP_INCLUDED_
 #define QUE_DATA_TYPES_HPP_INCLUDED_
 
-#include "TypeTraits.hpp"
+#include <type_traits>
 
 namespace qlib {
 
@@ -204,13 +204,13 @@ namespace qlib {
 
   template <typename _Type>
   struct LByteNormalize :
-    detail::LByteNormalizeImpl<_Type, is_integral<_Type>::value, is_float<_Type>::value>
+    detail::LByteNormalizeImpl<_Type, std::is_integral<_Type>::value, std::is_floating_point<_Type>::value>
   {
   };
 
   template <typename _Type>
   struct LByteNormalizeBE :
-    detail::LByteNormalizeBEImpl<_Type, is_integral<_Type>::value, is_float<_Type>::value>
+    detail::LByteNormalizeBEImpl<_Type, std::is_integral<_Type>::value, std::is_floating_point<_Type>::value>
   {
   };
 

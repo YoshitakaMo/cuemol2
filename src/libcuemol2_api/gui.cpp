@@ -70,7 +70,12 @@ namespace cuemol2 {
   }
 }
 #else
-#error "No suitable view impl found for current environment"
+namespace cuemol2 {
+  void registerViewFactory()
+  {
+    // TODO: add TTYViewFactory here
+  }
+}
 #endif
 
 namespace cuemol2 {
