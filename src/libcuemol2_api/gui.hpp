@@ -11,7 +11,7 @@ namespace cuemol2 {
   LIBCUEMOL_API gfx::TextRenderImpl *initTextRender();
   LIBCUEMOL_API void finiTextRender(gfx::TextRenderImpl *pTR);
   LIBCUEMOL_API sysdep::MouseEventHandler *createMouseEventHander();
-  void registerViewFactory();
 #endif
 
+  void registerViewFactory();
 }

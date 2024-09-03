@@ -113,7 +113,7 @@ macro(MCWRAPGEN_SCR_WRAPPERS _target)
     add_custom_target(${_target}_generate_pywrappers DEPENDS ${MCWG_PY_WRAPPERS})
     add_dependencies(${_target} ${_target}_generate_pywrappers)
     # install(FILES ${MCWG_PY_WRAPPERS} DESTINATION data/python/cuemol/wrappers)
-    install(FILES ${MCWG_PY_WRAPPERS} DESTINATION "${PROJECT_SOURCE_DIR}/python/cuemol/wrappers")
+    install(FILES ${MCWG_PY_WRAPPERS} DESTINATION "${PROJECT_SOURCE_DIR}/pymod/python/cuemol/wrappers")
   endif ()
 
   if (BUILD_XPCJS_BINDINGS)
