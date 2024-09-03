@@ -9,7 +9,8 @@
 
 #include "LClass.hpp"
 #include "LScrSmartPtr.hpp"
-#include "TypeTraits.hpp"
+
+#include <type_traits>
 
 using std::set;
 
@@ -86,9 +87,9 @@ namespace qlib {
     
   private:
     static inline
-    LDynamic *createObj_helper(integral_constant<bool, false>) { return MB_NEW _Type(); }
+    LDynamic *createObj_helper(std::integral_constant<bool, false>) { return MB_NEW _Type(); }
     static inline
-    LDynamic *createObj_helper(integral_constant<bool, true>) {
+    LDynamic *createObj_helper(std::integral_constant<bool, true>) {
       LOG_DPRINTLN("createObj() is called for abstract object!!");
       return NULL;
     }
@@ -96,7 +97,7 @@ namespace qlib {
   public:
     virtual LDynamic *createObj() const
     {
-      return createObj_helper(integral_constant<bool, qlib::is_abstract<_Type>::value>());
+      return createObj_helper(std::integral_constant<bool, std::is_abstract<_Type>::value>());
     }
 
     virtual LDynamic *createFromString(const LString &aStr) const

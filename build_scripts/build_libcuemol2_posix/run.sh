@@ -20,7 +20,7 @@ if [ "${GITHUB_WORKSPACE+foo}" ]; then
     CMAKE_OPT=""
 else
     CMAKE_SCCACHE_OPT=""
-    CMAKE_OPT=${2:-""}
+    CMAKE_OPT=""
 fi
 
 # Build
@@ -38,8 +38,7 @@ PYTHON=python3
 PYTHON_ROOT=$($PYTHON -c 'import sys;import pathlib; print(pathlib.Path(sys.executable).parent.parent)')
 echo "PYTHON_ROOT=$PYTHON_ROOT"
 
-BUILD_PYTHON_BINDINGS=OFF
-BUILD_PYTHON_MODULE=OFF
+BUILD_PYTHON_BINDINGS=ON
 
 # Install location
 CMAKE_INSTALL_PREFIX=$BASEDIR/cuemol2
@@ -57,7 +56,6 @@ cmake -S ${WORKSPACE} -B $BUILD_DIR \
       -DLCMS2_ROOT=$BASEDIR/lcms2-2.15 \
       -DGLEW_ROOT=$BASEDIR/glew-2.1.0 \
       -DBUILD_PYTHON_BINDINGS=$BUILD_PYTHON_BINDINGS \
-      -DBUILD_PYTHON_MODULE=$BUILD_PYTHON_MODULE \
       -DPython3_ROOT_DIR=$PYTHON_ROOT \
       -DBUILD_XPCJS_BINDINGS=ON \
       -DCGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE=TRUE \

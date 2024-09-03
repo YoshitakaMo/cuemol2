@@ -28,7 +28,6 @@ SET(CLI_LINK_LIBRARIES
 
 # Normal C++ source files
 SET(CLI_SRCS
-TTYView.cpp
 cli_main.cpp
 )
 
@@ -72,10 +71,10 @@ message("DEFAULT_SYSCONFIG_PATH: ${DEFAULT_SYSCONFIG_PATH}")
 target_compile_definitions(cuetty PUBLIC DEFAULT_CONFIG=\"${DEFAULT_SYSCONFIG_PATH}\")
 target_compile_definitions(cuetty PUBLIC LINK_SHARED)
 
-if (BUILD_PYTHON_BINDINGS)
-  list(APPEND CLI_LINK_LIBRARIES pybr)
-  target_compile_definitions(cuetty PUBLIC HAVE_PYTHON=1)
-endif ()
+# if (BUILD_PYTHON_BINDINGS)
+#   list(APPEND CLI_LINK_LIBRARIES pybr)
+#   target_compile_definitions(cuetty PUBLIC HAVE_PYTHON=1)
+# endif ()
 
 target_link_libraries(cuetty PRIVATE
   ${CLI_LINK_LIBRARIES}

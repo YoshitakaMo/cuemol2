@@ -1,0 +1,21 @@
+[project]
+name = "cuemol2"
+version = "0.0.1"
+
+[build-system]
+requires = ["scikit-build-core"]
+build-backend = "scikit_build_core.build"
+
+[tool.scikit-build-core]
+wheel.py-api = "cp37"
+
+[tool.scikit-build]
+build-dir = "build/{wheel_tag}"
+cmake.args = ["-G", "Unix Makefiles"]
+wheel.packages = ["python/cuemol"]
+
+# [tool.scikit-build.cmake.define]
+# LIBCUEMOL2_ROOT = "/opt/cuemol2"
+
+# [tool.scikit-build.wheel.packages]
+# "example/mypackage" = "python/mypackage"

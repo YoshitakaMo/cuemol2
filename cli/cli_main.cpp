@@ -13,34 +13,6 @@
 #include <qsys/SceneManager.hpp>
 #include <qsys/SysConfig.hpp>
 
-#ifdef HAVE_JAVASCRIPT
-#  include <jsbr/jsbr.hpp>
-#  include <jsbr/Interp.hpp>
-#endif
-
-#ifdef BUILD_PYTHON_BINDINGS
-#  include <pybr/pybr.hpp>
-#  include <pybr/PythonBridge.hpp>
-#endif
-
-#include "TTYView.hpp"
-
-namespace cli {
-  class TTYViewFactory : public qsys::ViewFactory
-  {
-  public:
-    TTYViewFactory() {}
-    virtual ~TTYViewFactory() {}
-    virtual qsys::View* create() {
-      return MB_NEW TTYView();
-    }
-  };
-  void registerViewFactory()
-  {
-    qsys::View::setViewFactory(MB_NEW TTYViewFactory());
-  }
-}
-
 using qlib::LString;
 void process_input(const LString &loadscr, const std::deque<LString> &args,bool bInvokeIntrShell);
 
@@ -100,11 +72,10 @@ int internal_main(int argc, const char *argv[])
     confpath = DEFAULT_CONFIG;
   }
 
-  int result = cuemol2::init(confpath, false);
+  int result = cuemol2::init(confpath, true);
   if (result < 0) {
     return result;
   }
-  cli::registerViewFactory();
 
   //if (!loadscr.isEmpty()) {
   process_input(loadscr, args2, bInvokeIntrShell);
@@ -152,50 +123,11 @@ void process_input(const LString &loadscr, const std::deque<LString> &args, bool
     //qlib::FileOutStream &fos = qlib::FileOutStream::getStdErr();
     //rscene->writeTo(fos, true);
   }
-  else if (full_path.extension()==".js") {
-#ifdef HAVE_JAVASCRIPT
-    jsbr::Interp *pInt = jsbr::createInterp(NULL);
-    pInt->setCmdArgs(args);
-
-    // setup system default script path
-    qsys::SysConfig *pconf = qsys::SysConfig::getInstance();
-    LString scrdir = pconf->get("script_dir");
-    MB_DPRINTLN("sysconfig: script_dir=%s", scrdir.c_str());
-    if (!scrdir.isEmpty())
-      pInt->setScriptPath("system", pconf->convPathName(scrdir));
-
-    // run startup script
-    pInt->execFile("startup.js");
-
-    // run the main script
-    pInt->execFile(loadscr);
-
-    delete pInt;
-#else
-    LOG_DPRINTLN("Javascript not supported!!");
-#endif
-  }
-  else if (full_path.extension()==".py") {
-#ifdef BUILD_PYTHON_BINDINGS
-    pybr::PythonBridge *pSvc = pybr::PythonBridge::getInstance();
-    pSvc->setCmdArgs(args);
-    pSvc->runFile(loadscr);
-#else
-    LOG_DPRINTLN("Python not supported!!");
-#endif
-  }
   else {
     // no input file --> try to run interactive shell
     bInvokeIntrShell = true;
   }
   
-#ifdef BUILD_PYTHON_BINDINGS
-  if (bInvokeIntrShell) {
-    pybr::PythonBridge *pSvc = pybr::PythonBridge::getInstance();
-    MB_DPRINTLN("");
-    pSvc->runInteractiveShell();
-  }
-#endif
 
   MB_DPRINTLN("main> cleanup ...");
   pSM->destroyAllScenes();

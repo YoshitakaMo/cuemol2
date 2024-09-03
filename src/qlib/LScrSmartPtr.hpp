@@ -8,8 +8,8 @@
 
 #include "LString.hpp"
 #include "LScriptable.hpp"
-#include "TypeTraits.hpp"
 #include "LExceptions.hpp"
+#include <type_traits>
 
 namespace qlib {
 
@@ -281,10 +281,10 @@ namespace qlib {
 
   private:
     static inline
-    _Type *defctor_helper(integral_constant<bool, false>) { return MB_NEW _Type(); }
+    _Type *defctor_helper(std::integral_constant<bool, false>) { return MB_NEW _Type(); }
 
     static inline
-    _Type *defctor_helper(integral_constant<bool, true>) {
+    _Type *defctor_helper(std::integral_constant<bool, true>) {
       LOG_DPRINTLN("defctor() is called for abstract object!!");
       return NULL;
     }
@@ -294,7 +294,7 @@ namespace qlib {
        create and assign default object by default ctor
      */
     static LScrSp<_Type> *defctor() {
-      _Type * pdefobj = defctor_helper(integral_constant<bool, qlib::is_abstract<_Type>::value>());
+      _Type * pdefobj = defctor_helper(std::integral_constant<bool, std::is_abstract<_Type>::value>());
       LScrSp<_Type> *rval = MB_NEW LScrSp<_Type>(pdefobj);
       MB_DPRINTLN("defctor() %p contruct", rval);
       return rval;
