@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 3.12)
-project(cuetty CXX C)
+cmake_minimum_required(VERSION 3.15...3.26)
+project(${SKBUILD_PROJECT_NAME} LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)  # ref. https://texus.me/2015/09/06/cmake-and-gcov/
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cli/cmake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 ##########
 # libcuemol2
@@ -18,9 +18,10 @@ set(Boost_USE_STATIC_LIBS OFF)
 find_package(Boost 1.50.0 REQUIRED
   COMPONENTS system thread filesystem chrono timer)
 
-##########
-# Python3
-find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+find_package(
+  Python3
+  COMPONENTS Interpreter Development.Module
+  REQUIRED)
 message(STATUS "Python3_Development_FOUND=${Python3_Development_FOUND}")
 message(STATUS "Python3_EXECUTABLE=${Python3_EXECUTABLE}")
 message(STATUS "Python: version=${Python3_VERSION}")
@@ -42,32 +43,13 @@ SET(PYMOD_LINK_LIBRARIES
 
 # Normal C++ source files
 SET(PYMODULE_SRCS
-    wrapper.cpp
-    convert.cpp
-    methodobj.cpp
-    initcuemol.cpp
-  )
+  src/wrapper.cpp
+  src/convert.cpp
+  src/methodobj.cpp
+  src/initcuemol.cpp
+)
 
-# set(DATA_DIR ${CMAKE_SOURCE_DIR}/../data/)
-
-# set(DATA_FILES
-# ${DATA_DIR}/prot_top.xml
-# ${DATA_DIR}/prot_props.xml
-# ${DATA_DIR}/nucl_top.xml
-# ${DATA_DIR}/nucl_props.xml
-# ${DATA_DIR}/sugar_top.xml
-# ${DATA_DIR}/mono_top.xml
-# ${DATA_DIR}/default_params.xml
-# ${DATA_DIR}/symop.dat
-# ${DATA_DIR}/default_style.xml
-# )
-
-# set(SYSCONFIG_FILE ${DATA_DIR}/sysconfig.xml)
-
-#####################
-# pymodule target
-
-Python3_add_library(_cuemol_internal MODULE ${PYMODULE_SRCS})
+python3_add_library(_cuemol_internal MODULE ${PYMODULE_SRCS} WITH_SOABI)
 
 target_include_directories(
   _cuemol_internal PRIVATE
@@ -77,42 +59,32 @@ target_include_directories(
   ${Boost_INCLUDE_DIRS}
   ${LIBCUEMOL2_INCLUDE_DIR}
 )
-
 target_link_directories(
   _cuemol_internal PRIVATE
   ${LIBCUEMOL2_LIBDIR}
 )
-file(TO_NATIVE_PATH "${CMAKE_INSTALL_PREFIX}/data/sysconfig.xml" DEFAULT_SYSCONFIG_PATH)
-STRING(REPLACE "\\" "\\\\" DEFAULT_SYSCONFIG_PATH ${DEFAULT_SYSCONFIG_PATH})
-message("DEFAULT_SYSCONFIG_PATH: ${DEFAULT_SYSCONFIG_PATH}")
-target_compile_definitions(_cuemol_internal PUBLIC DEFAULT_CONFIG=\"${DEFAULT_SYSCONFIG_PATH}\")
-target_compile_definitions(_cuemol_internal PUBLIC LINK_SHARED)
-
-# if (BUILD_PYTHON_BINDINGS)
-#   list(APPEND PYMOD_LINK_LIBRARIES pybr)
-#   target_compile_definitions(_cuemol_internal PUBLIC HAVE_PYTHON=1)
-# endif ()
-
 target_link_libraries(_cuemol_internal PRIVATE
   ${PYMOD_LINK_LIBRARIES}
 )
 
-if (WIN32)
-  set_target_properties(_cuemol_internal PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-else ()
-  set_target_properties(_cuemol_internal PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-endif ()
+file(TO_NATIVE_PATH "${LIBCUEMOL2_ROOT}/data/sysconfig.xml" DEFAULT_SYSCONFIG_PATH)
+STRING(REPLACE "\\" "\\\\" DEFAULT_SYSCONFIG_PATH ${DEFAULT_SYSCONFIG_PATH})
+message(STATUS "DEFAULT_SYSCONFIG_PATH: ${DEFAULT_SYSCONFIG_PATH}")
+target_compile_definitions(_cuemol_internal PUBLIC DEFAULT_CONFIG=\"${DEFAULT_SYSCONFIG_PATH}\")
+target_compile_definitions(_cuemol_internal PUBLIC LINK_SHARED)
 
-# install(TARGETS _cuemol_internal
-#   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-#   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-# )
-# install(FILES ${DATA_FILES} DESTINATION data/data)
-# install(FILES ${SYSCONFIG_FILE} DESTINATION data)
+# if (WIN32)
+#   set_target_properties(_cuemol_internal PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+# else ()
+#   set_target_properties(_cuemol_internal PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+# endif ()
 
-# For VS Debug
-set_target_properties(_cuemol_internal PROPERTIES
-  VS_DEBUGGER_ENVIRONMENT "PATH=${BOOST_LIBRARYDIR};${CMAKE_PREFIX_PATH}/bin;%PATH%")
+install(TARGETS _cuemol_internal DESTINATION .)
 
-# set_target_properties(_cuemol_internal PROPERTIES
-#   INSTALL_RPATH "@executable_path/../lib")
+# configure_file(
+#   "${PROJECT_SOURCE_DIR}/python/cuemol/__init__.py.in"
+#   "${PROJECT_BINARY_DIR}/python/cuemol/__init__.py")
+# install(FILES "${PROJECT_BINARY_DIR}/python/cuemol/__init__.py" DESTINATION cuemol)
+
+# install(FILES "${LIBCUEMOL2_ROOT}/data/python/cuemol/wrappers/Vector.py" DESTINATION "${PROJECT_SOURCE_DIR}/python/cuemol/wrappers")
+install(DIRECTORY "${LIBCUEMOL2_ROOT}/data/python/cuemol/wrappers" DESTINATION "${PROJECT_SOURCE_DIR}/python/cuemol")
