@@ -25,11 +25,6 @@
 #  include <jsbr/Interp.hpp>
 #endif
 
-#ifdef BUILD_PYTHON_BINDINGS
-#  include <pybr/pybr.hpp>
-#  include <pybr/PythonBridge.hpp>
-#endif
-
 #if !defined(QM_BUILD_LW)
 namespace importers {
   extern bool init();
@@ -153,11 +148,6 @@ namespace cuemol2 {
       jsbr::init();
 #endif
 
-#ifdef BUILD_PYTHON_BINDINGS
-      // load python module
-      pybr::init(confpath);
-#endif
-
 #ifdef BUILD_MOLCLIENT
       molclient::init();
 #endif
@@ -189,12 +179,6 @@ namespace cuemol2 {
       molclient::fini();
 #endif
 
-#ifdef BUILD_PYTHON_BINDINGS
-      // unload python module
-      pybr::fini();
-      MB_DPRINTLN("=== pybr::fini() OK ===");
-#endif
-      
 #ifdef HAVE_JAVASCRIPT
       jsbr::fini();
       MB_DPRINTLN("=== jsbr::fini() OK ===");
