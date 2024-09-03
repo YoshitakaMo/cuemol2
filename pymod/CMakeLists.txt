@@ -18,15 +18,20 @@ set(Boost_USE_STATIC_LIBS OFF)
 find_package(Boost 1.50.0 REQUIRED
   COMPONENTS system thread filesystem chrono timer)
 
+##########
+# Python3
 find_package(
   Python3
   COMPONENTS Interpreter Development.Module
   REQUIRED)
-message(STATUS "Python3_Development_FOUND=${Python3_Development_FOUND}")
+message(STATUS "Python3_Development.Module_FOUND=${Python3_Development.Module_FOUND}")
 message(STATUS "Python3_EXECUTABLE=${Python3_EXECUTABLE}")
 message(STATUS "Python: version=${Python3_VERSION}")
 message(STATUS "Python3_INCLUDE_DIRS=${Python3_INCLUDE_DIRS}")
 message(STATUS "Python3_LIBRARIES=${Python3_LIBRARIES}")
+
+find_package(Python3 COMPONENTS NumPy)
+message(STATUS "Python_NumPy_FOUND=${Python_NumPy_FOUND}")
 
 #####################
 

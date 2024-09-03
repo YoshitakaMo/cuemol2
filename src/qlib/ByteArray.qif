@@ -33,6 +33,8 @@ runtime_class ByteArray
   // methods
   //
 
+  void init(integer, integer);
+
   integer getValue(integer);
 
   void setValue(integer, integer);
