@@ -38,7 +38,7 @@ endif()
 # Dependent libs
 SET(PYMOD_LINK_LIBRARIES
   cuemol2
-  Boost::filesystem
+  # Boost::filesystem
 )
 
 # Normal C++ source files

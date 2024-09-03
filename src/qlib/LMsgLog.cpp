@@ -100,10 +100,10 @@ void LMsgLog::setFileRedirPath(const LString &path)
   // close the current stream
   if (!m_pImpl->m_filepath.isEmpty() && m_pImpl->m_fp)
     ::fclose(m_pImpl->m_fp);
-  m_pImpl->m_filepath = "";
-
+  
   if (path.isEmpty()) {
     // reset to default
+    m_pImpl->m_filepath = "";
     resetOutput();
     return;
   }
@@ -116,6 +116,7 @@ void LMsgLog::setFileRedirPath(const LString &path)
     if (m_pImpl->m_fp==NULL) {
       MB_THROW(IOException, ("Cannot open file:"+path));
     }
+    m_pImpl->m_filepath = path;
   }    
 }
 
