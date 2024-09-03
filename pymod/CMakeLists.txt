@@ -87,4 +87,4 @@ install(TARGETS _cuemol_internal DESTINATION .)
 # install(FILES "${PROJECT_BINARY_DIR}/python/cuemol/__init__.py" DESTINATION cuemol)
 
 # install(FILES "${LIBCUEMOL2_ROOT}/data/python/cuemol/wrappers/Vector.py" DESTINATION "${PROJECT_SOURCE_DIR}/python/cuemol/wrappers")
-install(DIRECTORY "${LIBCUEMOL2_ROOT}/data/python/cuemol/wrappers" DESTINATION "${PROJECT_SOURCE_DIR}/python/cuemol")
+# install(DIRECTORY "${LIBCUEMOL2_ROOT}/data/python/cuemol/wrappers" DESTINATION "${PROJECT_SOURCE_DIR}/python/cuemol")
