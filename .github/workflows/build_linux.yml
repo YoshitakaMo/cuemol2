@@ -1,0 +1,56 @@
+name: Build and release
+
+on:
+  push:
+    # branches-ignore:
+    #   - '**'
+
+###############################################
+
+jobs:
+  build_posix:
+    name: '${{ matrix.name }}'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            name: "Ubuntu 22 x64"
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Run sccache-cache
+      uses: mozilla-actions/sccache-action@v0.0.4
+
+    - name: Show build env versions
+      shell: bash
+      run: |
+        set -eux
+        uname -a
+        gcc --version
+
+    - name: Download deplibs
+      uses: ./build_scripts/download_deplibs
+      with:
+        basedir: ${{ github.workspace }}/target
+
+    - name: Build libcuemol2
+      uses: ./build_scripts/build_libcuemol2_posix
+      with:
+        basedir: ${{ github.workspace }}/target
+
+    - name: Build cuetty
+      uses: ./build_scripts/build_cuetty_posix
+      with:
+        basedir: ${{ github.workspace }}/target
+
+    - name: Check cuetty run
+      shell: bash
+      run: |
+        set -eux
+        BASEDIR=${{ github.workspace }}/target
+        ls -la $BASEDIR/cuemol2/bin/cuetty
+        $BASEDIR/cuemol2/bin/cuetty
+        
