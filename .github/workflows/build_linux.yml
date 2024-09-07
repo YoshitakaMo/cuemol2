@@ -24,12 +24,19 @@ jobs:
     - name: Run sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.4
 
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
     - name: Show build env versions
       shell: bash
       run: |
         set -eux
         uname -a
         gcc --version
+        python3 --version
+        python3 -m pip --version
 
     - name: Download deplibs
       uses: ./build_scripts/download_deplibs
@@ -38,6 +45,11 @@ jobs:
 
     - name: Build libcuemol2
       uses: ./build_scripts/build_libcuemol2_posix
+      with:
+        basedir: ${{ github.workspace }}/target
+        
+    - name: Build python module
+      uses: ./build_scripts/build_pymod_posix
       with:
         basedir: ${{ github.workspace }}/target
 
@@ -54,9 +66,4 @@ jobs:
         ls -la $BASEDIR/cuemol2/bin/cuetty
         ldd $BASEDIR/cuemol2/bin/cuetty
         env LD_LIBRARY_PATH=$BASEDIR/cuemol2/lib $BASEDIR/cuemol2/bin/cuetty
-        
-    - name: Build python module
-      uses: ./build_scripts/build_pymod_posix
-      with:
-        basedir: ${{ github.workspace }}/target
 
