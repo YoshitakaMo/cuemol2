@@ -91,7 +91,6 @@ namespace cuemol2 {
 
   bool createObj(const qlib::LString &clsname,
                  const qlib::LString &strval,
-                 // qlib::LDynamic **prval,
                  qlib::LScriptable **prval,
                  qlib::LString &errmsg) noexcept
   {

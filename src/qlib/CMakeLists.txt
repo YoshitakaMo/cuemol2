@@ -157,7 +157,6 @@ StringStream.hpp
 TagName.hpp
 TestClass.hpp
 TimerEvent.hpp
-TypeTraits.hpp
 Utils.hpp
 Vector2D.hpp
 Vector4D.hpp

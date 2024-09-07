@@ -90,7 +90,7 @@ qlib::LVarDict CmdMgr::runCmd(const LString &cmd_name, const qlib::LVarDict &arg
     pCmd->resetAllProps();
 
     for (const auto &elem : args) {
-        printf("key: %s\n", elem.first.c_str());
+        // printf("key: %s\n", elem.first.c_str());
         const auto &val = elem.second;
         pCmd->setProperty(elem.first, elem.second);
     }

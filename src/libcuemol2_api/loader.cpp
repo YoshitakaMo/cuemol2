@@ -20,16 +20,6 @@
 #include <sysdep/sysdep.hpp>
 #endif
 
-#ifdef HAVE_JAVASCRIPT
-#  include <jsbr/jsbr.hpp>
-#  include <jsbr/Interp.hpp>
-#endif
-
-#ifdef BUILD_PYTHON_BINDINGS
-#  include <pybr/pybr.hpp>
-#  include <pybr/PythonBridge.hpp>
-#endif
-
 #if !defined(QM_BUILD_LW)
 namespace importers {
   extern bool init();
@@ -92,11 +82,6 @@ namespace anim {
   extern void fini();
 }
 
-
-#ifndef DEFAULT_CONFIG
-#define DEFAULT_CONFIG "./sysconfig.xml"
-#endif
-
 namespace cuemol2 {
 
   using qlib::LString;
@@ -119,10 +104,6 @@ namespace cuemol2 {
   int init(const LString &confpath, bool reg_view) noexcept
   {
     try {
-      // if (confpath.isEmpty()) {
-      //   confpath = LString(DEFAULT_CONFIG);
-      // }
-
       if (!qsys::init(confpath)) {
         LOG_DPRINTLN("Qsys Init (%s): ERROR!!", confpath.c_str());
         return -1;
@@ -148,24 +129,12 @@ namespace cuemol2 {
       mdtools::init();
       importers::init();
 
-#ifdef HAVE_JAVASCRIPT
-      // load internal JS module
-      jsbr::init();
-#endif
-
-#ifdef BUILD_PYTHON_BINDINGS
-      // load python module
-      pybr::init(confpath);
-#endif
-
 #ifdef BUILD_MOLCLIENT
       molclient::init();
 #endif
 
       if (reg_view) {
-#ifdef BUILD_OPENGL_SYSDEP
         registerViewFactory();
-#endif
       }
 
     }
@@ -189,17 +158,6 @@ namespace cuemol2 {
       molclient::fini();
 #endif
 
-#ifdef BUILD_PYTHON_BINDINGS
-      // unload python module
-      pybr::fini();
-      MB_DPRINTLN("=== pybr::fini() OK ===");
-#endif
-      
-#ifdef HAVE_JAVASCRIPT
-      jsbr::fini();
-      MB_DPRINTLN("=== jsbr::fini() OK ===");
-#endif
-      
       // load other modules
       render::fini();
       molvis::fini();

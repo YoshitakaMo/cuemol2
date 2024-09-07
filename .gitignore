@@ -104,3 +104,6 @@ venv.bak/
 /uxp_gui/platform/**
 /uxp_gui/obj-*
 build/**
+
+/pymod/python/cuemol/wrappers
+

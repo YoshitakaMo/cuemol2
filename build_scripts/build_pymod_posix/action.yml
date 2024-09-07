@@ -1,0 +1,18 @@
+name: 'Build python module posix'
+description: 'Build python module posix'
+
+inputs:
+  basedir:
+     description: 'base dir'
+     required: true
+
+runs:
+  using: "composite"
+  steps:
+  - name: Build and install python module
+    shell: bash
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+    run: |
+      cd ${GITHUB_WORKSPACE}
+      bash build_scripts/build_pymod_posix/run.sh ${{ inputs.basedir }}
