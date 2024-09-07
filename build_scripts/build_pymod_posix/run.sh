@@ -8,7 +8,9 @@ set -eux
 
 BASEDIR=$1
 
-PYTHON="python3.12"
+# PYTHON="python3.12"
+PYTHON="python3"
+
 REPOS_DIR=$(cd $(dirname $0)/../..; pwd)
 WORKSPACE=${GITHUB_WORKSPACE:-$REPOS_DIR}
 
