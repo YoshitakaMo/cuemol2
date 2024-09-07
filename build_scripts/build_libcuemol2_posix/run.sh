@@ -20,7 +20,6 @@ if [ "${GITHUB_WORKSPACE+foo}" ]; then
     CMAKE_OPT=""
 else
     CMAKE_SCCACHE_OPT=""
-    CMAKE_OPT=""
 fi
 
 # Build

@@ -94,9 +94,11 @@ def conv_dict_arg(d):
     return result
 
 
-def createObj(name):
-    return createWrapper(ci.createObj(name))
-
+def createObj(name, strval=None):
+    if strval is None:
+        return createWrapper(ci.createObj(name))
+    else:
+        return createWrapper(ci.createObj(name, strval))
 
 def getService(name):
     return createWrapper(ci.getService(name))

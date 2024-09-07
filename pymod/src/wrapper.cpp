@@ -283,34 +283,22 @@ PyObject *Wrapper::getService(PyObject *self, PyObject *args)
 PyObject *Wrapper::createObj(PyObject *self, PyObject *args)
 {
     const char *clsname;
+    const char *strval = "";
 
-    if (!PyArg_ParseTuple(args, "s", &clsname)) return NULL;
-
-    qlib::ClassRegistry *pMgr = qlib::ClassRegistry::getInstance();
-    MB_ASSERT(pMgr != NULL);
-
-    qlib::LClass *pCls = NULL;
-    try {
-        pCls = pMgr->getClassObj(clsname);
-        MB_DPRINTLN("!!! CreateObj, LClass for %s: %p", clsname, pCls);
-    } catch (...) {
-        LString msg = LString::format("createObj class %s not found", clsname);
-        PyErr_SetString(PyExc_RuntimeError, msg);
-        return NULL;
+    int nargs = PyTuple_GET_SIZE(args);
+    if (nargs == 1) {
+      if (!PyArg_ParseTuple(args, "s", &clsname)) return NULL;
+    }
+    else if (nargs == 2) {
+      if (!PyArg_ParseTuple(args, "ss", &clsname, &strval)) return NULL;
     }
 
-    qlib::LDynamic *pDyn = pCls->createScrObj();
-    // MB_DPRINTLN("createScrObj returned: %p (%s)", pDyn, typeid(*pDyn).name());
-
-    // XXX: dynamic_cast<> returns NULL for LScriptable derived class's objects,
-    //   in some situations (Apple LLVM version 5.0??).
-    //   Old-type type cast is used to avoid this problem.
-    // LScriptable *pNewObj = dynamic_cast<LScriptable *>(pDyn);
-    LScriptable *pNewObj = (LScriptable *)(pDyn);
-
-    if (pNewObj == NULL) {
-        LString msg = LString::format(
-            "createObj %s failed (class.createScrObj returned NULL)", clsname);
+    LScriptable *pNewObj;
+    LString errmsg;
+    bool ok = cuemol2::createObj(clsname, strval, &pNewObj, errmsg);
+    
+    if (!ok) {
+        LString msg = LString::format("createObj %s failed (reason: %s)", clsname, errmsg.c_str());
         PyErr_SetString(PyExc_RuntimeError, msg);
         return NULL;
     }
