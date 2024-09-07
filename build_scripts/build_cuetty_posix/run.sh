@@ -37,3 +37,4 @@ make install
 
 ls -la $BASEDIR/$BOOST_VER/lib/lib*
 cp $BASEDIR/$BOOST_VER/lib/lib* $BASEDIR/cuemol2/lib/
+
