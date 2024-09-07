@@ -29,7 +29,7 @@ ls -la $BOOST_DIR/lib/lib*
 cp $BOOST_DIR/lib/lib* $BASEDIR/cuemol2/lib/
 
 # run python tests
-cd $WORKSPACE/pymod
+cd $WORKSPACE
 $PYTHON -m pip install pytest
 env LD_LIBRARY_PATH=$INST_PATH/lib \
     pytest tests
