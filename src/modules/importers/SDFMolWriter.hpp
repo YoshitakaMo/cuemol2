@@ -4,37 +4,37 @@
 
 #pragma once
 
-#include "importers.hpp"
-
-#include <qlib/mcutils.hpp>
-#include <qlib/LExceptions.hpp>
-#include <qsys/ObjWriter.hpp>
 #include <modules/molstr/molstr.hpp>
 #include <modules/molstr/ResidIndex.hpp>
+#include <qlib/LExceptions.hpp>
+#include <qlib/mcutils.hpp>
+#include <qsys/ObjWriter.hpp>
+
+#include "importers.hpp"
 
 namespace qlib {
-  class PrintStream;
+class PrintStream;
 }
 
 namespace importers {
 
-  using molstr::MolCoord;
-  using molstr::MolCoordPtr;
-  using molstr::MolResiduePtr;
-  using molstr::ResidIndex;
-  using molstr::ResidSet;
+using molstr::MolCoord;
+using molstr::MolCoordPtr;
+using molstr::MolResiduePtr;
+using molstr::ResidIndex;
+using molstr::ResidSet;
 
-  //
-  ///  SDF/MOL structure writer class
-  //
-  class IMPORTERS_API SDFMolWriter : public qsys::ObjWriter
-  {
+//
+///  SDF/MOL structure writer class
+//
+class IMPORTERS_API SDFMolWriter : public qsys::ObjWriter
+{
     MC_SCRIPTABLE;
 
-  private:
+private:
     typedef ObjWriter super_t;
 
-  public:
+public:
     SDFMolWriter();
     virtual ~SDFMolWriter();
 
@@ -54,27 +54,30 @@ namespace importers {
 
     virtual bool canHandle(qsys::ObjectPtr pobj) const;
 
-  private:
+private:
     /// Output target selection
     molstr::SelectionPtr m_pSel;
 
-  public:
-    
+public:
     // Set selection for writing
-    void setSelection(molstr::SelectionPtr pSel) {
-      m_pSel = pSel;
-    }
-    
-    // Get selection for writing
-    molstr::SelectionPtr getSelection() const {
-      return m_pSel;
+    void setSelection(molstr::SelectionPtr pSel)
+    {
+        m_pSel = pSel;
     }
 
-  private:
+    // Get selection for writing
+    molstr::SelectionPtr getSelection() const
+    {
+        return m_pSel;
+    }
+
+private:
     /// building molecular coordinate obj
     molstr::MolCoordPtr m_pMol;
 
+    using ResBondMap = std::map<LString, std::deque<int>>;
+    ResBondMap m_resBondMap;
+    void writeResidue(const molstr::MolResiduePtr &presid, qlib::PrintStream &prs);
+};
 
-  };
-
-}
+}  // namespace importers

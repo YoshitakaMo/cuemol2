@@ -83,6 +83,9 @@ namespace molstr {
     /// Cached transformation matrix
     qlib::Matrix4D *m_pXformMat;
 
+    /// formal charge
+    double m_charge;
+
   public:
 
     ////////////////////////////
@@ -177,6 +180,15 @@ namespace molstr {
     void setOcc(double occup)
     {
       m_occ = occup;
+    }
+
+    double getCharge() const
+    {
+      return m_charge;
+    }
+    void setCharge(double value)
+    {
+      m_charge = value;
     }
 
     /// Get canonical name of atom in the topology definition

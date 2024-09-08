@@ -42,4 +42,6 @@ def test_sdf_writer(mol_from_sdf, tmp_path):
 
     with out_file.open() as f:
         result = f.readlines()
-    print(f"{result=}")
+        # result = f.read()
+    for i in result:
+        print(i.rstrip())
