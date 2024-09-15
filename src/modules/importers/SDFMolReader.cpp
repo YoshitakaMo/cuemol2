@@ -93,6 +93,7 @@ bool SDFMolReader::read(qlib::InStream &ins)
                              m_nReadCmpds, m_nReadAtoms, m_nReadBonds);
                 return true;
             }
+            readCharge(str);
 
             if (str.startsWith("$$$$")) break;
         }
@@ -100,6 +101,53 @@ bool SDFMolReader::read(qlib::InStream &ins)
 
     // NOT REACHED
     return true;
+}
+
+void SDFMolReader::readCharge(const LString &str)
+{
+    if (!str.startsWith("M  CHG"))
+        return;
+
+    LString str_nent = str.substr(6, 3);
+    int nent;
+    if (!str_nent.toInt(&nent)) {
+        LString msg =
+            LString::format("Invalid nent <%s> in CHG line", str_nent.c_str());
+        MB_THROW(SDFFormatException, msg);
+    }
+
+    MB_DPRINTLN("SDFMolReader> M  CHG nent=%d", nent);
+    //M  CHG  1  17   1
+    for (int i=0; i<nent; ++i) {
+        const int ist_pos = i * 8 + 9;
+        const int ichg_pos = ist_pos + 4;
+
+        auto str_iind = str.substr(ist_pos, 4);
+        int iind;
+        if (!str_iind.toInt(&iind)) {
+            LString msg =
+                LString::format("Invalid index <%s> in CHG line", str_iind.c_str());
+            MB_THROW(SDFFormatException, msg);
+        }
+
+        auto str_ichg = str.substr(ichg_pos, 4);
+        int ichg;
+        if (!str_ichg.toInt(&ichg)) {
+            LString msg =
+                LString::format("Invalid charge <%s> in CHG line", str_ichg.c_str());
+            MB_THROW(SDFFormatException, msg);
+        }
+        
+        const auto iter = m_atomIDMap.find(iind-1);
+        if (iter == m_atomIDMap.end()) {
+            LOG_DPRINTLN("SDFMolReader> CHG line: atom %d not found", iind);
+            continue;
+        }
+        auto aid = iter->second;
+        m_pMol->getAtom(aid)->setAtomPropReal("charge", ichg);
+
+        MB_DPRINTLN("SDFMolReader> atom %d set charge %d", aid, ichg);
+    }
 }
 
 /// read one MOL entry from stream
@@ -149,7 +197,7 @@ void SDFMolReader::readMol(qlib::LineStream &lin, bool bskip)
     double xx, yy, zz;
 
     std::vector<int> elem_counts(ElemSym::MAX, 0);
-    std::map<int, int> atommap;
+    AtomIDMap atommap;
 
     for (i = 0; i < natom; ++i) {
         str = lin.readLine();
@@ -194,14 +242,17 @@ void SDFMolReader::readMol(qlib::LineStream &lin, bool bskip)
                 MB_THROW(SDFFormatException,
                          "invalid SDF format, appendAtom() failed!!");
 
-            atommap.insert(std::pair<int, int>(i, naid));
+            atommap.insert(AtomIDMap::value_type(i, naid));
             m_nReadAtoms++;
         }
     }
 
+    // set Atom ID mapping
+    m_atomIDMap = atommap;
+
     int natm1, natm2, nbont;
     int natm_id1, natm_id2;
-    std::map<int, int>::const_iterator iter;
+    AtomIDMap::const_iterator iter;
 
     for (i = 0; i < nbond; ++i) {
         str = lin.readLine();

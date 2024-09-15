@@ -1,5 +1,7 @@
 import pytest
+
 import cuemol
+
 
 def test_sdf_reader(test_data_path):
     svc = cuemol.getService("StreamManager")
@@ -19,6 +21,20 @@ def test_sdf_reader(test_data_path):
     nbonds = obj.getBondSize()
     print(f"{nbonds=}")
     assert nbonds == 40
+
+
+def test_sdf_reader_chg(test_data_path):
+    svc = cuemol.getService("StreamManager")
+    reader = svc.createHandler("sdf", 0)
+    print(f"{reader=}")
+
+    test_sdf_file = test_data_path / "test_chg1.sdf"
+    reader.setPath(str(test_sdf_file))
+    obj = reader.createDefaultObj()
+    reader.attach(obj)
+    reader.read()
+    reader.detach()
+
 
 @pytest.fixture
 def mol_from_sdf(test_data_path):

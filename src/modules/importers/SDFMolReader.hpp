@@ -107,6 +107,11 @@ namespace importers {
     /// read one MOL entry from stream
     void readMol(qlib::LineStream &lin, bool bskip);
 
+    /// atom index --> atom ID mapping
+    using AtomIDMap = std::map<int, int>;
+    AtomIDMap m_atomIDMap;
+
+    void readCharge(const LString &str);
   };
 
   /// File format exception
