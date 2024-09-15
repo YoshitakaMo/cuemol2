@@ -144,7 +144,7 @@ void SDFMolReader::readCharge(const LString &str)
             continue;
         }
         auto aid = iter->second;
-        m_pMol->getAtom(aid)->setAtomPropReal("charge", ichg);
+        m_pMol->getAtom(aid)->setAtomPropReal("formal_charge", ichg);
 
         MB_DPRINTLN("SDFMolReader> atom %d set charge %d", aid, ichg);
     }

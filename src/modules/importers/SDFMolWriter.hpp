@@ -78,6 +78,8 @@ private:
     using ResBondMap = std::map<LString, std::deque<int>>;
     ResBondMap m_resBondMap;
     void writeResidue(const molstr::MolResiduePtr &presid, qlib::PrintStream &prs);
+
+    void writeChgLines(const std::map<int, int> &chgmap,qlib::PrintStream &prs);
 };
 
 }  // namespace importers

@@ -8,6 +8,7 @@
 #include <modules/molstr/MolResidue.hpp>
 #include <modules/molstr/ResidIterator.hpp>
 #include <qlib/PrintStream.hpp>
+#include <algorithm>
 
 namespace importers {
 
@@ -138,6 +139,7 @@ void SDFMolWriter::writeResidue(const molstr::MolResiduePtr &presid,
     //   15.0880   10.7980   23.5470  N 0  3  0  4  0  4
     int index = 1;
     std::map<int, int> idmap;
+    std::map<int, int> chgmap;
     // for (auto iter = presid->atomBegin(); iter != presid->atomEnd(); ++iter, ++index) {
     for (int aid: atomset) {
         // auto aid = iter->second;
@@ -148,6 +150,17 @@ void SDFMolWriter::writeResidue(const molstr::MolResiduePtr &presid,
         // prs.formatln("%d", index);
         prs.formatln("%10.4f%10.4f%10.4f%3s  0  0  0  0  0  0  0  0  0  0  0  0",
                      pos.x(), pos.y(), pos.z(), elem.c_str());
+        if (patom->hasAtomProp("formal_charge")) {
+            auto typenm = patom->getPropTypeName("formal_charge");
+            if (typenm.equals("real")) {
+                double charge  = patom->getAtomPropReal("formal_charge");
+                MB_DPRINTLN("atom %d charge %f (%d)", aid, charge, int(charge));
+                chgmap.insert(std::pair<int, int>(aid, int(charge)));
+            }
+            else {
+                LOG_DPRINTLN("Warning: invalid atom charge type %s ignored", typenm.c_str());
+            }
+        }
         ++index;
     }
 
@@ -178,10 +191,38 @@ void SDFMolWriter::writeResidue(const molstr::MolResiduePtr &presid,
         prs.formatln("%3d%3d%3d  0", id1, id2, itype);
     }
 
+    writeChgLines(chgmap, prs);
+
     prs.println("M  END");
     prs.println("$$$$");
 
 }
 
+void SDFMolWriter::writeChgLines(const std::map<int, int> &chgmap,
+                                 qlib::PrintStream &prs)
+{
+    int nchg = chgmap.size();
+    if (nchg==0) {
+        return;
+    }
+
+    int nchg_lines = int(nchg / 8) + 1;
+    auto iter = chgmap.begin();
+    for (int i=0; i<nchg_lines; ++i) {
+        int nn8 = std::min(nchg, 8);
+        prs.format("M  CHG% 3d", nn8);
+        for (int j=0; j<8; ++j) {
+            if (iter == chgmap.end()) {
+                break;
+            }
+            const int aid = (iter->first) + 1;
+            const int chg = iter->second;
+            prs.format("% 4d% 4d", aid, chg);
+            ++iter;
+            --nchg;
+        }
+        prs.formatln("");
+    }
+}
 
 }  // namespace importers

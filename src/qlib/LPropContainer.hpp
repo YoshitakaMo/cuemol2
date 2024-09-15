@@ -32,6 +32,7 @@ namespace qlib {
 
   public:
     
+    bool hasDynProp(const LString &propnm) const;
     bool getDynProp(const LString &propnm, qlib::LVariant &presult) const;
     bool setDynProp(const LString &propnm, const qlib::LVariant &pvalue);
     bool removeDynProp(const LString &propnm);

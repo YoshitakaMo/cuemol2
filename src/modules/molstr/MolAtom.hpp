@@ -285,6 +285,9 @@ namespace molstr {
 */
   public:
     
+    bool hasAtomProp(const LString &propnm) const {
+        return hasDynProp(propnm);
+    }
     bool getAtomProp(const LString &propnm, qlib::LVariant &presult) const {
       return getDynProp(propnm, presult);
     }

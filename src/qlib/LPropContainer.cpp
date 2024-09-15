@@ -16,6 +16,13 @@ LDynPropContainer::~LDynPropContainer()
 {
 }
 
+bool LDynPropContainer::hasDynProp(const LString &propnm) const
+{
+    DynPropTab::const_iterator i = m_props.find(propnm);
+    if (m_props.end()==i)
+        return false; // not found!!
+    return true;
+}
 
 bool LDynPropContainer::getDynProp(const LString &propnm, qlib::LVariant &presult) const
 {
