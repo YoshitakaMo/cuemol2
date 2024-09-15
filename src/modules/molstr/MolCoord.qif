@@ -50,6 +50,8 @@ runtime_class MolCoord extends Object
   integer getAtomSize();
   integer getAtomSelSize(object<MolSelection$> psel) => getAtomSize;
 
+  integer getBondSize();
+
   /// Encode model ID into the chain name
   string encodeModelInChain(string chain_name, integer imodel);
 

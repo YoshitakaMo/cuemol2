@@ -47,6 +47,8 @@ runtime_class MolAtom
   string getPropTypeName(string name);
   integer getAtomPropInt(string name);
   void setAtomPropInt(string name, integer value);
+  real getAtomPropReal(string name);
+  void setAtomPropReal(string name, real value);
 
   ////
 

@@ -33,7 +33,7 @@ MolAtom::MolAtom()
 
   m_pXformMat = NULL;
 
-  m_charge = 0.0;
+  // m_charge = 0.0;
   // m_radius = 0.0;
 }
 
@@ -58,7 +58,7 @@ MolAtom::MolAtom(const MolAtom &src)
   m_occ = src.m_occ;
   m_confid = src.m_confid;
 
-  m_charge = src.m_charge;
+  // m_charge = src.m_charge;
   // m_radius = src.m_radius;
 
   m_paib = NULL;

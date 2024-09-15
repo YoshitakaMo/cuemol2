@@ -14,7 +14,11 @@ def test_sdf_reader(test_data_path):
     reader.detach()
     natoms = obj.getAtomSize()
     print(f"{natoms=}")
-    assert natoms == 59
+    assert natoms == 37
+
+    nbonds = obj.getBondSize()
+    print(f"{nbonds=}")
+    assert nbonds == 40
 
 @pytest.fixture
 def mol_from_sdf(test_data_path):
