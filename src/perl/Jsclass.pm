@@ -33,7 +33,8 @@ sub genJsWrapper($)
   if ($out_dir) {
     $out_fname = "$out_dir/${in_base}.js";
     if (!-d $out_dir) {
-        mkpath($out_dir) or die "Cannot create dir $out_dir: $!";
+        # mkpath($out_dir) or die "Cannot create dir $out_dir: $!";
+        mkpath($out_dir) or print("Cannot create dir $out_dir: $!\n");
     }
   }
 

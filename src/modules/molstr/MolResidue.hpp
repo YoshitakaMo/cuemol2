@@ -67,7 +67,7 @@ namespace molstr {
 
   public:
     typedef atomdata_t::const_iterator AtomCursor;
-    typedef std::set<int>::const_iterator BondCursor;
+    // typedef std::set<int>::const_iterator BondCursor;
   
   public:
 

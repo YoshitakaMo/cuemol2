@@ -6,6 +6,7 @@
 #include "MmcifMolReader.qif"
 #include "SDFMolReader.qif"
 #include "MOL2MolReader.qif"
+#include "SDFMolWriter.qif"
 
 module importers
 {
@@ -17,5 +18,6 @@ module importers
   MmcifMolReader;
   SDFMolReader;
   MOL2MolReader;
+  SDFMolWriter;
 
 };

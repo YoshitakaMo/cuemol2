@@ -83,6 +83,9 @@ namespace molstr {
     /// Cached transformation matrix
     qlib::Matrix4D *m_pXformMat;
 
+    // /// formal charge
+    // double m_charge;
+
   public:
 
     ////////////////////////////
@@ -282,6 +285,9 @@ namespace molstr {
 */
   public:
     
+    bool hasAtomProp(const LString &propnm) const {
+        return hasDynProp(propnm);
+    }
     bool getAtomProp(const LString &propnm, qlib::LVariant &presult) const {
       return getDynProp(propnm, presult);
     }

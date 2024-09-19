@@ -12,8 +12,8 @@
 
 #include <qlib/PrintStream.hpp>
 #include <qlib/LChar.hpp>
-#include <qlib/ClassRegistry.hpp>
-#include <qlib/LClassUtils.hpp>
+// #include <qlib/ClassRegistry.hpp>
+// #include <qlib/LClassUtils.hpp>
 
 #include "MolResidue.hpp"
 #include "MolCoord.hpp"

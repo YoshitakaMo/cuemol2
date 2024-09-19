@@ -191,6 +191,8 @@ namespace molstr {
     /// Convert from (persistent) string representation to aid
     int fromStrAID(const LString &strid) const;
 
+    MolBond *getBond(int bondid) const;
+
     /////////////////////////////////////////////////////
     // chain operations
 

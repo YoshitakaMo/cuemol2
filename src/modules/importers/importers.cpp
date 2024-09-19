@@ -13,6 +13,7 @@
 #include "MmcifMolReader.hpp"
 #include "SDFMolReader.hpp"
 #include "MOL2MolReader.hpp"
+#include "SDFMolWriter.hpp"
 
 extern void importers_regClasses();
 extern void importers_unregClasses();
@@ -28,11 +29,13 @@ namespace importers {
 
     // register IO handlers
     StreamManager *pSM = StreamManager::getInstance();
-    pSM->registWriter<PSEFileReader>();
+    pSM->registReader<PSEFileReader>();
 
-    pSM->registWriter<MmcifMolReader>();
-    pSM->registWriter<SDFMolReader>();
-    pSM->registWriter<MOL2MolReader>();
+    pSM->registReader<MmcifMolReader>();
+    pSM->registReader<SDFMolReader>();
+    pSM->registReader<MOL2MolReader>();
+
+    pSM->registWriter<SDFMolWriter>();
 
     MB_DPRINTLN("importers init: OK");
     return true;
