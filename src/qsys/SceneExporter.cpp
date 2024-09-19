@@ -31,7 +31,7 @@ void SceneExporter::attach(ScenePtr pScene)
 
   super_t::startTimerMes();
 }
-    
+
 /// detach from the target object
 ScenePtr SceneExporter::detach()
 {
@@ -61,7 +61,7 @@ LString SceneExporter::makeRelSubPath(const LString &sub_name)
 
   // Check and modify the mainpath to absolute form
   fs::path mainpath(str_mainpath.c_str());
-  if (!mainpath.is_complete()) {
+  if (!mainpath.is_absolute()) {
 #if (BOOST_FILESYSTEM_VERSION==2)
     // Make mainpath to be absolute using initial_path() (= PWD at the time when program starts)
     mainpath = fs::complete(mainpath);
@@ -76,7 +76,7 @@ LString SceneExporter::makeRelSubPath(const LString &sub_name)
 
   // Check and modify the inc file path
   fs::path subpath(str_subpath_orig.c_str());
-  if (!subpath.is_complete()) {
+  if (!subpath.is_absolute()) {
     // subpath is relative path (to the base_path) ==> return it
     rval = str_subpath_orig;
 #if (BOOST_FILESYSTEM_VERSION==2)
